@@ -1,0 +1,329 @@
+<!DOCTYPE html><html lang="uz" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Mening Vazifalarim - Housekeeping Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#434655",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "outline-variant": "#c4c5d7",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#dce9ff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb59c",
+                    "surface-dim": "#cbdbf5",
+                    "primary": "#0037b0",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-primary-container": "#cad3ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "on-secondary-container": "#fefcff",
+                    "surface": "#f8f9ff",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "inverse-surface": "#213145",
+                    "background": "#f8f9ff",
+                    "primary-fixed": "#dce1ff",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-primary-fixed": "#001551",
+                    "surface-tint": "#2151da",
+                    "outline": "#747686",
+                    "on-tertiary-fixed": "#390c00",
+                    "inverse-primary": "#b7c4ff",
+                    "surface-container": "#e5eeff",
+                    "secondary-container": "#2170e4",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#832700",
+                    "surface-variant": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "secondary": "#0058be",
+                    "on-secondary-fixed": "#001a42",
+                    "on-tertiary-container": "#ffc9b7",
+                    "tertiary-fixed": "#ffdbcf",
+                    "tertiary-container": "#a73400",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "primary-container": "#1d4ed8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "inline-gap": "12px",
+                    "container-padding": "20px",
+                    "stack-gap": "16px",
+                    "section-margin": "32px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "h1": ["Inter"],
+                    "h2": ["Inter"],
+                    "status-badge": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "status-badge": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .task-card-shadow {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .task-card-active {
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.3s ease-out forwards;
+            }
+        </style></head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top AppBar -->
+<header class="bg-surface dark:bg-background shadow-sm fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a male hotel housekeeping supervisor wearing a clean, modern navy blue uniform. The background is a brightly lit, high-end hotel corridor with soft, warm lighting. The image style is sharp, professional, and minimalist, echoing the premium efficiency of the Housekeeping Pro brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuetPYD75XIebEIZ9cv9BwOJ0LaIt1UPoWXomrjtCxwwB67fj44SZFxZeNO4D7mRq3EpWCNK2EugwZyakVSYnbIqp5zYel9SW1xlL_1Oi8EvEXDU8pOCcC5vkmLwUboc-UQQrH0yV0MENoPqA-en33dVOVSwQ7WPm5ejlnsmf8GZM4Fh0KmO9-dl1pe5xs5yBFhj7cTAXw8ESyrBroXplgaLQmTVboHbnNxD43m7zRwyBbUN1_lQR9qA">
+</div>
+<h1 class="font-h2 text-h2 text-primary dark:text-primary-fixed-dim">GoHotel Service</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+</header>
+<main class="pt-24 px-container-padding">
+<!-- Header & Date -->
+<section class="mb-6">
+<h2 class="font-h1 text-h1 text-on-surface mb-1">Mening vazifalarim</h2>
+<p class="font-body-md text-on-surface-variant">Bugun, 24-Oktyabr</p>
+</section>
+<!-- Tabs Navigation -->
+<nav class="flex space-x-1 p-1 bg-surface-container rounded-xl mb-8 overflow-x-auto hide-scrollbar">
+<button class="flex-1 py-2.5 px-4 rounded-lg font-label-caps text-label-caps transition-all duration-200 bg-surface-container-lowest text-primary shadow-sm" id="tab-pending" onclick="switchTab('pending')">
+                Kutilmoqda
+            </button>
+<button class="flex-1 py-2.5 px-4 rounded-lg font-label-caps text-label-caps transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high" id="tab-progress" onclick="switchTab('progress')">
+                Jarayonda
+            </button>
+<button class="flex-1 py-2.5 px-4 rounded-lg font-label-caps text-label-caps transition-all duration-200 text-on-surface-variant hover:bg-surface-container-high" id="tab-completed" onclick="switchTab('completed')">
+                Yakunlangan
+            </button>
+</nav>
+<!-- Task List Container -->
+<div class="space-y-stack-gap" id="task-container">
+<!-- Task Card 1 (Pending) -->
+<div class="task-card bg-surface-container-lowest p-5 rounded-[18px] task-card-shadow border border-white/50 animate-fade-in group hover:task-card-active transition-all" data-category="pending">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-h1 text-h1 text-primary">302</span>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">3-Qavat • Standart</p>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-status-badge text-status-badge">
+                        Kutilmoqda
+                    </span>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">person</span>
+<span class="font-body-md">Abdullayev D. (Chiqish)</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+<span class="font-body-md">Muddat: 14:00 gacha</span>
+</div>
+</div>
+<button class="w-full py-3.5 bg-primary text-on-primary rounded-xl font-body-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">play_arrow</span>
+                    Boshlash
+                </button>
+</div>
+<!-- Task Card 2 (In Progress) -->
+<div class="task-card bg-surface-container-lowest p-5 rounded-[18px] task-card-active border-2 border-secondary/20 hidden" data-category="progress">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-h1 text-h1 text-primary">415</span>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">4-Qavat • Lyuks</p>
+</div>
+<span class="px-3 py-1 bg-[#FFF7ED] text-[#9A3412] rounded-full font-status-badge text-status-badge flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-[#EA580C] animate-pulse"></span>
+                        Jarayonda
+                    </span>
+</div>
+<div class="mb-4">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Tozalash jarayoni</span>
+<span class="font-label-caps text-label-caps text-primary">65%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-700" style="width: 65%"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="py-3 px-4 bg-surface-container text-primary rounded-xl font-label-caps text-label-caps active:scale-95 transition-all">
+                        Hisobot
+                    </button>
+<button class="py-3 px-4 bg-primary text-on-primary rounded-xl font-label-caps text-label-caps active:scale-95 transition-all">
+                        Yakunlash
+                    </button>
+</div>
+</div>
+<!-- Task Card 3 (Pending) -->
+<div class="task-card bg-surface-container-lowest p-5 rounded-[18px] task-card-shadow border border-white/50" data-category="pending">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-h1 text-h1 text-primary">108</span>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">1-Qavat • Oilaviy</p>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-status-badge text-status-badge">
+                        Kutilmoqda
+                    </span>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">priority_high</span>
+<span class="font-body-md text-error">Shoshilinch tozalash</span>
+</div>
+</div>
+<button class="w-full py-3.5 bg-primary text-on-primary rounded-xl font-body-lg active:scale-[0.98] transition-transform">
+                    Boshlash
+                </button>
+</div>
+<!-- Task Card 4 (Completed) -->
+<div class="task-card bg-surface-container-low/50 p-5 rounded-[18px] border border-outline-variant/30 hidden" data-category="completed">
+<div class="flex justify-between items-start mb-4 opacity-70">
+<div>
+<span class="font-h1 text-h1 text-on-surface-variant">204</span>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">2-Qavat • Standart</p>
+</div>
+<span class="px-3 py-1 bg-[#F0FDF4] text-[#166534] rounded-full font-status-badge text-status-badge flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                        Tozalangan
+                    </span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant/60">
+<span class="material-symbols-outlined text-[20px]">task_alt</span>
+<span class="font-body-md">Yakunlandi: 10:45</span>
+</div>
+<button class="text-primary font-label-caps text-label-caps underline underline-offset-4">Tafsilotlar</button>
+</div>
+</div>
+</div>
+<!-- Empty State (Hidden by default) -->
+<div class="hidden flex-col items-center justify-center py-20 text-center" id="empty-state">
+<div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-surface-variant text-[48px]">assignment_turned_in</span>
+</div>
+<h3 class="font-h2 text-h2 mb-2">Hozircha vazifalar yo'q</h3>
+<p class="font-body-md text-on-surface-variant max-w-[240px]">Ushbu bo'limda hech qanday vazifa topilmadi.</p>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<footer class="fixed bottom-6 left-6 right-6 z-50 flex justify-around items-center px-4 py-3 bg-surface-container-lowest/80 backdrop-blur-md shadow-lg rounded-full border border-outline-variant/30"><button class="flex flex-col items-center justify-center text-on-surface-variant/70 flex-1 py-1 hover:bg-surface-container-high/30 rounded-full transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="font-label-caps text-[10px] mt-0.5">Bosh sahifa</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary/10 text-primary rounded-full flex-1 py-1.5 transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[22px]">assignment</span>
+<span class="font-label-caps text-[10px] mt-0.5">Vazifalar</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant/70 flex-1 py-1 hover:bg-surface-container-high/30 rounded-full transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[22px]">photo_camera</span>
+<span class="font-label-caps text-[10px] mt-0.5">Hisobot</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant/70 flex-1 py-1 hover:bg-surface-container-high/30 rounded-full transition-all active:scale-95 duration-200 relative">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<span class="font-label-caps text-[10px] mt-0.5">Xabarlar</span>
+<span class="absolute top-1 right-1/3 w-1.5 h-1.5 bg-error rounded-full"></span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant/70 flex-1 py-1 hover:bg-surface-container-high/30 rounded-full transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="font-label-caps text-[10px] mt-0.5">Profil</span>
+</button></footer>
+<script>
+        function switchTab(category) {
+            // Update Tab Buttons
+            const tabs = ['pending', 'progress', 'completed'];
+            tabs.forEach(tab => {
+                const btn = document.getElementById(`tab-${tab}`);
+                if (tab === category) {
+                    btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+                    btn.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
+                } else {
+                    btn.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+                    btn.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+                }
+            });
+
+            // Filter Cards
+            const cards = document.querySelectorAll('.task-card');
+            let visibleCount = 0;
+            cards.forEach(card => {
+                if (card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                    card.classList.add('animate-fade-in');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Show Empty State if no cards visible
+            const emptyState = document.getElementById('empty-state');
+            if (visibleCount === 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+            }
+        }
+
+        // Add a simple fade-in animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.3s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>

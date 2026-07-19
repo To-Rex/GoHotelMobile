@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="uz" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Bildirishnomalar - Housekeeping Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#434655",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "outline-variant": "#c4c5d7",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59c",
+                        "surface-dim": "#cbdbf5",
+                        "primary": "#0037b0",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-primary-container": "#cad3ff",
+                        "surface-container-low": "#eff4ff",
+                        "on-surface": "#0b1c30",
+                        "on-secondary-container": "#fefcff",
+                        "surface": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "primary-fixed": "#dce1ff",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-primary-fixed": "#001551",
+                        "surface-tint": "#2151da",
+                        "outline": "#747686",
+                        "on-tertiary-fixed": "#390c00",
+                        "inverse-primary": "#b7c4ff",
+                        "surface-container": "#e5eeff",
+                        "secondary-container": "#2170e4",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#832700",
+                        "surface-variant": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "secondary": "#0058be",
+                        "on-secondary-fixed": "#001a42",
+                        "on-tertiary-container": "#ffc9b7",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary-container": "#a73400",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "primary-container": "#1d4ed8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "inline-gap": "12px",
+                        "container-padding": "20px",
+                        "stack-gap": "16px",
+                        "section-margin": "32px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "status-badge": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "status-badge": ["13px", { "lineHeight": "18px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .notification-card {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .notification-card:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 z-40 sticky bg-surface dark:bg-background shadow-sm flex justify-between items-center w-full px-container-padding py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border-2 border-primary/10">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a housekeeping supervisor in a crisp white uniform, smiling warmly against a soft-focus background of a luxury hotel hallway. The lighting is natural and bright, emphasizing a clean and trustworthy persona consistent with high-end hospitality standards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsBGtAhHBUsTFwnGNUbIaJFaqfpP4WztVqPiH9U_SewmKC_zQzHhXGo0a7T2A32dNRUwX6ZqKPgkxTsjbRhwJKscM_QiHmX9-XDYF-Yyn7f4bDJ3SEZmQJ2rBKbDr0SQjnEZCONmJjmYCHLJa1tTtpvGr9fv62SvWsRR8_zvotqcBpL5Coy7R-y2LQcWfks_0VWcSN1XawATG3AhqD0UM3gbhmUv7gIl9Nfw9Fu2rhBwHLzsa0Yui4Rw">
+</div>
+<h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed-dim tracking-tight">GoHotel Service</h1>
+</div>
+<button class="material-symbols-outlined p-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150 text-on-surface-variant">
+            settings
+        </button>
+</header>
+<main class="px-container-padding pt-6">
+<div class="flex justify-between items-end mb-6">
+<div>
+<span class="font-label-caps text-label-caps text-primary mb-1 block">YANGILANISHLAR</span>
+<h2 class="font-h2 text-h2 text-on-surface">Bildirishnomalar</h2>
+</div>
+<button class="text-primary font-label-caps text-label-caps hover:underline">Hammasini o'qilgan deb belgilash</button>
+</div>
+<!-- Notification List -->
+<div class="flex flex-col gap-stack-gap">
+<!-- Alert: Critical -->
+<div class="notification-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-error flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-body-lg text-on-surface">Favqulodda tozalash zarur</h3>
+<span class="font-label-caps text-[10px] text-outline">Hozirgina</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">402-xonada suv toshishi aniqlandi. Zudlik bilan yordam kerak.</p>
+<div class="mt-3 flex gap-2">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps active:scale-95 transition-transform">BORISH</button>
+<button class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-lg font-label-caps text-label-caps active:scale-95 transition-transform">RAD ETISH</button>
+</div>
+</div>
+</div>
+<!-- Alert: New Task -->
+<div class="notification-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-primary flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">assignment_add</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-body-lg text-on-surface">Yangi vazifa tayinlandi</h3>
+<span class="font-label-caps text-[10px] text-outline">12 daqiqa avval</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Sizga 5 ta xonani (501-505) umumiy tozalash vazifasi yuklatildi.</p>
+</div>
+</div>
+<!-- Alert: Problem Accepted -->
+<div class="notification-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-secondary flex gap-4 opacity-80">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-body-lg text-on-surface">Muammo qabul qilindi</h3>
+<span class="font-label-caps text-[10px] text-outline">1 soat avval</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">308-xonadagi konditsioner nosozligi texnik bo'lim tomonidan qabul qilindi.</p>
+</div>
+</div>
+<!-- Alert: Inventory -->
+<div class="notification-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-tertiary flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-body-lg text-on-surface">Inventarizatsiya hisoboti</h3>
+<span class="font-label-caps text-[10px] text-outline">3 soat avval</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Tozalash vositalari zahirasini to'ldirish vaqti keldi.</p>
+</div>
+</div>
+<!-- Alert: System -->
+<div class="notification-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-outline-variant flex gap-4 opacity-70">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-body-lg text-on-surface">Ish vaqti yakunlanmoqda</h3>
+<span class="font-label-caps text-[10px] text-outline">Kecha</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Smenangiz tugashiga 30 daqiqa qoldi. Hisobotlarni yakunlang.</p>
+</div>
+</div>
+</div>
+<!-- Decorative Illustration -->
+<div class="mt-section-margin bg-surface-container rounded-3xl p-8 flex flex-col items-center text-center">
+<div class="w-24 h-24 mb-4 opacity-20">
+<span class="material-symbols-outlined !text-[96px] text-primary">notifications_active</span>
+</div>
+<h4 class="font-h2 text-h2 text-primary">Barcha yangiliklardan xabardor bo'ling</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-[280px]">Sizning samaradorligingiz - bizning ustuvorligimiz. Muhim bildirishnomalarni o'tkazib yubormang.</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-6 left-6 right-6 z-50 flex justify-around items-center p-2 bg-surface-container-lowest/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-xl rounded-full border border-outline-variant/10">
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant w-14 h-12 rounded-full hover:bg-surface-container-high/50 transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">home</span>
+    <span class="font-label-caps text-[9px] mt-0.5 opacity-70">Bosh sahifa</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant w-14 h-12 rounded-full hover:bg-surface-container-high/50 transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">assignment</span>
+    <span class="font-label-caps text-[9px] mt-0.5 opacity-70">Vazifalar</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant w-14 h-12 rounded-full hover:bg-surface-container-high/50 transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">photo_camera</span>
+    <span class="font-label-caps text-[9px] mt-0.5 opacity-70">Hisobot</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-primary w-14 h-12 rounded-full transition-all active:scale-90 duration-200 relative" href="#">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+    <span class="font-label-caps text-[9px] mt-0.5 font-bold">Xabarlar</span>
+    <div class="absolute -bottom-1 w-1 h-1 bg-primary rounded-full"></div>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant w-14 h-12 rounded-full hover:bg-surface-container-high/50 transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-label-caps text-[9px] mt-0.5 opacity-70">Profil</span>
+  </a>
+</nav>
+<script>
+        // Micro-interaction for notification swipe (visual only)
+        document.querySelectorAll('.notification-card').forEach(card => {
+            let startX;
+            card.addEventListener('touchstart', e => {
+                startX = e.touches[0].clientX;
+            });
+            card.addEventListener('touchmove', e => {
+                let diff = e.touches[0].clientX - startX;
+                if (diff < -50) {
+                    card.style.transform = `translateX(${diff}px)`;
+                }
+            });
+            card.addEventListener('touchend', e => {
+                card.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body></html>

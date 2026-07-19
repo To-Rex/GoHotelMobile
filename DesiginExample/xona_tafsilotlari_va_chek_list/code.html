@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="uz" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title class="">Xona Tafsilotlari - GoHotel Service</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#434655",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "outline-variant": "#c4c5d7",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59c",
+                        "surface-dim": "#cbdbf5",
+                        "primary": "#0037b0",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-primary-container": "#cad3ff",
+                        "surface-container-low": "#eff4ff",
+                        "on-surface": "#0b1c30",
+                        "on-secondary-container": "#fefcff",
+                        "surface": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "primary-fixed": "#dce1ff",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-primary-fixed": "#001551",
+                        "surface-tint": "#2151da",
+                        "outline": "#747686",
+                        "on-tertiary-fixed": "#390c00",
+                        "inverse-primary": "#b7c4ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#0039b5",
+                        "on-error": "#ffffff",
+                        "tertiary": "#7f2500",
+                        "on-secondary-fixed-variant": "#004395",
+                        "surface-container": "#e5eeff",
+                        "secondary-container": "#2170e4",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#832700",
+                        "surface-variant": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "secondary": "#0058be",
+                        "on-secondary-fixed": "#001a42",
+                        "on-tertiary-container": "#ffc9b7",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary-container": "#a73400",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "primary-container": "#1d4ed8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "inline-gap": "12px",
+                        "container-padding": "20px",
+                        "stack-gap": "16px",
+                        "section-margin": "32px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "status-badge": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "status-badge": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .task-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .task-card:active {
+            transform: scale(0.98);
+        }
+        .checkbox-custom:checked + label .check-icon {
+            opacity: 1;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="bg-surface dark:bg-background shadow-sm flex justify-between items-center w-full px-container-padding py-4 sticky top-0 z-40">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 duration-150 p-2 -ml-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed-dim">Xona 402</h1>
+</div>
+<div class="flex items-center gap-2"><button class="flex items-center gap-1 text-primary active:scale-95 transition-transform">
+<span class="material-symbols-outlined">photo_camera</span>
+<span class="font-body-md">Hisobot</span>
+</button></div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto px-container-padding pb-32">
+<!-- Room Identity Section (Bento Inspired) -->
+<section class="mt-stack-gap grid grid-cols-2 gap-4">
+<!-- Floor & Details -->
+<div class="col-span-1 bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-col justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-outline uppercase">Qavat</p>
+<p class="font-h2 text-h2 text-on-surface">4-qavat</p>
+</div>
+<div class="mt-4 flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span class="font-body-md">Standart xona</span>
+</div>
+</div>
+<!-- Status & Priority -->
+<div class="col-span-1 bg-error-container p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+<p class="font-label-caps text-label-caps text-on-error-container uppercase">Holat</p>
+<div class="flex flex-col h-full justify-between">
+<p class="font-h2 text-h2 text-on-error-container">Shoshilinch</p>
+<div class="mt-4 inline-flex items-center bg-error text-white px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                        Priority
+                    </div>
+</div>
+</div>
+<!-- Progress Card -->
+<div class="col-span-2 bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+<div class="flex justify-between items-center mb-2">
+<p class="font-label-caps text-label-caps text-outline uppercase">Jarayon</p>
+<p class="font-body-lg text-primary" id="progress-text">0%</p>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full transition-all duration-500 ease-out" id="progress-bar" style="width: 0%"></div>
+</div>
+</div>
+</section>
+<!-- Checklist Title -->
+<h2 class="mt-section-margin mb-stack-gap font-h2 text-h2 text-on-surface">Tozalash chek-listi</h2>
+<!-- Checklist Section -->
+<div class="space-y-4">
+<!-- Task Item 1 -->
+<div class="task-card flex items-center bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-transparent hover:border-primary-fixed cursor-pointer transition-all">
+<div class="relative flex items-center justify-center">
+<input class="checkbox-custom peer appearance-none w-7 h-7 border-2 border-outline-variant rounded-lg checked:bg-primary checked:border-primary transition-all cursor-pointer" id="task1" type="checkbox">
+<span class="material-symbols-outlined absolute text-white opacity-0 check-icon pointer-events-none transition-opacity" style="font-variation-settings: 'wght' 600;">check</span>
+</div>
+<label class="ml-4 flex-1 cursor-pointer" for="task1">
+<span class="block font-body-lg text-on-surface">To'shaklarni almashtirish</span>
+<span class="block text-sm text-outline">Toza choyshablar va yostiq jildlari</span>
+</label>
+</div>
+<!-- Task Item 2 -->
+<div class="task-card flex items-center bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-transparent hover:border-primary-fixed cursor-pointer transition-all">
+<div class="relative flex items-center justify-center">
+<input class="checkbox-custom peer appearance-none w-7 h-7 border-2 border-outline-variant rounded-lg checked:bg-primary checked:border-primary transition-all cursor-pointer" id="task2" type="checkbox">
+<span class="material-symbols-outlined absolute text-white opacity-0 check-icon pointer-events-none transition-opacity" style="font-variation-settings: 'wght' 600;">check</span>
+</div>
+<label class="ml-4 flex-1 cursor-pointer" for="task2">
+<span class="block font-body-lg text-on-surface">Changlarni artish</span>
+<span class="block text-sm text-outline">Barcha yuzalar va jihozlar</span>
+</label>
+</div>
+<!-- Task Item 3 -->
+<div class="task-card flex items-center bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-transparent hover:border-primary-fixed cursor-pointer transition-all">
+<div class="relative flex items-center justify-center">
+<input class="checkbox-custom peer appearance-none w-7 h-7 border-2 border-outline-variant rounded-lg checked:bg-primary checked:border-primary transition-all cursor-pointer" id="task3" type="checkbox">
+<span class="material-symbols-outlined absolute text-white opacity-0 check-icon pointer-events-none transition-opacity" style="font-variation-settings: 'wght' 600;">check</span>
+</div>
+<label class="ml-4 flex-1 cursor-pointer" for="task3">
+<span class="block font-body-lg text-on-surface">Vannaxonani tozalash</span>
+<span class="block text-sm text-outline">Dezinfeksiya va toza sochiqlar</span>
+</label>
+</div>
+<!-- Task Item 4 -->
+<div class="task-card flex items-center bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-transparent hover:border-primary-fixed cursor-pointer transition-all">
+<div class="relative flex items-center justify-center">
+<input class="checkbox-custom peer appearance-none w-7 h-7 border-2 border-outline-variant rounded-lg checked:bg-primary checked:border-primary transition-all cursor-pointer" id="task4" type="checkbox">
+<span class="material-symbols-outlined absolute text-white opacity-0 check-icon pointer-events-none transition-opacity" style="font-variation-settings: 'wght' 600;">check</span>
+</div>
+<label class="ml-4 flex-1 cursor-pointer" for="task4">
+<span class="block font-body-lg text-on-surface">Mini-barni to'ldirish</span>
+<span class="block text-sm text-outline">Suv va ichimliklarni tekshirish</span>
+</label>
+</div>
+<!-- Task Item 5 -->
+<div class="task-card flex items-center bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-transparent hover:border-primary-fixed cursor-pointer transition-all">
+<div class="relative flex items-center justify-center">
+<input class="checkbox-custom peer appearance-none w-7 h-7 border-2 border-outline-variant rounded-lg checked:bg-primary checked:border-primary transition-all cursor-pointer" id="task5" type="checkbox">
+<span class="material-symbols-outlined absolute text-white opacity-0 check-icon pointer-events-none transition-opacity" style="font-variation-settings: 'wght' 600;">check</span>
+</div>
+<label class="ml-4 flex-1 cursor-pointer" for="task5">
+<span class="block font-body-lg text-on-surface">Pollarni yuvish</span>
+<span class="block text-sm text-outline">Gilam va qattiq yuzalar</span>
+</label>
+</div>
+</div>
+<!-- Extra Note Section -->
+<div class="mt-8 bg-secondary-container/10 p-5 rounded-xl border-l-4 border-secondary-container">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary-container">assignment_late</span>
+<div>
+<p class="font-body-lg text-on-surface">Eslatma</p>
+<p class="text-sm text-outline">Mehmon 14:00 da qaytishini bildirgan. Iltimos, tezroq yakunlang.</p>
+</div>
+</div>
+</div>
+<div class="fixed bottom-24 right-6 z-40">
+  <button id="complete-btn" class="w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center active:scale-95 transition-transform">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 32px;">check_circle</span>
+  </button>
+</div></main>
+<!-- Bottom Action Area -->
+<nav class="fixed bottom-6 left-8 right-8 bg-surface/80 backdrop-blur-sm rounded-full shadow-2xl z-50 px-8 py-3 flex justify-between items-center border border-outline-variant/10">
+  <a href="#" class="flex flex-col items-center gap-1 text-primary transition-all relative">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment</span>
+    <span class="text-[10px] font-bold uppercase tracking-widest">Vazifalar</span>
+    <div class="absolute -bottom-1 w-1 h-1 bg-primary rounded-full"></div>
+  </a>
+  <a href="#" class="flex flex-col items-center gap-1 text-outline/60 hover:text-primary transition-colors">
+    <span class="material-symbols-outlined">chat_bubble</span>
+    <span class="text-[10px] font-bold uppercase tracking-widest">Xabarlar</span>
+  </a>
+  <a href="#" class="flex flex-col items-center gap-1 text-outline/60 hover:text-primary transition-colors">
+    <span class="material-symbols-outlined">person</span>
+    <span class="text-[10px] font-bold uppercase tracking-widest">Profil</span>
+  </a>
+</nav>
+<!-- Success Feedback Overlay (Hidden by Default) -->
+<div class="fixed inset-0 bg-on-background/40 backdrop-blur-sm z-[60] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" id="success-overlay">
+<div class="bg-surface p-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-xs text-center transform scale-90 transition-transform duration-300" id="success-card">
+<div class="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white text-5xl">task_alt</span>
+</div>
+<h3 class="font-h1 text-h1 text-on-surface mb-2">Ajoyib!</h3>
+<p class="text-outline mb-6">Xona 402 muvaffaqiyatli tozalandi va tizimga kiritildi.</p>
+<button class="w-full bg-primary text-white py-3 rounded-xl font-bold" onclick="window.location.reload()">Keyingi vazifa</button>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.checkbox-custom');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const completeBtn = document.getElementById('complete-btn');
+            const successOverlay = document.getElementById('success-overlay');
+            const successCard = document.getElementById('success-card');
+
+            const updateProgress = () => {
+                const total = checkboxes.length;
+                const checked = Array.from(checkboxes).filter(c => c.checked).length;
+                const percentage = Math.round((checked / total) * 100);
+                
+                progressBar.style.width = `${percentage}%`;
+                progressText.innerText = `${percentage}%`;
+
+                // Add pulse effect to primary button when 100%
+                if (percentage === 100) {
+                    completeBtn.classList.add('animate-pulse');
+                    completeBtn.classList.replace('bg-primary', 'bg-secondary-container');
+                } else {
+                    completeBtn.classList.remove('animate-pulse');
+                    completeBtn.classList.replace('bg-secondary-container', 'bg-primary');
+                }
+            };
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+                // Allow tapping the whole card
+                checkbox.closest('.task-card').addEventListener('click', (e) => {
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                        updateProgress();
+                    }
+                });
+            });
+
+            completeBtn.addEventListener('click', () => {
+                const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
+                if (checkedCount < checkboxes.length) {
+                    alert('Iltimos, barcha vazifalarni bajaring.');
+                    return;
+                }
+
+                // Show success UI
+                successOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                successCard.classList.remove('scale-90');
+                successCard.classList.add('scale-100');
+            });
+        });
+    </script>
+</body></html>

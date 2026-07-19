@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="uz"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#434655",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "outline-variant": "#c4c5d7",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#dce9ff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb59c",
+                    "surface-dim": "#cbdbf5",
+                    "primary": "#0037b0",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-primary-container": "#cad3ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "on-secondary-container": "#fefcff",
+                    "surface": "#f8f9ff",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "inverse-surface": "#213145",
+                    "background": "#f8f9ff",
+                    "primary-fixed": "#dce1ff",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-primary-fixed": "#001551",
+                    "surface-tint": "#2151da",
+                    "outline": "#747686",
+                    "on-tertiary-fixed": "#390c00",
+                    "inverse-primary": "#b7c4ff",
+                    "surface-container": "#e5eeff",
+                    "secondary-container": "#2170e4",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#832700",
+                    "surface-variant": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "secondary": "#0058be",
+                    "on-secondary-fixed": "#001a42",
+                    "on-tertiary-container": "#ffc9b7",
+                    "tertiary-fixed": "#ffdbcf",
+                    "tertiary-container": "#a73400",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "primary-container": "#1d4ed8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "inline-gap": "12px",
+                    "container-padding": "20px",
+                    "stack-gap": "16px",
+                    "section-margin": "32px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "h1": ["Inter"],
+                    "h2": ["Inter"],
+                    "status-badge": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "status-badge": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f8f9ff;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .active-ring:focus {
+            ring: 2px;
+            ring-color: #0037b0;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-background shadow-sm sticky top-0 z-50 flex justify-between items-center w-full px-container-padding py-4">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 duration-150 p-1" onclick="window.history.back()">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-h1 text-h1 text-primary">Muammo haqida xabar berish</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant">report_problem</span>
+</div>
+</header>
+<main class="px-container-padding py-6 max-w-2xl mx-auto pb-32">
+<!-- Header Visual Card (Atmospheric) -->
+<div class="relative overflow-hidden rounded-xl h-32 mb-8 bg-surface-container-high flex items-center px-6">
+<div class="z-10">
+<h2 class="font-h2 text-h2 text-primary mb-1">Yordam kerakmi?</h2>
+<p class="font-body-md text-on-surface-variant max-w-[200px]">Xona yoki uskunalar bilan bog'liq muammoni tavsiflang.</p>
+</div>
+<div class="absolute right-0 top-0 h-full w-1/2 opacity-20 pointer-events-none">
+<div class="w-full h-full bg-cover bg-center" data-alt="A clean, minimalist 5-star hotel room interior with soft morning light, emphasizing high-end hospitality and professional maintenance. The aesthetic is bright, airy, and organized, using a palette of white, light blue, and grey to convey cleanliness and efficiency. The lighting is natural and sophisticated." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBK1QwilM19vujYL4H2VTcqw6rKWr0uNY8QdRN0pBH8_p6I1GWd6KVfIeJSJag9gQ_FiNMJGhcOAMYEPo-ppzGuaInNuFVvYrmn8mcKH4b8ZRgWQvf5YfseCGMcIGCaoI5oGu414_WSFvHcyHnrlhTOW6fQjGf8bHePfPFxiMuHVOy93y5BuTT-5hjlVE5zulI7QqyhE-qC3HvCcCPzJ7uiubmAV8_2J3g9fKzbE_WlMVXXE1EKyhHxMw')"></div>
+</div>
+</div>
+<!-- Form Section -->
+<form class="space-y-stack-gap">
+<!-- Category Selection -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-1">KATEGORIYA</label>
+<div class="grid grid-cols-2 gap-3">
+<button class="category-btn flex flex-col items-center justify-center p-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-high transition-all active:scale-95 group border-primary bg-surface-container" type="button">
+<span class="material-symbols-outlined text-primary mb-2 group-hover:scale-110 transition-transform">broken_image</span>
+<span class="font-body-md text-on-surface">Siniq buyum</span>
+</button>
+<button class="category-btn flex flex-col items-center justify-center p-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-high transition-all active:scale-95 group" type="button">
+<span class="material-symbols-outlined text-on-surface-variant mb-2 group-hover:scale-110 transition-transform">engineering</span>
+<span class="font-body-md text-on-surface">Texnik nosozlik</span>
+</button>
+<button class="category-btn flex flex-col items-center justify-center p-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-high transition-all active:scale-95 group" type="button">
+<span class="material-symbols-outlined text-on-surface-variant mb-2 group-hover:scale-110 transition-transform">water_drop</span>
+<span class="font-body-md text-on-surface">Suv sizishi</span>
+</button>
+<button class="category-btn flex flex-col items-center justify-center p-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-high transition-all active:scale-95 group" type="button">
+<span class="material-symbols-outlined text-on-surface-variant mb-2 group-hover:scale-110 transition-transform">more_horiz</span>
+<span class="font-body-md text-on-surface">Boshqa</span>
+</button>
+</div>
+</div>
+<!-- Comment Section -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-1" for="comment">IZOH</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl p-4 font-body-md focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all resize-none" id="comment" placeholder="Muammoning tafsilotlarini kiriting..." rows="4"></textarea>
+</div>
+<!-- Photo Upload Section -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-1">RASM YUKLASH</label>
+<div class="flex gap-3">
+<button class="flex flex-col items-center justify-center w-24 h-24 bg-surface-container-lowest border-2 border-dashed border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group" type="button">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">add_a_photo</span>
+</button>
+<!-- Placeholder for uploaded images -->
+<div class="relative w-24 h-24 rounded-xl overflow-hidden shadow-sm group">
+<div class="w-full h-full bg-cover bg-center" data-alt="Close-up macro photography of a small structural crack in a polished white ceramic bathroom wall, professional lighting focusing on the texture and detail of the damage. The aesthetic is clean and forensic, suitable for a technical maintenance report in a luxury hotel environment. High contrast and sharp focus." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjQCo9ciiYoyQZu3mmFoKOXSF4M7OzSeymo9Q6YtZ4tzKgYEun9vxLUbfP1E6mss4Vkvg9U4RUmy8j_u0vnG65IPiMr2iTY0bVWnb9AkdcyYmFyQ1HPfcBXf8He-S0hhqOAKcDq3sQvxdGr5i0uma-f8-qPcGlhPSNq1nWWR_ORLy6XOhg1HsNRcJXxtDiN136bs7vymk_L3PiAOLOMup3V2vaQS8lHQEVKo4h-VIOmE1oizT5og3Xeg')"></div>
+<button class="absolute top-1 right-1 bg-error text-on-error rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<p class="font-body-md text-[12px] text-on-surface-variant opacity-70 mt-1">Kamida bitta rasm ilova qiling (Max 3 ta).</p>
+</div>
+</form>
+<!-- Submit Action -->
+<div class="fixed bottom-0 left-0 w-full p-container-padding bg-surface/80 backdrop-blur-md">
+<button class="w-full h-[56px] bg-primary text-on-primary font-body-lg rounded-full flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+                Xabar yuborish
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Invisible as per Relevance Check, but structured if needed) -->
+<!-- Suppressed for transactional screen focus -->
+<script>
+        // Micro-interaction for category selection
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active classes from all
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.classList.remove('border-primary', 'bg-surface-container');
+                    const icon = b.querySelector('.material-symbols-outlined');
+                    if(icon) icon.classList.remove('text-primary');
+                    if(icon) icon.classList.add('text-on-surface-variant');
+                });
+                
+                // Add active classes to selected
+                this.classList.add('border-primary', 'bg-surface-container');
+                const activeIcon = this.querySelector('.material-symbols-outlined');
+                if(activeIcon) {
+                    activeIcon.classList.remove('text-on-surface-variant');
+                    activeIcon.classList.add('text-primary');
+                }
+            });
+        });
+
+        // Simple form validation visual cue
+        const submitBtn = document.querySelector('button.bg-primary');
+        submitBtn.addEventListener('click', () => {
+            submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Yuborilmoqda...';
+            setTimeout(() => {
+                submitBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Muvaffaqiyatli!';
+                submitBtn.classList.remove('bg-primary');
+                submitBtn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+                
+                setTimeout(() => {
+                    window.history.back();
+                }, 1000);
+            }, 1500);
+        });
+    </script>
+</body></html>

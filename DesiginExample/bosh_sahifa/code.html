@@ -1,0 +1,268 @@
+<!DOCTYPE html><html lang="uz" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title class="">GoHotel Service - Bosh sahifa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#434655",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "outline-variant": "#c4c5d7",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#dce9ff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb59c",
+                    "surface-dim": "#cbdbf5",
+                    "primary": "#0037b0",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-primary-container": "#cad3ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "on-secondary-container": "#fefcff",
+                    "surface": "#f8f9ff",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "inverse-surface": "#213145",
+                    "background": "#f8f9ff",
+                    "primary-fixed": "#dce1ff",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-primary-fixed": "#001551",
+                    "surface-tint": "#2151da",
+                    "outline": "#747686",
+                    "on-tertiary-fixed": "#390c00",
+                    "inverse-primary": "#b7c4ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed-variant": "#0039b5",
+                    "on-error": "#ffffff",
+                    "tertiary": "#7f2500",
+                    "on-secondary-fixed-variant": "#004395",
+                    "surface-container": "#e5eeff",
+                    "secondary-container": "#2170e4",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#832700",
+                    "surface-variant": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "secondary": "#0058be",
+                    "on-secondary-fixed": "#001a42",
+                    "on-tertiary-container": "#ffc9b7",
+                    "tertiary-fixed": "#ffdbcf",
+                    "tertiary-container": "#a73400",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "primary-container": "#1d4ed8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "inline-gap": "12px",
+                    "container-padding": "20px",
+                    "stack-gap": "16px",
+                    "section-margin": "32px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "h1": ["Inter"],
+                    "h2": ["Inter"],
+                    "status-badge": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "status-badge": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9ff; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .circular-progress {
+            background: conic-gradient(#1d4ed8 var(--progress), #e5eeff 0deg);
+        }
+    </style>
+</head>
+<body class="text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-background shadow-sm flex justify-between items-center w-full px-container-padding py-4 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border-2 border-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a hospitality staff member wearing a clean, modern navy blue uniform. The background is a blurred high-end hotel lobby with warm, soft lighting. The image captures a sense of reliability, professionalism, and friendly service, consistent with a five-star hotel brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA6Uhb8AmH2ZPOh_68NDQXYFrMZGJBp_TTc7BtOjoGNS7xaWzPYEyTjR0vKkd-lmhvZiLdFxQiJYQ4WsJbq-h80tP2eg0FNlXMVcX21LD6pVxVFmKVE5ua9yzN_Fe0c8ktZ3Gd0JNqshvtCGpE6W1YWyIW7nXBnPvYrPyieHYj9hxrn076Uy3NaJKz00NmLyKK4SH5MgSJWdXUpuSvO0JkvDxg4swNGuk2iuaW4eNguTRMqFLLJuoY6g">
+</div>
+<div class="flex flex-col">
+<span class="font-h2 text-h2 text-primary">GoHotel Service</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Xodim profili</span>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary" data-icon="settings">settings</span>
+</button>
+</header>
+<main class="px-container-padding py-6 max-w-2xl mx-auto">
+<!-- Hero Section: Completion Percentage -->
+<section class="mb-section-margin">
+<div class="bg-surface-container-lowest rounded-[18px] p-6 shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-center justify-between">
+<div>
+<h2 class="font-h1 text-h1 text-on-surface mb-1">Xush kelibsiz!</h2>
+<p class="font-body-md text-on-surface-variant">Bugungi smenangiz muvaffaqiyatli o'tmoqda.</p>
+</div>
+<div class="relative flex items-center justify-center">
+<div class="w-24 h-24 rounded-full circular-progress flex items-center justify-center" style="--progress: 270deg;">
+<div class="w-20 h-20 bg-surface-container-lowest rounded-full flex flex-center items-center justify-center flex-col">
+<span class="font-h2 text-h2 text-primary">75%</span>
+</div>
+</div>
+<div class="absolute -bottom-2 bg-primary px-2 py-0.5 rounded-full">
+<span class="text-[10px] font-bold text-white uppercase tracking-wider">Bajarilish</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Grid -->
+<section class="grid grid-cols-3 gap-4 mb-section-margin">
+<div class="bg-white p-4 rounded-[18px] shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-secondary mb-2" data-icon="check_circle">check_circle</span>
+<span class="font-h2 text-h2 text-on-surface">12</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Yakunlandi</span>
+</div>
+<div class="bg-white p-4 rounded-[18px] shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="pending">pending</span>
+<span class="font-h2 text-h2 text-on-surface">4</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Kutilmoqda</span>
+</div>
+<div class="bg-white p-4 rounded-[18px] shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-error mb-2" data-icon="report_problem">report_problem</span>
+<span class="font-h2 text-h2 text-on-surface">1</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Muammo</span>
+</div>
+</section>
+<!-- Tasks List Header -->
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-h2 text-h2 text-on-surface">Bugungi vazifalar</h3>
+<button class="text-primary font-label-caps text-label-caps flex items-center gap-1 hover:underline">
+                Hammasi <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Tasks Feed -->
+<div class="space-y-stack-gap">
+<!-- Room Card 1: In Progress -->
+<div class="bg-white rounded-[18px] p-5 shadow-[0_8px_20px_rgba(0,0,0,0.08)] border-l-4 border-primary transition-all active:scale-[0.98]">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-h1 text-h1 text-on-surface">402-xona</span>
+<p class="font-body-md text-on-surface-variant">Standart Double • Mr. Alisher</p>
+</div>
+<span class="bg-secondary-container text-on-secondary-container font-status-badge text-status-badge px-3 py-1 rounded-full">
+                        Jarayonda
+                    </span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mb-4 overflow-hidden">
+<div class="bg-primary h-full w-[60%] rounded-full"></div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-white py-3 rounded-xl font-body-lg active:scale-95 transition-transform">
+                        Yakunlash
+                    </button>
+<button class="px-4 bg-surface-container text-primary rounded-xl active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+</button>
+</div>
+</div>
+<!-- Room Card 2: To be Cleaned -->
+<div class="bg-white rounded-[18px] p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] opacity-90 transition-all hover:opacity-100">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-h1 text-h1 text-on-surface">315-xona</span>
+<p class="font-body-md text-on-surface-variant">Lux Suite • Bo'shatilgan</p>
+</div>
+<span class="bg-surface-variant text-on-surface-variant font-status-badge text-status-badge px-3 py-1 rounded-full">
+                        Tozalanishi kerak
+                    </span>
+</div>
+<button class="w-full bg-secondary text-white py-3 rounded-xl font-body-lg active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
+                    Boshlash
+                </button>
+</div>
+<!-- Room Card 3: Task Alert -->
+<div class="bg-error-container text-on-error-container rounded-[18px] p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-error">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<span class="font-h2 text-h2">108-xona</span>
+</div>
+<span class="bg-error text-white font-status-badge text-status-badge px-3 py-1 rounded-full">
+                        Shoshilinch
+                    </span>
+</div>
+<p class="font-body-md mb-4">Sochiqlarni almashtirish so'raldi (Guest Request).</p>
+<button class="w-full bg-on-error-container text-white py-3 rounded-xl font-body-lg active:scale-95 transition-transform">
+                    Bajarish
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-6 left-6 right-6 z-50 bg-white/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] flex justify-around items-center px-4 py-3 rounded-full border border-white/20">
+  <!-- Bosh sahifa (Active) -->
+  <a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-full w-14 h-14 transition-all active:scale-95 duration-200" href="#">
+    <span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+    <span class="text-[9px] font-medium uppercase tracking-[0.05em] mt-1">Bosh</span>
+  </a>
+  <!-- Vazifalar -->
+  <a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant w-14 h-14 hover:text-primary transition-all active:scale-95 duration-200" href="#">
+    <span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+    <span class="text-[9px] font-medium uppercase tracking-[0.05em] mt-1">Vazifalar</span>
+  </a>
+  <!-- Hisobot -->
+  <a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant w-14 h-14 hover:text-primary transition-all active:scale-95 duration-200" href="#">
+    <span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+    <span class="text-[9px] font-medium uppercase tracking-[0.05em] mt-1">Hisobot</span>
+  </a>
+  <!-- Xabarlar -->
+  <a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant w-14 h-14 hover:text-primary transition-all active:scale-95 duration-200" href="#">
+    <div class="relative">
+      <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+      <span class="text-[9px] font-medium uppercase tracking-[0.05em] mt-1"></span>
+    </div>
+    <span class="text-[9px] font-medium uppercase tracking-[0.05em] mt-1">Xabarlar</span>
+  </a>
+  <!-- Profil -->
+  <a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant w-14 h-14 hover:text-primary transition-all active:scale-95 duration-200" href="#">
+    <span class="material-symbols-outlined" data-icon="person">person</span>
+    <span class="text-[9px] font-medium uppercase tracking-[0.05em] mt-1">Profil</span>
+  </a>
+</nav>
+<script>
+        // Simple micro-interaction for the progress circle
+        // In a real app, this would be reactive
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.active\\:scale-95');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Feedback effect handled by Tailwind classes
+                });
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="uz" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title class="">Profil va Sozlamalar - GoHotel Service</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#434655",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "outline-variant": "#c4c5d7",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59c",
+                        "surface-dim": "#cbdbf5",
+                        "primary": "#0037b0",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-primary-container": "#cad3ff",
+                        "surface-container-low": "#eff4ff",
+                        "on-surface": "#0b1c30",
+                        "on-secondary-container": "#fefcff",
+                        "surface": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "primary-fixed": "#dce1ff",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-primary-fixed": "#001551",
+                        "surface-tint": "#2151da",
+                        "outline": "#747686",
+                        "on-tertiary-fixed": "#390c00",
+                        "inverse-primary": "#b7c4ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#0039b5",
+                        "on-error": "#ffffff",
+                        "tertiary": "#7f2500",
+                        "on-secondary-fixed-variant": "#004395",
+                        "surface-container": "#e5eeff",
+                        "secondary-container": "#2170e4",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#832700",
+                        "surface-variant": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "secondary": "#0058be",
+                        "on-secondary-fixed": "#001a42",
+                        "on-tertiary-container": "#ffc9b7",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary-container": "#a73400",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "primary-container": "#1d4ed8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "inline-gap": "12px",
+                        "container-padding": "20px",
+                        "stack-gap": "16px",
+                        "section-margin": "32px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "status-badge": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "status-badge": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f8f9ff;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .profile-mesh {
+            background: radial-gradient(circle at top left, #dce9ff 0%, transparent 70%),
+                        radial-gradient(circle at bottom right, #eff4ff 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-background shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-container-padding py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female housekeeping staff member for a luxury hotel, wearing a clean, modern navy blue uniform. The lighting is soft and professional, set against a blurred high-end hotel lobby interior. The image has a clean, high-key aesthetic with a premium feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcyB7rq7JVxjEVN1fBHZH11KoqozApAGt_5bXwXMowf9HrkTXSWgSVltTY3-efNT13LxoIUZ8X-obpZ6ORfVuG--zaHtqzoLnkJRDvpOUITtaoRT7tSL7RfZmxchOCY7u6CvgzAZ2Gm1AQDls8go5qqKNyJUq8RhCYErs6JG2Dd1vsdDOLPBr80uUnBfQ-YiKDMc5NJJk0TcPavNhymKBZzTY4QaGfU3aIxPPS-6FdTZrv_geFhXRQ0Q">
+</div>
+<h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed-dim">Profil</h1>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<main class="max-w-md mx-auto px-container-padding pt-6 pb-24 space-y-6">
+<!-- Profile Header Card (Asymmetric Bento Style) -->
+<section class="profile-mesh p-6 rounded-[18px] shadow-sm border border-white/50 relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="font-label-caps text-label-caps text-primary uppercase tracking-wider mb-1">Xodim ma'lumoti</p>
+<h2 class="font-h1 text-h1 text-on-background">Malika Axmedova</h2>
+<span class="inline-flex items-center px-3 py-1 mt-2 rounded-full bg-primary text-white font-status-badge text-status-badge">
+                            Housekeeper
+                        </span>
+</div>
+<div class="bg-white/90 p-2 rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">badge</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/60 p-4 rounded-xl">
+<p class="font-label-caps text-label-caps text-outline mb-1">Bo'lim</p>
+<p class="font-body-lg text-body-lg text-on-surface">Xizmat ko'rsatish</p>
+</div>
+<div class="bg-white/60 p-4 rounded-xl">
+<p class="font-label-caps text-label-caps text-outline mb-1">ID raqam</p>
+<p class="font-body-lg text-body-lg text-on-surface">#HP-90234</p>
+</div>
+</div>
+</div>
+<!-- Decorative circle -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
+</section>
+<!-- Settings List Section -->
+<section class="space-y-4">
+<h3 class="font-label-caps text-label-caps text-outline px-1">Tizim sozlamalari</h3>
+<div class="bg-surface-container-lowest rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
+<!-- Tilni o'zgartirish -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container-high transition-all active:scale-[0.98] duration-150 border-b border-surface-container">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="language">language</span>
+</div>
+<div class="text-left">
+<p class="font-body-lg text-body-lg text-on-surface">Tilni o'zgartirish</p>
+<p class="text-[12px] text-on-surface-variant">O'zbekcha</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</button>
+<!-- Maxfiylik -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container-high transition-all active:scale-[0.98] duration-150 border-b border-surface-container">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="lock">lock</span>
+</div>
+<div class="text-left">
+<p class="font-body-lg text-body-lg text-on-surface">Maxfiylik</p>
+<p class="text-[12px] text-on-surface-variant">Xavfsizlik va kirish nazorati</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</button>
+<!-- Yordam -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container-high transition-all active:scale-[0.98] duration-150">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="help_outline">help_outline</span>
+</div>
+<div class="text-left">
+<p class="font-body-lg text-body-lg text-on-surface">Yordam</p>
+<p class="text-[12px] text-on-surface-variant">Qo'llab-quvvatlash xizmati</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Stats Section (Mini Bento) -->
+<section class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-highest p-4 rounded-[16px] flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">timer</span>
+<div>
+<p class="font-h2 text-h2">124</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Ish soatlari</p>
+</div>
+</div>
+<div class="bg-secondary-container p-4 rounded-[16px] text-on-secondary-container flex flex-col gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<div>
+<p class="font-h2 text-h2">4.9</p>
+<p class="font-label-caps text-label-caps opacity-80">Reyting</p>
+</div>
+</div>
+</section>
+<!-- Log Out Section -->
+<section class="pt-4">
+<button class="w-full flex items-center justify-center gap-2 p-4 bg-error-container text-on-error-container rounded-[16px] font-body-lg hover:bg-opacity-80 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Chiqish
+            </button>
+<p class="text-center text-[12px] text-outline mt-6">Versiya 2.4.0 (Build 89)</p>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-6 left-6 right-6 z-50 flex justify-around items-center py-3 px-4 bg-white/90 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-full border border-white/50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-1 rounded-full hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-tight opacity-70">Bosh sahifa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-1 rounded-full hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-tight opacity-70">Vazifalar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-1 rounded-full hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="photo_camera">photo_camera</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-tight opacity-70">Hisobot</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-1 rounded-full hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-tight opacity-70">Xabarlar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary px-4 py-1 rounded-full relative active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-tight opacity-70">Profil</span>
+<div class="absolute -bottom-1 w-1 h-1 bg-primary rounded-full"></div></a>
+</nav>
+<script>
+        // Micro-interaction for feedback
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                let ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '100px';
+                ripple.style.height = '100px';
+                ripple.style.background = 'rgba(0, 55, 176, 0.1)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.transform = 'translate(-50%, -50%) scale(0)';
+                ripple.style.transition = 'transform 0.4s ease-out, opacity 0.4s';
+                ripple.style.pointerEvents = 'none';
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.style.transform = 'translate(-50%, -50%) scale(4)';
+                    ripple.style.opacity = '0';
+                }, 50);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 450);
+            });
+        });
+    </script>
+</body></html>

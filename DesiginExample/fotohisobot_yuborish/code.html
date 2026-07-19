@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="uz" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Fotohisobot - Housekeeping Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#1d4ed8",
+                    "surface-variant": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "secondary": "#0058be",
+                    "on-tertiary-fixed": "#390c00",
+                    "on-secondary-fixed-variant": "#004395",
+                    "on-background": "#0b1c30",
+                    "on-tertiary-fixed-variant": "#832700",
+                    "inverse-primary": "#b7c4ff",
+                    "on-tertiary-container": "#ffc9b7",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-primary-fixed": "#001551",
+                    "inverse-surface": "#213145",
+                    "on-primary-container": "#cad3ff",
+                    "surface": "#f8f9ff",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "outline-variant": "#c4c5d7",
+                    "surface-container": "#e5eeff",
+                    "secondary-container": "#2170e4",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffdbcf",
+                    "tertiary": "#7f2500",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#001a42",
+                    "surface-tint": "#2151da",
+                    "outline": "#747686",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed": "#dce1ff",
+                    "primary": "#0037b0",
+                    "on-secondary-container": "#fefcff",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#a73400",
+                    "on-primary-fixed-variant": "#0039b5",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container-high": "#dce9ff",
+                    "on-surface": "#0b1c30",
+                    "surface-dim": "#cbdbf5",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-error-container": "#93000a",
+                    "on-surface-variant": "#434655",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "background": "#f8f9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "16px",
+                    "section-margin": "32px",
+                    "container-padding": "20px",
+                    "inline-gap": "12px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "h2": ["Inter"],
+                    "status-badge": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h1": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "status-badge": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9ff; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-elevation {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .active-elevation {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top AppBar -->
+<header class="bg-surface dark:bg-background shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-container-padding py-4">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 duration-150 p-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed-dim">GoHotel Service</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a hospitality staff member wearing a clean, modern uniform. The lighting is soft and studio-quality against a minimalist neutral background, reflecting a high-end luxury hotel aesthetic. The image is crisp and conveys reliability and professionalism within the Housekeeping Pro brand system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwANDs2bKNWmzPduCsg_TYvsRevO1KaT5ry4fqTjhwg009CjAuh1ClMz1eed6slP-cmnX_GuxIdqNe69K6En_aODz9ApN_wo96RjcsmNbhqYXlNPCLlhzWNtGfJnQe4qVhv_FaqxcjrtsOXg_Mm2o9YAx7gWA_v1sjOfzJNfAN38UL9vL5M6d84mG1Ij7hN7y03AwKquf5Q3qwxjdSf_ebk9CW6RfW94EVBfKppGoEdjeBpK3VgnZCdQ">
+</div>
+</div>
+</div>
+</header>
+<main class="px-container-padding mt-6 max-w-2xl mx-auto">
+<!-- Room Info Card -->
+<div class="glass-card rounded-[18px] p-6 mb-6 soft-elevation border border-white/50">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-1">XONA RAQAMI</span>
+<h2 class="font-h1 text-[32px] font-extrabold text-primary">402</h2>
+</div>
+<div class="bg-surface-container-highest px-4 py-2 rounded-full">
+<span class="font-status-badge text-status-badge text-primary">Standart Lyuks</span>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant">Xona tozalash ishlari yakunlandi. Iltimos, hisobotni tasdiqlash uchun xonaning holatini suratga oling.</p>
+</div>
+<!-- Photo Upload Grid -->
+<div class="space-y-4">
+<h3 class="font-h2 text-h2 text-on-surface px-1">Fotohisobot</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Upload Slot 1: Bed -->
+<div class="group relative aspect-square bg-surface-container-low rounded-[18px] border-2 border-dashed border-outline-variant hover:border-primary transition-all flex flex-col items-center justify-center cursor-pointer overflow-hidden active:scale-95 duration-150">
+<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-primary/5"></div>
+<span class="material-symbols-outlined text-[32px] text-primary mb-2">king_bed</span>
+<span class="font-label-caps text-label-caps text-primary text-center px-4">YOTOQ QISMI</span>
+<p class="text-[10px] text-outline mt-1">Rasm yuklash uchun bosing</p>
+</div>
+<!-- Upload Slot 2: Bathroom -->
+<div class="group relative aspect-square bg-surface-container-low rounded-[18px] border-2 border-dashed border-outline-variant hover:border-primary transition-all flex flex-col items-center justify-center cursor-pointer overflow-hidden active:scale-95 duration-150">
+<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-primary/5"></div>
+<span class="material-symbols-outlined text-[32px] text-primary mb-2">shower</span>
+<span class="font-label-caps text-label-caps text-primary text-center px-4">VANNAXONA</span>
+<p class="text-[10px] text-outline mt-1">Rasm yuklash uchun bosing</p>
+</div>
+<!-- Upload Slot 3: General View -->
+<div class="group relative aspect-square bg-surface-container-low rounded-[18px] border-2 border-dashed border-outline-variant hover:border-primary transition-all flex flex-col items-center justify-center cursor-pointer overflow-hidden active:scale-95 duration-150">
+<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-primary/5"></div>
+<span class="material-symbols-outlined text-[32px] text-primary mb-2">photo_camera</span>
+<span class="font-label-caps text-label-caps text-primary text-center px-4">UMUMIY KO'RINISH</span>
+<p class="text-[10px] text-outline mt-1">Rasm yuklash uchun bosing</p>
+</div>
+</div>
+<!-- Pre-filled Example (Preview State) -->
+<div class="mt-6">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-3">YUKLANGAN RASMLAR NAMUNASI</span>
+<div class="grid grid-cols-3 gap-2">
+<div class="relative h-24 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover" data-alt="A high-quality interior photograph of a pristine, freshly made hotel bed with crisp white linens and decorative pillows. The lighting is warm and inviting, emphasizing the cleanliness and premium standards of a luxury hotel suite. The shot is clear, sharp, and reflects the meticulous work of professional housekeeping." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnm7DxncNiHKdjbN5I-Fvkf3wSOK_SiwcLs6a2yv3NmGzymPokplSKngXVZrb_Ld1NLC0LY0WzPPwvwaAFiJOBTRI9I60vr0kpdcuuPzpE_tLNcPswnanuKUBvTin6KzvdW9Drl8wkSVkCd1DuVicNBeYBZiE01xqQEsuN8eLM0-6kiOzTaSTcKNusNJfb56gXMtNZFklqpBXlRr-EqE3vy_zynu2Bw7x_M7cKdMBNpMCtyjj_Fai0MQ">
+<button class="absolute top-1 right-1 bg-error text-white rounded-full p-1 scale-0 group-hover:scale-100 transition-transform">
+<span class="material-symbols-outlined text-xs">close</span>
+</button>
+</div>
+<div class="relative h-24 rounded-lg overflow-hidden border border-outline-variant flex items-center justify-center bg-white">
+<span class="material-symbols-outlined text-outline">add_a_photo</span>
+</div>
+<div class="relative h-24 rounded-lg overflow-hidden border border-outline-variant flex items-center justify-center bg-white">
+<span class="material-symbols-outlined text-outline">add_a_photo</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Comments Section -->
+<div class="mt-8">
+<label class="font-label-caps text-label-caps text-on-surface-variant block mb-2 px-1" for="comment">QO'SHIMCHA IZOH (IXTIYORIY)</label>
+<textarea class="w-full rounded-[18px] border-outline-variant bg-surface-container-lowest focus:ring-primary focus:border-primary p-4 font-body-md text-on-surface placeholder:text-outline/50 transition-all soft-elevation" id="comment" placeholder="Xona holati haqida qo'shimcha ma'lumot yozing..." rows="4"></textarea>
+</div>
+<!-- Action Buttons -->
+<div class="mt-10 flex flex-col gap-4">
+<button class="w-full h-14 bg-primary text-on-primary font-bold rounded-full active:scale-95 duration-200 shadow-lg flex items-center justify-center gap-2 hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined">send</span>
+<span class="">Hisobotni yuborish</span>
+</button>
+<button class="w-full h-14 bg-surface-container-high text-primary font-bold rounded-full active:scale-95 duration-200 flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="">Bekor qilish</span>
+</button>
+</div>
+</main>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-6 left-6 right-6 z-50 flex justify-around items-center px-4 py-3 bg-white/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-lg rounded-full border border-white/20">
+  <a class="flex flex-col items-center justify-center text-primary px-4 py-1 transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">home</span>
+    <span class="font-label-caps text-[10px] mt-0.5 opacity-80">Bosh sahifa</span>
+    <div class="w-1 h-1 bg-primary rounded-full mt-1"></div>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 px-4 py-1 hover:text-primary transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">assignment</span>
+    <span class="font-label-caps text-[10px] mt-0.5">Vazifalar</span>
+    <div class="w-1 h-1 bg-transparent rounded-full mt-1"></div>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 px-4 py-1 hover:text-primary transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">qr_code_scanner</span>
+    <span class="font-label-caps text-[10px] mt-0.5">Skaner</span>
+    <div class="w-1 h-1 bg-transparent rounded-full mt-1"></div>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 px-4 py-1 hover:text-primary transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">notifications</span>
+    <span class="font-label-caps text-[10px] mt-0.5">Xabarlar</span>
+    <div class="w-1 h-1 bg-transparent rounded-full mt-1"></div>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 px-4 py-1 hover:text-primary transition-all active:scale-90 duration-200" href="#">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-label-caps text-[10px] mt-0.5">Profil</span>
+    <div class="w-1 h-1 bg-transparent rounded-full mt-1"></div>
+  </a>
+</nav>
+<script>
+        // Micro-interactions for interactive elements
+        document.querySelectorAll('.cursor-pointer').forEach(el => {
+            el.addEventListener('mousedown', () => el.classList.add('active-elevation'));
+            el.addEventListener('mouseup', () => el.classList.remove('active-elevation'));
+            el.addEventListener('mouseleave', () => el.classList.remove('active-elevation'));
+        });
+
+        // Simple validation feedback logic
+        const submitBtn = document.querySelector('button.bg-primary');
+        submitBtn.addEventListener('click', () => {
+            submitBtn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Yuborilmoqda...</span>
+            `;
+            setTimeout(() => {
+                alert("Hisobot muvaffaqiyatli yuborildi!");
+                window.location.reload();
+            }, 1500);
+        });
+    </script>
+
+
+</body></html>
