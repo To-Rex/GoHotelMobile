@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
+import '../../../core/animations/app_animations.dart';
 import '../../../data/models/task_model.dart';
 import '../controllers/tasks_controller.dart';
 
@@ -25,7 +26,8 @@ class RoomDetailsPage extends StatelessWidget {
           backgroundColor: AppColors.surface,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.onSurface),
+            icon: const Icon(Icons.arrow_back_rounded,
+                color: AppColors.onSurface),
             onPressed: () => Get.back(),
           ),
           title: Text(
@@ -36,14 +38,16 @@ class RoomDetailsPage extends StatelessWidget {
             TextButton.icon(
               onPressed: () =>
                   Get.toNamed('/problem-report', arguments: currentTask),
-              icon: const Icon(Icons.report_problem_outlined, size: 18),
+              icon: const Icon(Icons.report_problem_outlined,
+                  size: 18, color: AppColors.error),
               label: Text('Muammo',
                   style: AppTextStyles.bodyMd(color: AppColors.error)),
             ),
             TextButton.icon(
               onPressed: () =>
                   Get.toNamed('/photo-report', arguments: currentTask),
-              icon: const Icon(Icons.photo_camera, size: 18),
+              icon: const Icon(Icons.photo_camera_rounded,
+                  size: 18, color: AppColors.primary),
               label: Text('Hisobot',
                   style: AppTextStyles.bodyMd(color: AppColors.primary)),
             ),
@@ -54,14 +58,21 @@ class RoomDetailsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildInfoGrid(currentTask),
-              const SizedBox(height: 20),
-              Text('Tekshirish ro\'yxati', style: AppTextStyles.h2()),
+              FadeSlideIn(index: 0, child: _buildInfoGrid(currentTask)),
+              const SizedBox(height: 24),
+              FadeSlideIn(
+                index: 2,
+                child:
+                    Text('Tekshirish ro\'yxati', style: AppTextStyles.h2()),
+              ),
               const SizedBox(height: 12),
               _buildChecklist(currentTask, tasksController),
               if (currentTask.note != null) ...[
                 const SizedBox(height: 16),
-                _buildNote(currentTask.note!),
+                FadeSlideIn(
+                  index: 4 + currentTask.checklist.length,
+                  child: _buildNote(currentTask.note!),
+                ),
               ],
               const SizedBox(height: 100),
             ],
@@ -78,31 +89,26 @@ class RoomDetailsPage extends StatelessWidget {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceContainerLowest,
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.onSurface.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: AppShadows.soft,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Qavat', style: AppTextStyles.labelCaps()),
-                    const SizedBox(height: 4),
+                    Text('QAVAT', style: AppTextStyles.labelCaps()),
+                    const SizedBox(height: 6),
                     Text(task.floor, style: AppTextStyles.h2()),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.info_outline,
+                        const Icon(Icons.info_outline_rounded,
                             size: 16, color: AppColors.onSurfaceVariant),
                         const SizedBox(width: 4),
                         Expanded(
@@ -121,25 +127,21 @@ class RoomDetailsPage extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: task.isUrgent
                       ? AppColors.errorContainer
                       : AppColors.surfaceContainerLowest,
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.onSurface.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: task.isUrgent
+                      ? AppShadows.glow(AppColors.error, alpha: 0.15)
+                      : AppShadows.soft,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Holat', style: AppTextStyles.labelCaps()),
-                    const SizedBox(height: 4),
+                    Text('HOLAT', style: AppTextStyles.labelCaps()),
+                    const SizedBox(height: 6),
                     Text(
                       _statusText(task),
                       style: AppTextStyles.h2(
@@ -148,7 +150,7 @@ class RoomDetailsPage extends StatelessWidget {
                             : AppColors.primary,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     if (task.isUrgent)
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -159,8 +161,8 @@ class RoomDetailsPage extends StatelessWidget {
                         ),
                         child: Text(
                           'Priority',
-                          style: AppTextStyles.labelCaps(
-                              color: AppColors.onError),
+                          style:
+                              AppTextStyles.labelCaps(color: AppColors.onError),
                         ),
                       ),
                   ],
@@ -173,30 +175,28 @@ class RoomDetailsPage extends StatelessWidget {
         if (task.status != TaskStatus.completed)
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
               color: AppColors.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: AppShadows.soft,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Jarayon', style: AppTextStyles.labelCaps()),
-                const SizedBox(height: 8),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: task.progress / 100,
-                    backgroundColor: AppColors.surfaceContainer,
-                    color: AppColors.primary,
-                    minHeight: 8,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('JARAYON', style: AppTextStyles.labelCaps()),
+                    AnimatedCount(
+                      value: task.progress,
+                      suffix: '%',
+                      style: AppTextStyles.h2(color: AppColors.primary),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  '${task.progress}%',
-                  style: AppTextStyles.bodyLg(color: AppColors.primary),
-                ),
+                const SizedBox(height: 10),
+                AnimatedProgressBar(value: task.progress / 100, height: 9),
               ],
             ),
           ),
@@ -218,52 +218,49 @@ class RoomDetailsPage extends StatelessWidget {
 
   Widget _buildChecklist(TaskModel task, TasksController controller) {
     return Column(
-      children: task.checklist.map((item) {
-        return GestureDetector(
-          onTap: () =>
-              controller.toggleChecklistItem(task.id, item.id),
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: item.isCompleted
-                          ? AppColors.primary
-                          : AppColors.outlineVariant,
-                      width: 2,
-                    ),
-                    color: item.isCompleted ? AppColors.primary : Colors.transparent,
-                  ),
-                  child: item.isCompleted
-                      ? const Icon(Icons.check,
-                          size: 18, color: AppColors.onPrimary)
-                      : null,
+      children: task.checklist.asMap().entries.map((entry) {
+        final item = entry.value;
+        return FadeSlideIn(
+          index: 3 + entry.key,
+          child: Pressable(
+            onTap: () => controller.toggleChecklistItem(task.id, item.id),
+            pressedScale: 0.98,
+            child: AnimatedContainer(
+              duration: AppMotion.base,
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: item.isCompleted
+                    ? AppColors.surfaceContainerLow
+                    : AppColors.surfaceContainerLowest,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: item.isCompleted
+                      ? AppColors.primary.withValues(alpha: 0.25)
+                      : AppColors.outlineVariant.withValues(alpha: 0.35),
                 ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    item.title,
-                    style: AppTextStyles.bodyLg().copyWith(
-                      decoration: item.isCompleted
-                          ? TextDecoration.lineThrough
-                          : null,
-                      color: item.isCompleted
-                          ? AppColors.onSurfaceVariant
-                          : AppColors.onSurface,
+                boxShadow: item.isCompleted ? null : AppShadows.soft,
+              ),
+              child: Row(
+                children: [
+                  BouncyCheck(checked: item.isCompleted),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: AnimatedDefaultTextStyle(
+                      duration: AppMotion.base,
+                      style: AppTextStyles.bodyLg().copyWith(
+                        decoration: item.isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                        color: item.isCompleted
+                            ? AppColors.onSurfaceVariant
+                            : AppColors.onSurface,
+                      ),
+                      child: Text(item.title),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -275,8 +272,8 @@ class RoomDetailsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
         border: Border(
           left: BorderSide(
             color: AppColors.secondaryContainer,
@@ -286,9 +283,9 @@ class RoomDetailsPage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.assignment_late,
+          const Icon(Icons.assignment_late_rounded,
               color: AppColors.primary, size: 20),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               note,
@@ -304,32 +301,51 @@ class RoomDetailsPage extends StatelessWidget {
     if (task.status == TaskStatus.completed) return const SizedBox();
 
     final allDone = task.checklist.every((c) => c.isCompleted);
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: 56,
-      height: 56,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: allDone
-            ? AppColors.secondaryContainer
-            : AppColors.primaryContainer,
-        boxShadow: [
-          BoxShadow(
-            color: (allDone ? AppColors.secondary : AppColors.primary)
-                .withValues(alpha: 0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+    return SoftPulse(
+      active: allDone,
+      child: Pressable(
+        onTap: () => Get.toNamed('/photo-report', arguments: task),
+        child: AnimatedContainer(
+          duration: AppMotion.base,
+          curve: Curves.easeOut,
+          height: 56,
+          padding: EdgeInsets.symmetric(horizontal: allDone ? 20 : 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: allDone
+                  ? [AppColors.success, AppColors.statusCleaned]
+                  : const [
+                      AppColors.primaryContainer,
+                      AppColors.secondaryContainer,
+                    ],
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: AppShadows.glow(
+              allDone ? AppColors.success : AppColors.primary,
+              alpha: 0.35,
+            ),
           ),
-        ],
-      ),
-      child: IconButton(
-        onPressed: () {
-          Get.toNamed('/photo-report', arguments: task);
-        },
-        icon: Icon(
-          Icons.check_circle,
-          color: AppColors.onPrimary,
-          size: 32,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.check_circle_rounded,
+                  color: AppColors.onPrimary, size: 26),
+              AnimatedSize(
+                duration: AppMotion.base,
+                curve: AppMotion.emphasized,
+                child: allDone
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Text(
+                          'Yakunlash',
+                          style: AppTextStyles.bodyLg(
+                              color: AppColors.onPrimary),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:math';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
+import '../../../core/animations/app_animations.dart';
 import '../../../core/widgets/app_header.dart';
 import '../../../core/widgets/stat_card.dart';
 import '../../../core/widgets/task_card.dart';
@@ -18,6 +18,7 @@ class HomePage extends GetView<HomeController> {
     return Scaffold(
       backgroundColor: AppColors.surface,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             const AppHeader(
@@ -29,16 +30,16 @@ class HomePage extends GetView<HomeController> {
                 onRefresh: controller.refreshData,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 110),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildWelcomeCard(context),
+                      FadeSlideIn(index: 1, child: _buildWelcomeCard(context)),
                       const SizedBox(height: 20),
-                      _buildStatsGrid(),
-                      const SizedBox(height: 24),
-                      _buildTasksHeader(),
-                      const SizedBox(height: 12),
+                      FadeSlideIn(index: 2, child: _buildStatsGrid()),
+                      const SizedBox(height: 28),
+                      FadeSlideIn(index: 3, child: _buildTasksHeader()),
+                      const SizedBox(height: 14),
                       _buildTasksList(),
                     ],
                   ),
@@ -56,14 +57,8 @@ class HomePage extends GetView<HomeController> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.onSurface.withValues(alpha: 0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: AppShadows.soft,
       ),
       child: Row(
         children: [
@@ -71,11 +66,15 @@ class HomePage extends GetView<HomeController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text('BUGUNGI SMENA',
+                    style: AppTextStyles.labelCaps(color: AppColors.primary)),
+                const SizedBox(height: 6),
                 Text('Xush kelibsiz!', style: AppTextStyles.h1()),
                 const SizedBox(height: 4),
                 Text(
                   'Bugungi smenangiz muvaffaqiyatli o\'tmoqda.',
-                  style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+                  style:
+                      AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -92,20 +91,13 @@ class HomePage extends GetView<HomeController> {
       final progress = controller.overallProgress.value;
       return Column(
         children: [
-          SizedBox(
-            width: 64,
-            height: 64,
-            child: CustomPaint(
-              painter: _ProgressRingPainter(progress),
-              child: Center(
-                child: Text(
-                  '${(progress * 100).round()}%',
-                  style: AppTextStyles.h2(color: AppColors.primary),
-                ),
-              ),
-            ),
+          AnimatedProgressRing(
+            value: progress,
+            size: 72,
+            strokeWidth: 7,
+            textStyle: AppTextStyles.h2(color: AppColors.primary),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
@@ -130,8 +122,8 @@ class HomePage extends GetView<HomeController> {
             child: StatCard(
               title: 'Yakunlandi',
               count: controller.completedTasks.value,
-              icon: Icons.check_circle,
-              iconColor: AppColors.secondary,
+              icon: Icons.check_circle_rounded,
+              iconColor: AppColors.success,
             ),
           ),
           const SizedBox(width: 12),
@@ -139,7 +131,7 @@ class HomePage extends GetView<HomeController> {
             child: StatCard(
               title: 'Kutilmoqda',
               count: controller.pendingTasks.value,
-              icon: Icons.pending,
+              icon: Icons.pending_rounded,
               iconColor: AppColors.primary,
             ),
           ),
@@ -148,7 +140,7 @@ class HomePage extends GetView<HomeController> {
             child: StatCard(
               title: 'Muammo',
               count: controller.problemTasks.value,
-              icon: Icons.report_problem,
+              icon: Icons.report_problem_rounded,
               iconColor: AppColors.error,
               onTap: () => Get.toNamed('/problem-report'),
             ),
@@ -163,11 +155,26 @@ class HomePage extends GetView<HomeController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('Bugungi vazifalar', style: AppTextStyles.h2()),
-        GestureDetector(
+        Pressable(
           onTap: () => Get.toNamed('/tasks'),
-          child: Text(
-            'Hammasi \u2192',
-            style: AppTextStyles.bodyMd(color: AppColors.primary),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Hammasi',
+                  style: AppTextStyles.statusBadge(color: AppColors.primary),
+                ),
+                const SizedBox(width: 4),
+                const Icon(Icons.arrow_forward_rounded,
+                    size: 16, color: AppColors.primary),
+              ],
+            ),
           ),
         ),
       ],
@@ -178,60 +185,30 @@ class HomePage extends GetView<HomeController> {
     return Obx(
       () => Column(
         children: controller.todayTasks
-            .map((task) => TaskCard(
-                  task: task,
-                  onTap: () => Get.toNamed('/room-details', arguments: task),
-                  onStart: () {
-                    if (task.status == TaskStatus.pending) {
-                      Get.find<TasksController>().startTask(task.id);
-                      controller.loadData();
-                    }
-                  },
-                  onFinish: () => Get.toNamed('/room-details', arguments: task),
-                  onReport: () =>
-                      Get.toNamed('/photo-report', arguments: task),
-                  onProblemReport: () => Get.toNamed('/problem-report', arguments: task),
+            .asMap()
+            .entries
+            .map((entry) => FadeSlideIn(
+                  index: 4 + entry.key,
+                  child: TaskCard(
+                    task: entry.value,
+                    onTap: () =>
+                        Get.toNamed('/room-details', arguments: entry.value),
+                    onStart: () {
+                      if (entry.value.status == TaskStatus.pending) {
+                        Get.find<TasksController>().startTask(entry.value.id);
+                        controller.loadData();
+                      }
+                    },
+                    onFinish: () =>
+                        Get.toNamed('/room-details', arguments: entry.value),
+                    onReport: () =>
+                        Get.toNamed('/photo-report', arguments: entry.value),
+                    onProblemReport: () =>
+                        Get.toNamed('/problem-report', arguments: entry.value),
+                  ),
                 ))
             .toList(),
       ),
     );
   }
-}
-
-class _ProgressRingPainter extends CustomPainter {
-  final double progress;
-  _ProgressRingPainter(this.progress);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2 - 4;
-
-    final bgPaint = Paint()
-      ..color = AppColors.surfaceContainer
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6;
-
-    canvas.drawCircle(center, radius, bgPaint);
-
-    final fgPaint = Paint()
-      ..shader = SweepGradient(
-        colors: [AppColors.primary, AppColors.secondaryContainer],
-      ).createShader(Rect.fromCircle(center: center, radius: radius))
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
-      2 * pi * progress,
-      false,
-      fgPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _ProgressRingPainter oldDelegate) =>
-      progress != oldDelegate.progress;
 }

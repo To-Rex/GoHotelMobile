@@ -45,4 +45,33 @@ abstract class AppColors {
   static const Color statusInProgressBg = Color(0xFFFFF7ED);
   static const Color statusPending = Color(0xFF6B7280);
   static const Color statusPendingBg = Color(0xFFF3F4F6);
+
+  static const Color success = Color(0xFF16A34A);
+}
+
+/// Yumshoq ambient soyalar — chegarasiz chuqurlik (DESIGN.md: Level 1 / Level 2).
+abstract class AppShadows {
+  static List<BoxShadow> get soft => [
+        BoxShadow(
+          color: AppColors.onSurface.withValues(alpha: 0.05),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
+        ),
+      ];
+
+  static List<BoxShadow> get raised => [
+        BoxShadow(
+          color: AppColors.onSurface.withValues(alpha: 0.08),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ];
+
+  static List<BoxShadow> glow(Color color, {double alpha = 0.3}) => [
+        BoxShadow(
+          color: color.withValues(alpha: alpha),
+          blurRadius: 18,
+          offset: const Offset(0, 6),
+        ),
+      ];
 }

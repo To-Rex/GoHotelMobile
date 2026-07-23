@@ -18,6 +18,8 @@ class GoHotelApp extends StatelessWidget {
       title: 'GoHotel Service',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      defaultTransition: Transition.cupertino,
+      transitionDuration: const Duration(milliseconds: 380),
       initialRoute: AppRoutes.initialRoute,
       getPages: AppRoutes.routes,
     );

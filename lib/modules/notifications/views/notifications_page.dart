@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
+import '../../../core/animations/app_animations.dart';
 import '../../../core/widgets/app_header.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../data/models/notification_model.dart';
@@ -15,6 +16,7 @@ class NotificationsPage extends GetView<NotificationsController> {
     return Scaffold(
       backgroundColor: AppColors.surface,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             const AppHeader(
@@ -26,18 +28,21 @@ class NotificationsPage extends GetView<NotificationsController> {
                 onRefresh: controller.loadNotifications,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 110),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildHeader(),
+                      FadeSlideIn(index: 1, child: _buildHeader()),
                       const SizedBox(height: 16),
                       Obx(
                         () => controller.notifications.isEmpty
-                            ? const EmptyState(
-                                icon: Icons.notifications_active_outlined,
-                                message:
-                                    'Barcha yangiliklardan xabardor bo\'ling',
+                            ? const Padding(
+                                padding: EdgeInsets.only(top: 40),
+                                child: EmptyState(
+                                  icon: Icons.notifications_active_outlined,
+                                  message:
+                                      'Barcha yangiliklardan xabardor bo\'ling',
+                                ),
                               )
                             : _buildNotificationsList(),
                       ),
@@ -55,6 +60,7 @@ class NotificationsPage extends GetView<NotificationsController> {
   Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,18 +72,38 @@ class NotificationsPage extends GetView<NotificationsController> {
         ),
         Obx(
           () => Flexible(
-            child: GestureDetector(
+            child: Pressable(
               onTap: controller.unreadCount > 0
                   ? controller.markAllAsRead
                   : null,
-              child: Text(
-                'Hammasini o\'qilgan deb belgilash',
-                style: AppTextStyles.bodyMd(
-                  color: controller.unreadCount > 0
-                      ? AppColors.primary
-                      : AppColors.outline,
+              child: AnimatedOpacity(
+                duration: AppMotion.base,
+                opacity: controller.unreadCount > 0 ? 1 : 0.45,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.done_all_rounded,
+                          size: 16, color: AppColors.primary),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          'O\'qildi deb belgilash',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.statusBadge(
+                              color: AppColors.primary),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                textAlign: TextAlign.right,
               ),
             ),
           ),
@@ -89,12 +115,17 @@ class NotificationsPage extends GetView<NotificationsController> {
   Widget _buildNotificationsList() {
     return Obx(
       () => Column(
-        children: controller.notifications.map((notif) {
-          return _NotificationCard(
-            notification: notif,
-            onMarkRead: () => controller.markAsRead(notif.id),
-          );
-        }).toList(),
+        children: controller.notifications
+            .asMap()
+            .entries
+            .map((entry) => FadeSlideIn(
+                  index: 2 + entry.key,
+                  child: _NotificationCard(
+                    notification: entry.value,
+                    onMarkRead: () => controller.markAsRead(entry.value.id),
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
@@ -109,16 +140,16 @@ class _NotificationCard extends StatelessWidget {
     required this.onMarkRead,
   });
 
-  Color get _borderColor {
+  Color get _accentColor {
     switch (notification.type) {
       case NotificationType.critical:
         return AppColors.error;
       case NotificationType.newTask:
         return AppColors.primary;
       case NotificationType.problemAccepted:
-        return AppColors.secondary;
+        return AppColors.success;
       case NotificationType.inventory:
-        return AppColors.tertiary;
+        return AppColors.tertiaryContainer;
       case NotificationType.system:
         return AppColors.outlineVariant;
     }
@@ -131,9 +162,9 @@ class _NotificationCard extends StatelessWidget {
       case NotificationType.newTask:
         return AppColors.surfaceContainer;
       case NotificationType.problemAccepted:
-        return AppColors.secondaryContainer.withValues(alpha: 0.2);
+        return AppColors.statusCleanedBg;
       case NotificationType.inventory:
-        return AppColors.tertiaryContainer.withValues(alpha: 0.2);
+        return AppColors.tertiaryContainer.withValues(alpha: 0.15);
       case NotificationType.system:
         return AppColors.surfaceContainerHigh;
     }
@@ -146,7 +177,7 @@ class _NotificationCard extends StatelessWidget {
       case NotificationType.newTask:
         return AppColors.primary;
       case NotificationType.problemAccepted:
-        return AppColors.secondary;
+        return AppColors.success;
       case NotificationType.inventory:
         return AppColors.tertiary;
       case NotificationType.system:
@@ -157,133 +188,138 @@ class _NotificationCard extends StatelessWidget {
   IconData get _icon {
     switch (notification.type) {
       case NotificationType.critical:
-        return Icons.emergency;
+        return Icons.emergency_rounded;
       case NotificationType.newTask:
         return Icons.assignment_add;
       case NotificationType.problemAccepted:
-        return Icons.check_circle;
+        return Icons.check_circle_rounded;
       case NotificationType.inventory:
-        return Icons.inventory_2;
+        return Icons.inventory_2_rounded;
       case NotificationType.system:
-        return Icons.schedule;
+        return Icons.schedule_rounded;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final opacity = notification.type == NotificationType.problemAccepted
-        ? 0.8
-        : notification.type == NotificationType.system
-            ? 0.7
-            : 1.0;
+    final muted = notification.type == NotificationType.problemAccepted ||
+        notification.type == NotificationType.system;
 
-    return Opacity(
-      opacity: opacity,
-      child: GestureDetector(
+    return AnimatedOpacity(
+      duration: AppMotion.base,
+      opacity: muted ? 0.75 : 1,
+      child: Pressable(
         onTap: onMarkRead,
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: notification.isRead
-                ? AppColors.surfaceContainerLowest
-                : AppColors.surfaceContainerLowest,
-            borderRadius: BorderRadius.circular(18),
-            border: Border(left: BorderSide(color: _borderColor, width: 4)),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.onSurface.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            color: AppColors.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: AppShadows.soft,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Stack(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: _iconBgColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(_icon, color: _iconColor, size: 22),
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Container(width: 4, color: _accentColor),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 16, 16),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              notification.title,
-                              style: AppTextStyles.bodyLg(),
-                            ),
-                          ),
-                          if (!notification.isRead)
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: AppColors.primary,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        notification.message,
-                        style: AppTextStyles.bodyMd(
-                          color: AppColors.onSurfaceVariant,
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: _iconBgColor,
+                          shape: BoxShape.circle,
                         ),
+                        child: Icon(_icon, color: _iconColor, size: 22),
                       ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 8,
-                        runSpacing: 6,
-                        children: [
-                          Text(
-                            notification.timeAgo,
-                            style: AppTextStyles.labelCaps(
-                              color: AppColors.outline,
-                            ),
-                          ),
-                          if (notification.roomNumber != null)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.surfaceContainer,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                'Xona ${notification.roomNumber}',
-                                style: AppTextStyles.labelCaps(
-                                  color: AppColors.primary,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    notification.title,
+                                    style: AppTextStyles.bodyLg(),
+                                  ),
                                 ),
+                                if (!notification.isRead)
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    margin: const EdgeInsets.only(top: 6),
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.primary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              notification.message,
+                              style: AppTextStyles.bodyMd(
+                                color: AppColors.onSurfaceVariant,
                               ),
                             ),
-                          if (notification.hasActions) ...[
-                            _buildActionButton(
-                              'BORISH',
-                              AppColors.primaryContainer,
-                              AppColors.onPrimary,
-                            ),
-                            _buildActionButton(
-                              'RAD ETISH',
-                              AppColors.surfaceContainer,
-                              AppColors.onSurfaceVariant,
+                            const SizedBox(height: 10),
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 8,
+                              runSpacing: 6,
+                              children: [
+                                Text(
+                                  notification.timeAgo,
+                                  style: AppTextStyles.labelCaps(
+                                    color: AppColors.outline,
+                                  ),
+                                ),
+                                if (notification.roomNumber != null)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.surfaceContainer,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      'Xona ${notification.roomNumber}',
+                                      style: AppTextStyles.labelCaps(
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
+                                if (notification.hasActions) ...[
+                                  _actionButton(
+                                    'BORISH',
+                                    AppColors.primaryContainer,
+                                    AppColors.onPrimary,
+                                    glow: true,
+                                  ),
+                                  _actionButton(
+                                    'RAD ETISH',
+                                    AppColors.surfaceContainer,
+                                    AppColors.onSurfaceVariant,
+                                  ),
+                                ],
+                              ],
                             ),
                           ],
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -296,12 +332,15 @@ class _NotificationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(String label, Color bgColor, Color textColor) {
+  Widget _actionButton(String label, Color bgColor, Color textColor,
+      {bool glow = false}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow:
+            glow ? AppShadows.glow(AppColors.primary, alpha: 0.25) : null,
       ),
       child: Text(label, style: AppTextStyles.labelCaps(color: textColor)),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
+import '../../../core/animations/app_animations.dart';
 import '../../../core/widgets/app_header.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/task_card.dart';
@@ -16,22 +17,43 @@ class TasksPage extends GetView<TasksController> {
     return Scaffold(
       backgroundColor: AppColors.surface,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             const AppHeader(
               title: 'Mening vazifalarim',
               subtitle: 'Bugun, 24-Oktyabr',
             ),
-            const SizedBox(height: 12),
-            _buildTabBar(),
+            const SizedBox(height: 8),
+            FadeSlideIn(index: 1, child: _buildTabBar()),
             const SizedBox(height: 16),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: controller.loadTasks,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Obx(() => _buildTabContent()),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 110),
+                  child: Obx(
+                    () => AnimatedSwitcher(
+                      duration: AppMotion.base,
+                      switchInCurve: AppMotion.enter,
+                      switchOutCurve: Curves.easeIn,
+                      transitionBuilder: (child, animation) => FadeTransition(
+                        opacity: animation,
+                        child: SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0, 0.03),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: child,
+                        ),
+                      ),
+                      child: KeyedSubtree(
+                        key: ValueKey(controller.selectedTab.value),
+                        child: _buildTabContent(),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -48,7 +70,7 @@ class TasksPage extends GetView<TasksController> {
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           color: AppColors.surfaceContainer,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
@@ -64,18 +86,22 @@ class TasksPage extends GetView<TasksController> {
   Widget _buildTab(String label, int index, int count) {
     final isActive = controller.selectedTab.value == index;
     return Expanded(
-      child: GestureDetector(
+      child: Pressable(
         onTap: () => controller.changeTab(index),
-        child: Container(
+        pressedScale: 0.96,
+        child: AnimatedContainer(
+          duration: AppMotion.base,
+          curve: AppMotion.emphasized,
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isActive ? AppColors.surfaceContainerLowest : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
+            color:
+                isActive ? AppColors.surfaceContainerLowest : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: AppColors.onSurface.withValues(alpha: 0.04),
-                      blurRadius: 4,
+                      color: AppColors.onSurface.withValues(alpha: 0.06),
+                      blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
                   ]
@@ -85,15 +111,23 @@ class TasksPage extends GetView<TasksController> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  label,
-                  style: AppTextStyles.statusBadge(
-                    color: isActive ? AppColors.primary : AppColors.onSurfaceVariant,
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    style: AppTextStyles.statusBadge(
+                      color:
+                          isActive ? AppColors.primary : AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                AnimatedContainer(
+                  duration: AppMotion.base,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: isActive
                         ? AppColors.primary.withValues(alpha: 0.1)
@@ -103,7 +137,8 @@ class TasksPage extends GetView<TasksController> {
                   child: Text(
                     '$count',
                     style: AppTextStyles.labelCaps(
-                      color: isActive ? AppColors.primary : AppColors.onSurfaceVariant,
+                      color:
+                          isActive ? AppColors.primary : AppColors.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -124,21 +159,33 @@ class TasksPage extends GetView<TasksController> {
     };
 
     if (tasks.isEmpty) {
-      return const EmptyState(
-        icon: Icons.assignment_turned_in,
-        message: 'Hozircha vazifalar yo\'q',
+      return const Padding(
+        padding: EdgeInsets.only(top: 40),
+        child: EmptyState(
+          icon: Icons.assignment_turned_in_rounded,
+          message: 'Hozircha vazifalar yo\'q',
+        ),
       );
     }
 
     return Column(
       children: tasks
-          .map((task) => TaskCard(
-                task: task,
-                onTap: () => Get.toNamed('/room-details', arguments: task),
-                onStart: () => controller.startTask(task.id),
-                onFinish: () => Get.toNamed('/room-details', arguments: task),
-                onReport: () => Get.toNamed('/photo-report', arguments: task),
-                onProblemReport: () => Get.toNamed('/problem-report', arguments: task),
+          .asMap()
+          .entries
+          .map((entry) => FadeSlideIn(
+                index: entry.key,
+                child: TaskCard(
+                  task: entry.value,
+                  onTap: () =>
+                      Get.toNamed('/room-details', arguments: entry.value),
+                  onStart: () => controller.startTask(entry.value.id),
+                  onFinish: () =>
+                      Get.toNamed('/room-details', arguments: entry.value),
+                  onReport: () =>
+                      Get.toNamed('/photo-report', arguments: entry.value),
+                  onProblemReport: () =>
+                      Get.toNamed('/problem-report', arguments: entry.value),
+                ),
               ))
           .toList(),
     );

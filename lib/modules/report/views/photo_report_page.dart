@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'dart:io';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
+import '../../../core/animations/app_animations.dart';
 import '../../../core/widgets/app_header.dart';
 import '../controllers/photo_report_controller.dart';
 import '../../../data/models/task_model.dart';
@@ -22,7 +23,7 @@ class PhotoReportPage extends GetView<PhotoReportController> {
               backgroundColor: AppColors.surface,
               elevation: 0,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back,
+                icon: const Icon(Icons.arrow_back_rounded,
                     color: AppColors.onSurface),
                 onPressed: () => Get.back(),
               ),
@@ -44,19 +45,19 @@ class PhotoReportPage extends GetView<PhotoReportController> {
                   showBackButton: false,
                 ),
               if (task != null) ...[
-                _buildRoomInfo(task),
+                FadeSlideIn(index: 0, child: _buildRoomInfo(task)),
                 const SizedBox(height: 24),
               ],
-              _buildPhotoGrid(context),
+              FadeSlideIn(index: 1, child: _buildPhotoGrid(context)),
               const SizedBox(height: 24),
-              _buildUploadedSamples(),
+              FadeSlideIn(index: 2, child: _buildUploadedSamples()),
               const SizedBox(height: 24),
-              _buildCommentsField(),
+              FadeSlideIn(index: 3, child: _buildCommentsField()),
               const SizedBox(height: 32),
-              _buildSubmitButton(),
+              FadeSlideIn(index: 4, child: _buildSubmitButton()),
               if (isPush) ...[
                 const SizedBox(height: 12),
-                _buildCancelButton(),
+                FadeSlideIn(index: 5, child: _buildCancelButton()),
               ],
               const SizedBox(height: 20),
             ],
@@ -71,15 +72,9 @@ class PhotoReportPage extends GetView<PhotoReportController> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest.withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.onSurface.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: AppShadows.soft,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +82,7 @@ class PhotoReportPage extends GetView<PhotoReportController> {
           Text('XONA RAQAMI', style: AppTextStyles.labelCaps()),
           const SizedBox(height: 4),
           Text(task.roomNumber, style: AppTextStyles.roomNumber()),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
@@ -109,32 +104,32 @@ class PhotoReportPage extends GetView<PhotoReportController> {
 
   Widget _buildPhotoGrid(BuildContext context) {
     final sections = [
-      {'icon': Icons.king_bed, 'title': 'YOTOQ QISMI'},
-      {'icon': Icons.shower, 'title': 'VANNAXONA'},
-      {'icon': Icons.photo_camera, 'title': 'UMUMIY KO\'RINISH'},
+      (icon: Icons.king_bed_rounded, title: 'YOTOQ QISMI'),
+      (icon: Icons.shower_rounded, title: 'VANNAXONA'),
+      (icon: Icons.photo_camera_rounded, title: 'UMUMIY KO\'RINISH'),
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('RASMLAR', style: AppTextStyles.labelCaps()),
-        const SizedBox(height: 8),
+        const SizedBox(height: 10),
         Row(
           children: sections.map((section) {
             return Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: GestureDetector(
-                  onTap: () =>
-                      controller.pickImage(section['title'] as String),
+                child: Pressable(
+                  onTap: () => controller.pickImage(section.title),
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.surfaceContainerLowest,
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: AppColors.outlineVariant,
-                          width: 2,
+                          color: AppColors.outlineVariant.withValues(alpha: 0.6),
+                          width: 1.6,
                         ),
                       ),
                       child: Padding(
@@ -143,16 +138,24 @@ class PhotoReportPage extends GetView<PhotoReportController> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                section['icon'] as IconData,
-                                size: 32,
-                                color: AppColors.outline,
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color:
+                                      AppColors.primary.withValues(alpha: 0.07),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  section.icon,
+                                  size: 30,
+                                  color: AppColors.primary,
+                                ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 10),
                               Text(
-                                section['title'] as String,
+                                section.title,
                                 style: AppTextStyles.labelCaps(
-                                  color: AppColors.outline,
+                                  color: AppColors.onSurfaceVariant,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -186,20 +189,21 @@ class PhotoReportPage extends GetView<PhotoReportController> {
           return Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(12),
+              color: AppColors.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
               children: [
                 const Icon(Icons.image_outlined,
                     color: AppColors.onSurfaceVariant),
                 const SizedBox(width: 8),
-                Text(
-                  'YUKLANGAN RASMLAR NAMUNASI',
-                  style:
-                      AppTextStyles.labelCaps(color: AppColors.onSurfaceVariant),
+                Expanded(
+                  child: Text(
+                    'YUKLANGAN RASMLAR NAMUNASI',
+                    style: AppTextStyles.labelCaps(
+                        color: AppColors.onSurfaceVariant),
+                  ),
                 ),
-                const Spacer(),
                 Text(
                   '${controller.pickedPhotos.length}/3',
                   style:
@@ -228,39 +232,46 @@ class PhotoReportPage extends GetView<PhotoReportController> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: controller.pickedPhotos.asMap().entries.map((entry) {
-                return Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.file(
-                        File(entry.value['path']!),
-                        width: 96,
-                        height: 96,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () => controller.removePhoto(entry.key),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: AppColors.error,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.close,
-                              size: 14, color: AppColors.onError),
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.6, end: 1),
+                  duration: AppMotion.base,
+                  curve: Curves.easeOutBack,
+                  builder: (_, scale, child) =>
+                      Transform.scale(scale: scale, child: child),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Image.file(
+                          File(entry.value['path']!),
+                          width: 96,
+                          height: 96,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: Pressable(
+                          onTap: () => controller.removePhoto(entry.key),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: AppColors.error,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.close_rounded,
+                                size: 14, color: AppColors.onError),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
             ),
@@ -278,7 +289,7 @@ class PhotoReportPage extends GetView<PhotoReportController> {
           'QO\'SHIMCHA IZOH (IXTIYORIY)',
           style: AppTextStyles.labelCaps(),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 10),
         TextField(
           onChanged: (v) => controller.commentController.value = v,
           maxLines: 4,
@@ -289,15 +300,15 @@ class PhotoReportPage extends GetView<PhotoReportController> {
             filled: true,
             fillColor: AppColors.surfaceContainerLowest,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
               borderSide: const BorderSide(color: AppColors.outlineVariant),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
               borderSide: const BorderSide(color: AppColors.outlineVariant),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
               borderSide: const BorderSide(color: AppColors.primary, width: 2),
             ),
           ),
@@ -308,15 +319,31 @@ class PhotoReportPage extends GetView<PhotoReportController> {
 
   Widget _buildSubmitButton() {
     return Obx(
-      () => SizedBox(
-        width: double.infinity,
-        height: 56,
-        child: ElevatedButton.icon(
-          onPressed: controller.isUploading.value
-              ? null
-              : controller.submitReport,
-          icon: controller.isUploading.value
-              ? const SizedBox(
+      () => Pressable(
+        onTap: controller.isUploading.value ? null : controller.submitReport,
+        child: AnimatedContainer(
+          duration: AppMotion.base,
+          width: double.infinity,
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: controller.isUploading.value
+                  ? [AppColors.outlineVariant, AppColors.outlineVariant]
+                  : const [
+                      AppColors.primaryContainer,
+                      AppColors.secondaryContainer,
+                    ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: controller.isUploading.value
+                ? null
+                : AppShadows.glow(AppColors.primary, alpha: 0.3),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (controller.isUploading.value)
+                const SizedBox(
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
@@ -324,19 +351,23 @@ class PhotoReportPage extends GetView<PhotoReportController> {
                     color: AppColors.onPrimary,
                   ),
                 )
-              : Icon(controller.isPushPage ? Icons.task_alt : Icons.send),
-          label: Text(
-            controller.isUploading.value
-                ? 'Yuborilmoqda...'
-                : controller.isPushPage ? 'Yakunlash' : 'Hisobotni yuborish',
-            style: AppTextStyles.bodyLg(color: AppColors.onPrimary),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryContainer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
+              else
+                Icon(
+                  controller.isPushPage
+                      ? Icons.task_alt_rounded
+                      : Icons.send_rounded,
+                  color: AppColors.onPrimary,
+                ),
+              const SizedBox(width: 8),
+              Text(
+                controller.isUploading.value
+                    ? 'Yuborilmoqda...'
+                    : controller.isPushPage
+                        ? 'Yakunlash'
+                        : 'Hisobotni yuborish',
+                style: AppTextStyles.bodyLg(color: AppColors.onPrimary),
+              ),
+            ],
           ),
         ),
       ),
@@ -344,20 +375,19 @@ class PhotoReportPage extends GetView<PhotoReportController> {
   }
 
   Widget _buildCancelButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: OutlinedButton(
-        onPressed: () => Get.back(),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          side: const BorderSide(color: AppColors.outlineVariant),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+    return Pressable(
+      onTap: () => Get.back(),
+      child: Container(
+        width: double.infinity,
+        height: 56,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.outlineVariant),
         ),
-        child: Text('Bekor qilish',
-            style: AppTextStyles.bodyLg(color: AppColors.primary)),
+        child: Center(
+          child: Text('Bekor qilish',
+              style: AppTextStyles.bodyLg(color: AppColors.primary)),
+        ),
       ),
     );
   }

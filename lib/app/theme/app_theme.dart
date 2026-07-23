@@ -86,5 +86,22 @@ class AppTheme {
         ),
       ),
     ),
+    splashFactory: InkSparkle.splashFactory,
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: AppColors.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      showDragHandle: true,
+    ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: AppColors.primary,
+    ),
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: FadeForwardsPageTransitionsBuilder(),
+      },
+    ),
   );
 }

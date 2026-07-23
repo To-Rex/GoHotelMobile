@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../app/theme/colors.dart';
 import '../../app/theme/text_styles.dart';
+import '../animations/app_animations.dart';
 
 class StatCard extends StatelessWidget {
   final String title;
@@ -22,38 +23,37 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Pressable(
       onTap: onTap,
       child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.onSurface.withValues(alpha: 0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: backgroundColor ?? AppColors.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: AppShadows.soft,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(9),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: iconColor, size: 22),
             ),
-            child: Icon(icon, color: iconColor, size: 24),
-          ),
-          const SizedBox(height: 12),
-          Text(count.toString(), style: AppTextStyles.h1()),
-          const SizedBox(height: 2),
-          Text(title, style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant)),
-        ],
-      ),
+            const SizedBox(height: 14),
+            AnimatedCount(value: count, style: AppTextStyles.display(fontSize: 28)),
+            const SizedBox(height: 2),
+            Text(
+              title,
+              style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
