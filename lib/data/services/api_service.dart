@@ -13,12 +13,19 @@ class ApiService {
 
   // ── AUTH ──────────────────────────────────────────────────────────
 
-  Future<Map<String, dynamic>> login(String username, String password) async {
+  /// [fcmToken] berilsa, backend uni shu foydalanuvchining qurilmasiga
+  /// darhol bog'laydi — alohida device-token so'rovi kerak bo'lmaydi.
+  Future<Map<String, dynamic>> login(
+    String username,
+    String password, {
+    String? fcmToken,
+  }) async {
     final response = await _client.post<Map<String, dynamic>>(
       '/api/v1/auth/login',
       data: {
         'username': username,
         'password': password,
+        if (fcmToken != null && fcmToken.isNotEmpty) 'fcm_token': fcmToken,
       },
       options: Options(headers: {'Content-Type': 'application/json'}),
     );
@@ -156,6 +163,32 @@ class ApiService {
 
   Future<void> markAllNotificationsAsRead() async {
     await _client.put('/api/v1/notifications/read-all');
+  }
+
+  // ── PUSH TOKEN ────────────────────────────────────────────────────
+
+  /// FCM token'ni joriy foydalanuvchiga bog'laydi.
+  Future<void> registerDeviceToken({
+    required String token,
+    required String platform,
+  }) async {
+    await _client.post(
+      '/api/v1/notifications/device-token',
+      data: {
+        'token': token,
+        'platform': platform,
+      },
+      options: Options(headers: {'Content-Type': 'application/json'}),
+    );
+  }
+
+  /// Logout'da token'ni uzadi — boshqa foydalanuvchiga xabar ketmasligi uchun.
+  Future<void> unregisterDeviceToken(String token) async {
+    await _client.delete(
+      '/api/v1/notifications/device-token',
+      data: {'token': token},
+      options: Options(headers: {'Content-Type': 'application/json'}),
+    );
   }
 
   // ── PROFILE ───────────────────────────────────────────────────────

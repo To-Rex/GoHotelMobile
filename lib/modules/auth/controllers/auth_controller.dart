@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../../../app/theme/colors.dart';
 import '../../../core/storage/local_storage.dart';
 import '../../../data/services/data_service.dart';
+import '../../../data/services/push_notification_service.dart';
 
 class AuthController extends GetxController {
   final storage = LocalStorage();
@@ -53,9 +54,14 @@ class AuthController extends GetxController {
     isLoading.value = true;
 
     try {
+      // FCM token login so'rovi bilan birga yuboriladi — backend uni shu
+      // foydalanuvchiga darhol bog'laydi.
+      final fcmToken = _currentFcmToken();
+
       final result = await _dataService.login(
         phoneController.value,
         passwordController.value,
+        fcmToken: fcmToken,
       );
 
       storage.isLoggedIn = true;
@@ -80,6 +86,10 @@ class AuthController extends GetxController {
 
       isLoggedIn.value = true;
       Get.offAllNamed('/home');
+
+      // Token login so'roviga ulgurmagan bo'lsa (masalan iOS'da APNs hali
+      // tayyor emas edi) — uni alohida so'rov bilan bog'laymiz.
+      await _syncPushToken(alreadySent: fcmToken != null);
     } catch (e) {
       Get.snackbar(
         'Xatolik',
@@ -93,7 +103,40 @@ class AuthController extends GetxController {
     }
   }
 
-  void logout() {
+  /// Push servisi ro'yxatdan o'tmagan (yoki init'i muvaffaqiyatsiz tugagan)
+  /// bo'lishi mumkin — shuning uchun `null` qaytarish normal holat.
+  String? _currentFcmToken() {
+    if (!Get.isRegistered<PushNotificationService>()) return null;
+    try {
+      return PushNotificationService.to.currentToken;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Login muvaffaqiyatli tugagach chaqiriladi. Bu bosqichdagi xatolik
+  /// login oqimini to'xtatmasligi kerak.
+  Future<void> _syncPushToken({required bool alreadySent}) async {
+    if (!Get.isRegistered<PushNotificationService>()) return;
+    try {
+      // Token login body'sida ketgan bo'lsa, takroriy so'rov yubormaymiz.
+      if (!alreadySent) {
+        await PushNotificationService.to.registerToken();
+      }
+      // Ilova push orqali ochilgan, lekin login talab qilgan bo'lsa —
+      // endi kutib turgan xabarni qayta ishlaymiz.
+      PushNotificationService.to.consumePendingMessage();
+    } catch (_) {}
+  }
+
+  Future<void> logout() async {
+    // Token'ni auth header hali amal qilayotganda uzamiz.
+    if (Get.isRegistered<PushNotificationService>()) {
+      try {
+        await PushNotificationService.to.unregisterToken();
+      } catch (_) {}
+    }
+
     storage.isLoggedIn = false;
     storage.userId = '';
     storage.write('auth_token', '');

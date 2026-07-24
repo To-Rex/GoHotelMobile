@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../../../core/storage/local_storage.dart';
 import '../../../data/services/data_service.dart';
+import '../../../data/services/push_notification_service.dart';
 
 class ProfileController extends GetxController {
   final _dataService = DataService();
@@ -47,12 +48,21 @@ class ProfileController extends GetxController {
     storage.language = lang;
   }
 
-  void logout() {
+  Future<void> logout() async {
+    // FCM token'ni auth header hali amal qilayotganda backend'dan uzamiz,
+    // aks holda push'lar chiqib ketgan foydalanuvchiga kelaveradi.
+    if (Get.isRegistered<PushNotificationService>()) {
+      try {
+        await PushNotificationService.to.unregisterToken();
+      } catch (_) {}
+    }
+
     storage.isLoggedIn = false;
     storage.userId = '';
     storage.userRole = '';
     storage.userName = '';
     storage.write('auth_token', '');
+    storage.write('refresh_token', '');
     Get.offAllNamed('/login');
   }
 }

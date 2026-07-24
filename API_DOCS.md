@@ -10,6 +10,25 @@
 
 Barcha so'rovlar `Authorization: Bearer {access_token}` header talab qiladi.
 
+### Login (`POST /api/v1/auth/login`)
+
+Login body'siga **`fcm_token`** maydoni qo'shildi — qurilmaning push token'i
+shu yerda foydalanuvchiga bog'lanadi, alohida so'rov kerak bo'lmaydi.
+Maydon **ixtiyoriy**: token hali tayyor bo'lmasa (iOS'da APNs kechikishi,
+foydalanuvchi bildirishnomaga ruxsat bermagani) umuman yuborilmaydi.
+Bunday holda ilova [3.4](#34-push-token-royxatdan-otkazish-fcm) endpoint'ini
+chaqiradi.
+
+```json
+{
+  "username": "farrux",
+  "password": "anna123",
+  "fcm_token": "qjindqinmomoqw..."
+}
+```
+
+**Response:** o'zgarmagan — `access_token`, `refresh_token`, `token_type`, `expires_in`.
+
 ---
 
 ## 1. Vazifalar (Tasks)
@@ -263,6 +282,76 @@ PUT /api/v1/notifications/read-all
 
 ---
 
+### 3.4 Push Token Ro'yxatdan O'tkazish (FCM)
+
+Odatda token login body'sidagi `fcm_token` orqali keladi. Bu endpoint qolgan
+holatlar uchun: token login paytida hali tayyor bo'lmagan, Firebase token'ni
+almashtirgan (`onTokenRefresh`), yoki ilova allaqachon login qilingan holatda
+qayta ishga tushgan. Endpoint **idempotent** bo'lishi kerak — bir xil token
+qayta kelsa dublikat yaratmasin.
+
+```
+POST /api/v1/notifications/device-token
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+**Request:**
+
+```json
+{
+  "token": "fcm-registration-token",
+  "platform": "android"
+}
+```
+
+`platform`: `android` yoki `ios`.
+
+**Response 200/204:** No Content
+
+---
+
+### 3.5 Push Token'ni Uzish
+
+Logout'da chaqiriladi — bu qurilmaga endi xabar yuborilmaydi.
+
+```
+DELETE /api/v1/notifications/device-token
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+**Request:**
+
+```json
+{ "token": "fcm-registration-token" }
+```
+
+**Response 204:** No Content
+
+---
+
+### 3.6 Push Xabar Payload Formati
+
+Server FCM orqali yuboradigan xabar `data` bloki quyidagi maydonlarni
+qo'llab-quvvatlaydi (barchasi string):
+
+| Maydon | Majburiy | Tavsif |
+|--------|----------|--------|
+| `id` | ha | Bildirishnoma id — `GET /api/v1/notifications` dagi id bilan bir xil |
+| `type` | yo'q | `critical` \| `newTask` \| `problemAccepted` \| `inventory` \| `system` (noma'lum qiymat `system`ga tushadi) |
+| `title` | yo'q | `notification.title` bo'lmasa ishlatiladi |
+| `message` | yo'q | `notification.body` bo'lmasa ishlatiladi |
+| `room_number` | yo'q | Xona raqami |
+| `task_id` | yo'q | Berilsa, push bosilganda `/room-details` ochiladi |
+| `has_actions` | yo'q | `"true"` bo'lsa kartada tugmalar chiqadi |
+| `timestamp` | yo'q | ISO-8601; bo'lmasa qurilma vaqti olinadi |
+
+Android'da fon holatidagi bildirishnoma `gohotel_high_importance` kanaliga
+tushadi (`AndroidManifest.xml` dagi `default_notification_channel_id`).
+
+---
+
 ## Xatolik Formati
 
 Barcha xatolik javoblari quyidagi formatda qaytadi:
@@ -302,3 +391,5 @@ Barcha xatolik javoblari quyidagi formatda qaytadi:
 | 8 | `GET` | `/api/v1/notifications` | Bildirishnomalar |
 | 9 | `PUT` | `/api/v1/notifications/{id}/read` | O'qilgan belgilash |
 | 10 | `PUT` | `/api/v1/notifications/read-all` | Hammasini o'qilgan |
+| 11 | `POST` | `/api/v1/notifications/device-token` | FCM token ro'yxatdan o'tkazish |
+| 12 | `DELETE` | `/api/v1/notifications/device-token` | FCM token'ni uzish |

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import '../models/user_model.dart';
@@ -36,8 +38,12 @@ class DataService {
 
   // ── AUTH ──────────────────────────────────────────────────────────
 
-  Future<Map<String, dynamic>> login(String username, String password) async {
-    return await _api.login(username, password);
+  Future<Map<String, dynamic>> login(
+    String username,
+    String password, {
+    String? fcmToken,
+  }) async {
+    return await _api.login(username, password, fcmToken: fcmToken);
   }
 
   Future<UserModel> getCurrentUser() async {
@@ -187,6 +193,34 @@ class DataService {
       await _api.markAllNotificationsAsRead();
     } catch (e) {
       print('[DataService] API markAllNotificationsAsRead failed: $e');
+    }
+  }
+
+  // ── PUSH TOKEN ────────────────────────────────────────────────────
+
+  /// Backend hali bu endpoint'ni qo'llab-quvvatlamasa ham ilova buzilmasligi
+  /// uchun xatolik faqat log'ga yoziladi.
+  Future<bool> registerDeviceToken(String token) async {
+    try {
+      await _api.registerDeviceToken(
+        token: token,
+        platform: Platform.isIOS ? 'ios' : 'android',
+      );
+      return true;
+    } catch (e) {
+      await _handleAuthError(e);
+      _logApiError('registerDeviceToken', e);
+      return false;
+    }
+  }
+
+  Future<bool> unregisterDeviceToken(String token) async {
+    try {
+      await _api.unregisterDeviceToken(token);
+      return true;
+    } catch (e) {
+      _logApiError('unregisterDeviceToken', e);
+      return false;
     }
   }
 

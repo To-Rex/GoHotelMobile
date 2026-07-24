@@ -32,7 +32,7 @@ class NotificationModel {
   factory NotificationModel.fromJson(Map<String, dynamic> json) =>
       NotificationModel(
         id: json['id'],
-        type: NotificationType.values.firstWhere((e) => e.name == json['type']),
+        type: parseType(json['type']),
         title: json['title'],
         message: json['message'],
         roomNumber: json['room_number'],
@@ -40,6 +40,37 @@ class NotificationModel {
         isRead: json['is_read'] ?? false,
         hasActions: json['has_actions'] ?? false,
       );
+
+  /// Noma'lum yoki bo'sh turdagi qiymat kelsa `system`ga tushadi — push'dan
+  /// kelgan `data` maydonlari server enum'iga har doim ham mos kelavermaydi.
+  static NotificationType parseType(dynamic raw) {
+    final name = raw?.toString();
+    return NotificationType.values.firstWhere(
+      (e) => e.name == name,
+      orElse: () => NotificationType.system,
+    );
+  }
+
+  /// FCM push'ining `data` payload'idan model yasaydi.
+  /// Server `notification` blokini yubormasa, sarlavha/matn ham `data`dan olinadi.
+  factory NotificationModel.fromPush({
+    required Map<String, dynamic> data,
+    String? fallbackTitle,
+    String? fallbackBody,
+    String? fallbackId,
+  }) {
+    final rawTimestamp = data['timestamp']?.toString();
+    return NotificationModel(
+      id: (data['id'] ?? data['notification_id'] ?? fallbackId ?? '').toString(),
+      type: parseType(data['type']),
+      title: (data['title'] ?? fallbackTitle ?? 'Yangi bildirishnoma').toString(),
+      message: (data['message'] ?? data['body'] ?? fallbackBody ?? '').toString(),
+      roomNumber: data['room_number']?.toString(),
+      timestamp: DateTime.tryParse(rawTimestamp ?? '') ?? DateTime.now(),
+      isRead: false,
+      hasActions: data['has_actions']?.toString() == 'true',
+    );
+  }
 
   NotificationModel copyWith({
     String? id,
