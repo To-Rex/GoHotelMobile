@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +24,12 @@ void main() async {
   unawaited(push.init());
 
   runApp(const GoHotelApp());
+
 }
 
 class GoHotelApp extends StatelessWidget {
   const GoHotelApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {
