@@ -36,7 +36,8 @@ class UserModel {
     this.workHours = 0,
   });
 
-  String get name => [firstName, lastName].where((s) => s.isNotEmpty).join(' ').trim();
+  String get name =>
+      [firstName, lastName].where((s) => s.isNotEmpty).join(' ').trim();
   String get role => userType;
   String get displayName => name.isNotEmpty ? name : username;
 

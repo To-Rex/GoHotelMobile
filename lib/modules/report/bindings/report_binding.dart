@@ -14,12 +14,9 @@ class ReportBinding extends Bindings {
 class ProblemReportBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ProblemReportController>(
-      () {
-        final task = Get.arguments as TaskModel?;
-        return ProblemReportController(task: task);
-      },
-      fenix: true,
-    );
+    Get.lazyPut<ProblemReportController>(() {
+      final task = Get.arguments as TaskModel?;
+      return ProblemReportController(task: task);
+    }, fenix: true);
   }
 }

@@ -21,10 +21,13 @@ class ProblemReportPage extends GetView<ProblemReportController> {
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: AppColors.onSurface),
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: AppColors.onSurface,
+          ),
           onPressed: () => Get.back(),
         ),
-        title: Text('Muammo haqida xabar berish', style: AppTextStyles.h2()),
+        title: Text('Muammo haqida xabar berish'.tr, style: AppTextStyles.h2()),
       ),
       body: Column(
         children: [
@@ -35,7 +38,10 @@ class ProblemReportPage extends GetView<ProblemReportController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (hasTask) ...[
-                    FadeSlideIn(index: 0, child: _buildTaskInfo(controller.task!)),
+                    FadeSlideIn(
+                      index: 0,
+                      child: _buildTaskInfo(controller.task!),
+                    ),
                     const SizedBox(height: 24),
                   ],
                   FadeSlideIn(index: 1, child: _buildHeaderCard()),
@@ -76,8 +82,11 @@ class ProblemReportPage extends GetView<ProblemReportController> {
               color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(Icons.meeting_room_rounded,
-                color: AppColors.primary, size: 24),
+            child: const Icon(
+              Icons.meeting_room_rounded,
+              color: AppColors.primary,
+              size: 24,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -85,9 +94,12 @@ class ProblemReportPage extends GetView<ProblemReportController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(task.roomNumber, style: AppTextStyles.h2()),
-                Text('${task.floor} • ${task.roomType}',
-                    style: AppTextStyles.bodyMd(
-                        color: AppColors.onSurfaceVariant)),
+                Text(
+                  '${task.floor} • ${task.roomType}',
+                  style: AppTextStyles.bodyMd(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
               ],
             ),
           ),
@@ -123,14 +135,18 @@ class ProblemReportPage extends GetView<ProblemReportController> {
               color: AppColors.errorContainer.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(Icons.report_problem_rounded,
-                color: AppColors.error, size: 24),
+            child: const Icon(
+              Icons.report_problem_rounded,
+              color: AppColors.error,
+              size: 24,
+            ),
           ),
           const SizedBox(height: 14),
-          Text('Muammo haqida xabar berish', style: AppTextStyles.h2()),
+          Text('Muammo haqida xabar berish'.tr, style: AppTextStyles.h2()),
           const SizedBox(height: 8),
           Text(
-            'Xonada siniq buyum, chiroy kuygan joy, texnik nosozlik yoki boshqa muammo bo\'lsa, quyidagi shakl orqali xabar bering va foto hisobot qo\'shing.',
+            'Xonada siniq buyum, chiroy kuygan joy, texnik nosozlik yoki boshqa muammo bo\'lsa, quyidagi shakl orqali xabar bering va foto hisobot qo\'shing.'
+                .tr,
             style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
           ),
         ],
@@ -142,7 +158,7 @@ class ProblemReportPage extends GetView<ProblemReportController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('KATEGORIYA', style: AppTextStyles.labelCaps()),
+        Text('KATEGORIYA'.tr, style: AppTextStyles.labelCaps()),
         const SizedBox(height: 12),
         Obx(
           () => Wrap(
@@ -157,7 +173,9 @@ class ProblemReportPage extends GetView<ProblemReportController> {
                   duration: AppMotion.base,
                   curve: AppMotion.emphasized,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 18, vertical: 13),
+                    horizontal: 18,
+                    vertical: 13,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.primary.withValues(alpha: 0.1)
@@ -185,7 +203,7 @@ class ProblemReportPage extends GetView<ProblemReportController> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        category,
+                        category.tr,
                         style: AppTextStyles.statusBadge(
                           color: isSelected
                               ? AppColors.primary
@@ -228,14 +246,14 @@ class ProblemReportPage extends GetView<ProblemReportController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('TAFSILOTLAR', style: AppTextStyles.labelCaps()),
+        Text('TAFSILOTLAR'.tr, style: AppTextStyles.labelCaps()),
         const SizedBox(height: 10),
         TextField(
           onChanged: (v) => controller.descriptionController.value = v,
           maxLines: 4,
           style: AppTextStyles.bodyMd(),
           decoration: InputDecoration(
-            hintText: 'Muammoning tafsilotlarini kiriting...',
+            hintText: 'Muammoning tafsilotlarini kiriting...'.tr,
             hintStyle: AppTextStyles.bodyMd(color: AppColors.outline),
             filled: true,
             fillColor: AppColors.surfaceContainerLowest,
@@ -262,10 +280,10 @@ class ProblemReportPage extends GetView<ProblemReportController> {
       () => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('FOTO HISOBOT', style: AppTextStyles.labelCaps()),
+          Text('FOTO HISOBOT'.tr, style: AppTextStyles.labelCaps()),
           const SizedBox(height: 4),
           Text(
-            'Muammo joyidan suratga oling (Max 3 ta)',
+            'Muammo joyidan suratga oling (Max 3 ta)'.tr,
             style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
           ),
           const SizedBox(height: 12),
@@ -299,7 +317,7 @@ class ProblemReportPage extends GetView<ProblemReportController> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Rasm qo\'shish uchun bosing',
+                      'Rasm qo\'shish uchun bosing'.tr,
                       style: AppTextStyles.bodyMd(color: AppColors.outline),
                     ),
                   ],
@@ -340,8 +358,11 @@ class ProblemReportPage extends GetView<ProblemReportController> {
                                   color: AppColors.error,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.close_rounded,
-                                    size: 14, color: AppColors.onError),
+                                child: const Icon(
+                                  Icons.close_rounded,
+                                  size: 14,
+                                  color: AppColors.onError,
+                                ),
                               ),
                             ),
                           ),
@@ -359,7 +380,9 @@ class ProblemReportPage extends GetView<ProblemReportController> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: AppColors.outlineVariant.withValues(alpha: 0.7),
+                          color: AppColors.outlineVariant.withValues(
+                            alpha: 0.7,
+                          ),
                           width: 1.6,
                         ),
                         color: AppColors.surfaceContainerLowest,
@@ -375,7 +398,7 @@ class ProblemReportPage extends GetView<ProblemReportController> {
             ),
             const SizedBox(height: 8),
             Text(
-              '${controller.pickedPhotos.length}/3 rasm yuklandi',
+              '${controller.pickedPhotos.length}/3 ${'rasm yuklandi'.tr}',
               style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
             ),
           ],
@@ -397,8 +420,7 @@ class ProblemReportPage extends GetView<ProblemReportController> {
               MediaQuery.of(context).padding.bottom + 16,
             ),
             decoration: BoxDecoration(
-              color:
-                  AppColors.surfaceContainerLowest.withValues(alpha: 0.82),
+              color: AppColors.surfaceContainerLowest.withValues(alpha: 0.82),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.onSurface.withValues(alpha: 0.06),
@@ -443,13 +465,15 @@ class ProblemReportPage extends GetView<ProblemReportController> {
                           ),
                         )
                       else
-                        const Icon(Icons.send_rounded,
-                            color: AppColors.onPrimary),
+                        const Icon(
+                          Icons.send_rounded,
+                          color: AppColors.onPrimary,
+                        ),
                       const SizedBox(width: 8),
                       Text(
                         controller.isSubmitting.value
-                            ? 'Yuborilmoqda...'
-                            : 'Xabar yuborish',
+                            ? 'Yuborilmoqda...'.tr
+                            : 'Xabar yuborish'.tr,
                         style: AppTextStyles.bodyLg(color: AppColors.onPrimary),
                       ),
                     ],

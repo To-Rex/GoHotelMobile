@@ -8,22 +8,24 @@ class ApiClient {
   late final Dio _dio;
 
   ApiClient() {
-    _dio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
-      sendTimeout: const Duration(seconds: 30),
-      headers: {
-        'Accept': 'application/json',
-      },
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
+        sendTimeout: const Duration(seconds: 30),
+        headers: {'Accept': 'application/json'},
+      ),
+    );
 
     _dio.interceptors.add(_AuthInterceptor());
-    _dio.interceptors.add(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-      logPrint: (obj) => print('[API] $obj'),
-    ));
+    _dio.interceptors.add(
+      LogInterceptor(
+        requestBody: true,
+        responseBody: true,
+        logPrint: (obj) => print('[API] $obj'),
+      ),
+    );
   }
 
   Dio get dio => _dio;
@@ -33,30 +35,22 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) {
-    return _dio.get<T>(path, queryParameters: queryParameters, options: options);
+    return _dio.get<T>(
+      path,
+      queryParameters: queryParameters,
+      options: options,
+    );
   }
 
-  Future<Response<T>> post<T>(
-    String path, {
-    dynamic data,
-    Options? options,
-  }) {
+  Future<Response<T>> post<T>(String path, {dynamic data, Options? options}) {
     return _dio.post<T>(path, data: data, options: options);
   }
 
-  Future<Response<T>> put<T>(
-    String path, {
-    dynamic data,
-    Options? options,
-  }) {
+  Future<Response<T>> put<T>(String path, {dynamic data, Options? options}) {
     return _dio.put<T>(path, data: data, options: options);
   }
 
-  Future<Response<T>> delete<T>(
-    String path, {
-    dynamic data,
-    Options? options,
-  }) {
+  Future<Response<T>> delete<T>(String path, {dynamic data, Options? options}) {
     return _dio.delete<T>(path, data: data, options: options);
   }
 }

@@ -44,8 +44,11 @@ class AppHeader extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: AppShadows.soft,
                   ),
-                  child: const Icon(Icons.arrow_back_rounded,
-                      size: 22, color: AppColors.onSurface),
+                  child: const Icon(
+                    Icons.arrow_back_rounded,
+                    size: 22,
+                    color: AppColors.onSurface,
+                  ),
                 ),
               ),
             if (showAvatar)
@@ -62,8 +65,11 @@ class AppHeader extends StatelessWidget {
                   ),
                   boxShadow: AppShadows.glow(AppColors.primary, alpha: 0.25),
                 ),
-                child: const Icon(Icons.person_rounded,
-                    color: AppColors.onPrimary, size: 24),
+                child: const Icon(
+                  Icons.person_rounded,
+                  color: AppColors.onPrimary,
+                  size: 24,
+                ),
               ),
             Expanded(
               child: Column(
@@ -79,7 +85,8 @@ class AppHeader extends StatelessWidget {
                     Text(
                       subtitle!,
                       style: AppTextStyles.bodyMd(
-                          color: AppColors.onSurfaceVariant),
+                        color: AppColors.onSurfaceVariant,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

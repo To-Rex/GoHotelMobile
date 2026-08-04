@@ -52,26 +52,26 @@ abstract class AppColors {
 /// Yumshoq ambient soyalar — chegarasiz chuqurlik (DESIGN.md: Level 1 / Level 2).
 abstract class AppShadows {
   static List<BoxShadow> get soft => [
-        BoxShadow(
-          color: AppColors.onSurface.withValues(alpha: 0.05),
-          blurRadius: 12,
-          offset: const Offset(0, 4),
-        ),
-      ];
+    BoxShadow(
+      color: AppColors.onSurface.withValues(alpha: 0.05),
+      blurRadius: 12,
+      offset: const Offset(0, 4),
+    ),
+  ];
 
   static List<BoxShadow> get raised => [
-        BoxShadow(
-          color: AppColors.onSurface.withValues(alpha: 0.08),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-      ];
+    BoxShadow(
+      color: AppColors.onSurface.withValues(alpha: 0.08),
+      blurRadius: 20,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
   static List<BoxShadow> glow(Color color, {double alpha = 0.3}) => [
-        BoxShadow(
-          color: color.withValues(alpha: alpha),
-          blurRadius: 18,
-          offset: const Offset(0, 6),
-        ),
-      ];
+    BoxShadow(
+      color: color.withValues(alpha: alpha),
+      blurRadius: 18,
+      offset: const Offset(0, 6),
+    ),
+  ];
 }

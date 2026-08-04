@@ -43,8 +43,8 @@ class ProblemReportController extends GetxController {
   Future<void> submitReport() async {
     if (descriptionController.value.isEmpty) {
       Get.snackbar(
-        'Xatolik',
-        'Iltimos, muammoning tafsilotlarini kiriting',
+        'Xatolik'.tr,
+        'Iltimos, muammoning tafsilotlarini kiriting'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.errorContainer,
         colorText: AppColors.onErrorContainer,
@@ -54,8 +54,8 @@ class ProblemReportController extends GetxController {
 
     if (pickedPhotos.isEmpty) {
       Get.snackbar(
-        'Xatolik',
-        'Iltimos, muammo joyidan suratga oling',
+        'Xatolik'.tr,
+        'Iltimos, muammo joyidan suratga oling'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.errorContainer,
         colorText: AppColors.onErrorContainer,
@@ -76,8 +76,8 @@ class ProblemReportController extends GetxController {
     if (!success) {
       isSubmitting.value = false;
       Get.snackbar(
-        'Xatolik',
-        'Hisobot yuborishda xatolik yuz berdi',
+        'Xatolik'.tr,
+        'Hisobot yuborishda xatolik yuz berdi'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.errorContainer,
         colorText: AppColors.onErrorContainer,
@@ -91,8 +91,8 @@ class ProblemReportController extends GetxController {
     isSubmitting.value = false;
 
     Get.snackbar(
-      'Muvaffaqiyatli!',
-      'Muammo haqida xabar yuborildi',
+      'Muvaffaqiyatli!'.tr,
+      'Muammo haqida xabar yuborildi'.tr,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.statusCleanedBg,
       colorText: AppColors.statusCleaned,

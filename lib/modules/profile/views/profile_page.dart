@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
+import '../../../app/translations/app_translations.dart';
 import '../../../core/animations/app_animations.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/widgets/app_header.dart';
@@ -18,10 +19,7 @@ class ProfilePage extends GetView<ProfileController> {
         bottom: false,
         child: Column(
           children: [
-            const AppHeader(
-              title: 'Profil',
-              showAvatar: true,
-            ),
+            AppHeader(title: 'Profil'.tr, showAvatar: true),
             Expanded(
               child: Obx(
                 () => RefreshIndicator(
@@ -34,16 +32,21 @@ class ProfilePage extends GetView<ProfileController> {
                         FadeSlideIn(
                           index: 1,
                           child: _buildProfileCard(
-                              controller.userName.value,
-                              controller.userRole.value,
-                              controller.userDepartment.value,
-                              controller.userId.value,
-                              controller.userPhone.value),
+                            controller.userName.value,
+                            controller.userRole.value,
+                            controller.userDepartment.value,
+                            controller.userId.value,
+                            controller.userPhone.value,
+                          ),
                         ),
                         const SizedBox(height: 20),
-                        FadeSlideIn(index: 2, child: _buildStatsCard(
+                        FadeSlideIn(
+                          index: 2,
+                          child: _buildStatsCard(
                             controller.userWorkHours.value,
-                            controller.userRating.value)),
+                            controller.userRating.value,
+                          ),
+                        ),
                         const SizedBox(height: 20),
                         FadeSlideIn(index: 3, child: _buildSettingsCard()),
                         const SizedBox(height: 20),
@@ -96,25 +99,31 @@ class ProfilePage extends GetView<ProfileController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('XODIM MA\'LUMOTI',
-                        style:
-                            AppTextStyles.labelCaps(color: AppColors.primary)),
+                    Text(
+                      'XODIM MA\'LUMOTI'.tr,
+                      style: AppTextStyles.labelCaps(color: AppColors.primary),
+                    ),
                     const SizedBox(height: 4),
                     Text(name, style: AppTextStyles.h1()),
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 6),
+                        horizontal: 14,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.primaryContainer,
                         borderRadius: BorderRadius.circular(999),
-                        boxShadow:
-                            AppShadows.glow(AppColors.primary, alpha: 0.25),
+                        boxShadow: AppShadows.glow(
+                          AppColors.primary,
+                          alpha: 0.25,
+                        ),
                       ),
                       child: Text(
                         role,
-                        style:
-                            AppTextStyles.labelCaps(color: AppColors.onPrimary),
+                        style: AppTextStyles.labelCaps(
+                          color: AppColors.onPrimary,
+                        ),
                       ),
                     ),
                   ],
@@ -124,8 +133,9 @@ class ProfilePage extends GetView<ProfileController> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color:
-                      AppColors.surfaceContainerLowest.withValues(alpha: 0.9),
+                  color: AppColors.surfaceContainerLowest.withValues(
+                    alpha: 0.9,
+                  ),
                   borderRadius: BorderRadius.circular(18),
                   boxShadow: AppShadows.soft,
                 ),
@@ -141,24 +151,31 @@ class ProfilePage extends GetView<ProfileController> {
           Row(
             children: [
               Expanded(
-                child:
-                    _infoColumn('Bo\'lim', department, Icons.business_outlined),
+                child: _infoColumn(
+                  'Bo\'lim'.tr,
+                  department,
+                  Icons.business_outlined,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _infoColumn('ID raqam', '#$id', Icons.badge_outlined),
+                child: _infoColumn('ID raqam'.tr, '#$id', Icons.badge_outlined),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              const Icon(Icons.phone_outlined,
-                  size: 16, color: AppColors.onSurfaceVariant),
+              const Icon(
+                Icons.phone_outlined,
+                size: 16,
+                color: AppColors.onSurfaceVariant,
+              ),
               const SizedBox(width: 6),
-              Text(phone,
-                  style:
-                      AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant)),
+              Text(
+                phone,
+                style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+              ),
             ],
           ),
         ],
@@ -175,12 +192,17 @@ class ProfilePage extends GetView<ProfileController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label,
-                  style: AppTextStyles.labelCaps(
-                      color: AppColors.onSurfaceVariant)),
-              Text(value,
-                  style: AppTextStyles.bodyMd(),
-                  overflow: TextOverflow.ellipsis),
+              Text(
+                label,
+                style: AppTextStyles.labelCaps(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+              Text(
+                value,
+                style: AppTextStyles.bodyMd(),
+                overflow: TextOverflow.ellipsis,
+              ),
             ],
           ),
         ),
@@ -192,20 +214,22 @@ class ProfilePage extends GetView<ProfileController> {
     final items = [
       (
         icon: Icons.language_rounded,
-        title: 'Tilni o\'zgartirish',
-        subtitle: 'O\'zbekcha',
+        title: 'Tilni o\'zgartirish'.tr,
+        subtitle: AppTranslations.languageName(
+          controller.selectedLanguage.value,
+        ),
         onTap: _showLanguagePicker,
       ),
       (
         icon: Icons.lock_outline_rounded,
-        title: 'Maxfiylik',
-        subtitle: 'Xavfsizlik va kirish nazorati',
+        title: 'Maxfiylik'.tr,
+        subtitle: 'Xavfsizlik va kirish nazorati'.tr,
         onTap: () {},
       ),
       (
         icon: Icons.help_outline_rounded,
-        title: 'Yordam',
-        subtitle: 'Qo\'llab-quvvatlash xizmati',
+        title: 'Yordam'.tr,
+        subtitle: 'Qo\'llab-quvvatlash xizmati'.tr,
         onTap: () {},
       ),
     ];
@@ -228,23 +252,27 @@ class ProfilePage extends GetView<ProfileController> {
               ),
             ListTile(
               onTap: items[i].onTap,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 4,
+              ),
               leading: Container(
                 padding: const EdgeInsets.all(9),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(items[i].icon,
-                    color: AppColors.primary, size: 22),
+                child: Icon(items[i].icon, color: AppColors.primary, size: 22),
               ),
               title: Text(items[i].title, style: AppTextStyles.bodyLg()),
-              subtitle: Text(items[i].subtitle,
-                  style:
-                      AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant)),
-              trailing: const Icon(Icons.chevron_right_rounded,
-                  color: AppColors.outline),
+              subtitle: Text(
+                items[i].subtitle,
+                style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+              ),
+              trailing: const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.outline,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -275,31 +303,32 @@ class ProfilePage extends GetView<ProfileController> {
                 borderRadius: BorderRadius.circular(999),
               ),
             ),
-            Text('Til tanlang', style: AppTextStyles.h2()),
+            Text('Til tanlang'.tr, style: AppTextStyles.h2()),
             const SizedBox(height: 16),
             ...AppConstants.languages.map((lang) {
-              return Obx(
-                () {
-                  final selected = controller.selectedLanguage.value == lang;
-                  return ListTile(
-                    leading: AnimatedSwitcher(
-                      duration: AppMotion.fast,
-                      child: Icon(
-                        selected
-                            ? Icons.radio_button_checked_rounded
-                            : Icons.radio_button_unchecked_rounded,
-                        key: ValueKey(selected),
-                        color: AppColors.primary,
-                      ),
+              return Obx(() {
+                final selected = controller.selectedLanguage.value == lang;
+                return ListTile(
+                  leading: AnimatedSwitcher(
+                    duration: AppMotion.fast,
+                    child: Icon(
+                      selected
+                          ? Icons.radio_button_checked_rounded
+                          : Icons.radio_button_unchecked_rounded,
+                      key: ValueKey(selected),
+                      color: AppColors.primary,
                     ),
-                    title: Text(lang, style: AppTextStyles.bodyLg()),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    onTap: () => controller.setLanguage(lang),
-                  );
-                },
-              );
+                  ),
+                  title: Text(
+                    '$lang — ${AppTranslations.languageName(lang)}',
+                    style: AppTextStyles.bodyLg(),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  onTap: () => controller.setLanguage(lang),
+                );
+              });
             }),
           ],
         ),
@@ -315,8 +344,10 @@ class ProfilePage extends GetView<ProfileController> {
             icon: Icons.timer_rounded,
             iconColor: AppColors.primary,
             value: AnimatedCount(
-                value: workHours, style: AppTextStyles.display(fontSize: 28)),
-            label: 'Ish soatlari',
+              value: workHours,
+              style: AppTextStyles.display(fontSize: 28),
+            ),
+            label: 'Ish soatlari'.tr,
           ),
         ),
         const SizedBox(width: 12),
@@ -333,7 +364,7 @@ class ProfilePage extends GetView<ProfileController> {
                 style: AppTextStyles.display(fontSize: 28),
               ),
             ),
-            label: 'Reyting',
+            label: 'Reyting'.tr,
           ),
         ),
       ],
@@ -365,8 +396,10 @@ class ProfilePage extends GetView<ProfileController> {
           ),
           const SizedBox(height: 10),
           value,
-          Text(label,
-              style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant)),
+          Text(
+            label,
+            style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+          ),
         ],
       ),
     );
@@ -388,7 +421,10 @@ class ProfilePage extends GetView<ProfileController> {
           children: [
             const Icon(Icons.logout_rounded, color: AppColors.error),
             const SizedBox(width: 8),
-            Text('Chiqish', style: AppTextStyles.bodyLg(color: AppColors.error)),
+            Text(
+              'Hisobdan chiqish'.tr,
+              style: AppTextStyles.bodyLg(color: AppColors.error),
+            ),
           ],
         ),
       ),
@@ -398,7 +434,7 @@ class ProfilePage extends GetView<ProfileController> {
   Widget _buildVersion() {
     return Center(
       child: Text(
-        'Versiya ${AppConstants.appVersion} (Build ${AppConstants.buildNumber})',
+        '${'Versiya'.tr} ${AppConstants.appVersion} (Build ${AppConstants.buildNumber})',
         style: AppTextStyles.bodyMd(color: AppColors.outline),
       ),
     );

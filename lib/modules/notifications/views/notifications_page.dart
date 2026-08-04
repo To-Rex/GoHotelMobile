@@ -19,10 +19,7 @@ class NotificationsPage extends GetView<NotificationsController> {
         bottom: false,
         child: Column(
           children: [
-            const AppHeader(
-              title: 'GoHotel Service',
-              showAvatar: true,
-            ),
+            const AppHeader(title: 'GoHotel Service', showAvatar: true),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: controller.loadNotifications,
@@ -36,12 +33,13 @@ class NotificationsPage extends GetView<NotificationsController> {
                       const SizedBox(height: 16),
                       Obx(
                         () => controller.notifications.isEmpty
-                            ? const Padding(
-                                padding: EdgeInsets.only(top: 40),
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 40),
                                 child: EmptyState(
                                   icon: Icons.notifications_active_outlined,
                                   message:
-                                      'Barcha yangiliklardan xabardor bo\'ling',
+                                      'Barcha yangiliklardan xabardor bo\'ling'
+                                          .tr,
                                 ),
                               )
                             : _buildNotificationsList(),
@@ -65,9 +63,9 @@ class NotificationsPage extends GetView<NotificationsController> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('YANGILANISHLAR', style: AppTextStyles.labelCaps()),
+            Text('YANGILANISHLAR'.tr, style: AppTextStyles.labelCaps()),
             const SizedBox(height: 2),
-            Text('Bildirishnomalar', style: AppTextStyles.h2()),
+            Text('Bildirishnomalar'.tr, style: AppTextStyles.h2()),
           ],
         ),
         Obx(
@@ -80,8 +78,10 @@ class NotificationsPage extends GetView<NotificationsController> {
                 duration: AppMotion.base,
                 opacity: controller.unreadCount > 0 ? 1 : 0.45,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(999),
@@ -89,16 +89,20 @@ class NotificationsPage extends GetView<NotificationsController> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.done_all_rounded,
-                          size: 16, color: AppColors.primary),
+                      const Icon(
+                        Icons.done_all_rounded,
+                        size: 16,
+                        color: AppColors.primary,
+                      ),
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(
-                          'O\'qildi deb belgilash',
+                          'O\'qildi deb belgilash'.tr,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.statusBadge(
-                              color: AppColors.primary),
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ],
@@ -118,13 +122,16 @@ class NotificationsPage extends GetView<NotificationsController> {
         children: controller.notifications
             .asMap()
             .entries
-            .map((entry) => FadeSlideIn(
-                  index: 2 + entry.key,
-                  child: _NotificationCard(
-                    notification: entry.value,
-                    onMarkRead: () => controller.markAsRead(entry.value.id),
-                  ),
-                ))
+            .map(
+              (entry) => FadeSlideIn(
+                index: 2 + entry.key,
+                child: _NotificationCard(
+                  notification: entry.value,
+                  onMarkRead: () => controller.markAsRead(entry.value.id),
+                  onGo: () => controller.goToTarget(entry.value),
+                ),
+              ),
+            )
             .toList(),
       ),
     );
@@ -134,10 +141,12 @@ class NotificationsPage extends GetView<NotificationsController> {
 class _NotificationCard extends StatelessWidget {
   final NotificationModel notification;
   final VoidCallback onMarkRead;
+  final VoidCallback onGo;
 
   const _NotificationCard({
     required this.notification,
     required this.onMarkRead,
+    required this.onGo,
   });
 
   Color get _accentColor {
@@ -202,7 +211,8 @@ class _NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final muted = notification.type == NotificationType.problemAccepted ||
+    final muted =
+        notification.type == NotificationType.problemAccepted ||
         notification.type == NotificationType.system;
 
     return AnimatedOpacity(
@@ -246,8 +256,7 @@ class _NotificationCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
                                   child: Text(
@@ -297,25 +306,13 @@ class _NotificationCard extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
-                                      'Xona ${notification.roomNumber}',
+                                      '${'Xona'.tr} ${notification.roomNumber}',
                                       style: AppTextStyles.labelCaps(
                                         color: AppColors.primary,
                                       ),
                                     ),
                                   ),
-                                if (notification.hasActions) ...[
-                                  _actionButton(
-                                    'BORISH',
-                                    AppColors.primaryContainer,
-                                    AppColors.onPrimary,
-                                    glow: true,
-                                  ),
-                                  _actionButton(
-                                    'RAD ETISH',
-                                    AppColors.surfaceContainer,
-                                    AppColors.onSurfaceVariant,
-                                  ),
-                                ],
+                                if (notification.hasActions) _buildGoButton(),
                               ],
                             ),
                           ],
@@ -332,17 +329,32 @@ class _NotificationCard extends StatelessWidget {
     );
   }
 
-  Widget _actionButton(String label, Color bgColor, Color textColor,
-      {bool glow = false}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow:
-            glow ? AppShadows.glow(AppColors.primary, alpha: 0.25) : null,
+  Widget _buildGoButton() {
+    return Pressable(
+      onTap: onGo,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          color: AppColors.primaryContainer,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: AppShadows.glow(AppColors.primary, alpha: 0.25),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'BORISH'.tr,
+              style: AppTextStyles.labelCaps(color: AppColors.onPrimary),
+            ),
+            const SizedBox(width: 4),
+            const Icon(
+              Icons.arrow_forward_rounded,
+              size: 14,
+              color: AppColors.onPrimary,
+            ),
+          ],
+        ),
       ),
-      child: Text(label, style: AppTextStyles.labelCaps(color: textColor)),
     );
   }
 }

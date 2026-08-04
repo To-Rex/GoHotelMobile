@@ -6,6 +6,8 @@ import '../../modules/home/bindings/home_binding.dart';
 import '../../modules/home/bindings/main_binding.dart';
 import '../../modules/home/views/main_page.dart';
 import '../../modules/notifications/bindings/notifications_binding.dart';
+import '../../modules/occupied_rooms/bindings/occupied_rooms_binding.dart';
+import '../../modules/occupied_rooms/views/occupied_rooms_page.dart';
 import '../../modules/tasks/bindings/tasks_binding.dart';
 import '../../modules/tasks/views/room_details_page.dart';
 import '../../modules/report/bindings/report_binding.dart';
@@ -36,7 +38,12 @@ class AppRoutes {
     GetPage(
       name: '/room-details',
       page: () => const RoomDetailsPage(),
-      binding: TasksBinding(),
+      bindings: [TasksBinding(), RoomDetailsBinding()],
+    ),
+    GetPage(
+      name: '/occupied-rooms',
+      page: () => const OccupiedRoomsPage(),
+      binding: OccupiedRoomsBinding(),
     ),
     GetPage(
       name: '/photo-report',

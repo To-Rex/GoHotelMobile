@@ -23,12 +23,13 @@ class PhotoReportPage extends GetView<PhotoReportController> {
               backgroundColor: AppColors.surface,
               elevation: 0,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back_rounded,
-                    color: AppColors.onSurface),
+                icon: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: AppColors.onSurface,
+                ),
                 onPressed: () => Get.back(),
               ),
-              title: Text(isPush ? 'Vazifani yakunlash' : 'Fotohisobot',
-                  style: AppTextStyles.h2()),
+              title: Text('Vazifani yakunlash'.tr, style: AppTextStyles.h2()),
             )
           : null,
       body: SafeArea(
@@ -39,25 +40,23 @@ class PhotoReportPage extends GetView<PhotoReportController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!isPush)
-                const AppHeader(
-                  title: 'Fotohisobot',
+                AppHeader(
+                  title: 'Fotohisobot'.tr,
                   showAvatar: true,
                   showBackButton: false,
                 ),
               if (task != null) ...[
-                FadeSlideIn(index: 0, child: _buildRoomInfo(task)),
+                FadeSlideIn(index: 0, child: _buildRoomCard(task)),
                 const SizedBox(height: 24),
               ],
-              FadeSlideIn(index: 1, child: _buildPhotoGrid(context)),
+              FadeSlideIn(index: 1, child: _buildPhotosSection()),
               const SizedBox(height: 24),
-              FadeSlideIn(index: 2, child: _buildUploadedSamples()),
-              const SizedBox(height: 24),
-              FadeSlideIn(index: 3, child: _buildCommentsField()),
-              const SizedBox(height: 32),
-              FadeSlideIn(index: 4, child: _buildSubmitButton()),
+              FadeSlideIn(index: 2, child: _buildCommentsField()),
+              const SizedBox(height: 28),
+              FadeSlideIn(index: 3, child: _buildSubmitButton()),
               if (isPush) ...[
                 const SizedBox(height: 12),
-                FadeSlideIn(index: 5, child: _buildCancelButton()),
+                FadeSlideIn(index: 4, child: _buildCancelButton()),
               ],
               const SizedBox(height: 20),
             ],
@@ -67,217 +66,222 @@ class PhotoReportPage extends GetView<PhotoReportController> {
     );
   }
 
-  Widget _buildRoomInfo(TaskModel task) {
+  Widget _buildRoomCard(TaskModel task) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(20),
         boxShadow: AppShadows.soft,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text('XONA RAQAMI', style: AppTextStyles.labelCaps()),
-          const SizedBox(height: 4),
-          Text(task.roomNumber, style: AppTextStyles.roomNumber()),
-          const SizedBox(height: 6),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            width: 62,
+            padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(999),
+              color: AppColors.primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(16),
             ),
-            child: Text(task.roomType,
-                style: AppTextStyles.labelCaps(color: AppColors.primary)),
+            child: Column(
+              children: [
+                Text(
+                  'XONA'.tr,
+                  style: AppTextStyles.labelCaps(
+                    color: AppColors.primary,
+                    fontSize: 9,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  task.roomNumber,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.h2(color: AppColors.primary),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            '${task.floor} • ${task.guest ?? ''} • ${task.guestStatus ?? ''}',
-            style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  task.roomType,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodyLg(),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  task.guest != null
+                      ? '${task.floor} • ${task.guest}'
+                      : task.floor,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodyMd(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildPhotoGrid(BuildContext context) {
-    final sections = [
-      (icon: Icons.king_bed_rounded, title: 'YOTOQ QISMI'),
-      (icon: Icons.shower_rounded, title: 'VANNAXONA'),
-      (icon: Icons.photo_camera_rounded, title: 'UMUMIY KO\'RINISH'),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('RASMLAR', style: AppTextStyles.labelCaps()),
-        const SizedBox(height: 10),
-        Row(
-          children: sections.map((section) {
-            return Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Pressable(
-                  onTap: () => controller.pickImage(section.title),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerLowest,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.outlineVariant.withValues(alpha: 0.6),
-                          width: 1.6,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: FittedBox(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color:
-                                      AppColors.primary.withValues(alpha: 0.07),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  section.icon,
-                                  size: 30,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                section.title,
-                                style: AppTextStyles.labelCaps(
-                                  color: AppColors.onSurfaceVariant,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Rasm yuklash uchun bosing',
-                                style: AppTextStyles.bodyMd(
-                                  color: AppColors.outline,
-                                  fontSize: 10,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+  Widget _buildPhotosSection() {
+    return Obx(() {
+      final photos = controller.pickedPhotos;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('SURATLAR'.tr, style: AppTextStyles.labelCaps()),
+              const Spacer(),
+              if (photos.isNotEmpty)
+                Text(
+                  '${photos.length} ${'ta surat'.tr}',
+                  style: AppTextStyles.labelCaps(color: AppColors.primary),
                 ),
-              ),
-            );
-          }).toList(),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (photos.isEmpty)
+            _buildCaptureCard()
+          else
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                ...photos.asMap().entries.map(
+                  (entry) => _buildPhotoTile(entry.key, entry.value),
+                ),
+                _buildAddTile(),
+              ],
+            ),
+        ],
+      );
+    });
+  }
+
+  Widget _buildCaptureCard() {
+    return Pressable(
+      onTap: controller.pickImage,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: AppColors.outlineVariant.withValues(alpha: 0.6),
+            width: 1.6,
+          ),
         ),
-      ],
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.camera_alt_rounded,
+                size: 30,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text('Suratga olish'.tr, style: AppTextStyles.bodyLg()),
+            const SizedBox(height: 4),
+            Text(
+              'Xona holatini bir nechta suratga olishingiz mumkin'.tr,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildUploadedSamples() {
-    return Obx(
-      () {
-        if (controller.pickedPhotos.isEmpty) {
-          return Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(16),
+  Widget _buildPhotoTile(int index, String path) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.6, end: 1),
+      duration: AppMotion.base,
+      curve: Curves.easeOutBack,
+      builder: (_, scale, child) => Transform.scale(scale: scale, child: child),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Image.file(
+              File(path),
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
             ),
-            child: Row(
-              children: [
-                const Icon(Icons.image_outlined,
-                    color: AppColors.onSurfaceVariant),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'YUKLANGAN RASMLAR NAMUNASI',
-                    style: AppTextStyles.labelCaps(
-                        color: AppColors.onSurfaceVariant),
-                  ),
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: Pressable(
+              onTap: () => controller.removePhoto(index),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: AppColors.error,
+                  shape: BoxShape.circle,
                 ),
-                Text(
-                  '${controller.pickedPhotos.length}/3',
-                  style:
-                      AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+                child: const Icon(
+                  Icons.close_rounded,
+                  size: 14,
+                  color: AppColors.onError,
                 ),
-              ],
+              ),
             ),
-          );
-        }
+          ),
+        ],
+      ),
+    );
+  }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildAddTile() {
+    return Pressable(
+      onTap: controller.pickImage,
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.outlineVariant.withValues(alpha: 0.6),
+            width: 1.6,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              children: [
-                const Icon(Icons.image_outlined, color: AppColors.primary),
-                const SizedBox(width: 8),
-                Text(
-                  'YUKLANGAN RASMLAR',
-                  style: AppTextStyles.labelCaps(color: AppColors.primary),
-                ),
-                const Spacer(),
-                Text(
-                  '${controller.pickedPhotos.length}/3',
-                  style: AppTextStyles.bodyMd(color: AppColors.primary),
-                ),
-              ],
+            const Icon(
+              Icons.add_a_photo_rounded,
+              size: 26,
+              color: AppColors.primary,
             ),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: controller.pickedPhotos.asMap().entries.map((entry) {
-                return TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.6, end: 1),
-                  duration: AppMotion.base,
-                  curve: Curves.easeOutBack,
-                  builder: (_, scale, child) =>
-                      Transform.scale(scale: scale, child: child),
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(14),
-                        child: Image.file(
-                          File(entry.value['path']!),
-                          width: 96,
-                          height: 96,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        top: 4,
-                        right: 4,
-                        child: Pressable(
-                          onTap: () => controller.removePhoto(entry.key),
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: AppColors.error,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.close_rounded,
-                                size: 14, color: AppColors.onError),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
+            const SizedBox(height: 6),
+            Text(
+              'Yana'.tr,
+              style: AppTextStyles.labelCaps(color: AppColors.onSurfaceVariant),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -286,7 +290,7 @@ class PhotoReportPage extends GetView<PhotoReportController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'QO\'SHIMCHA IZOH (IXTIYORIY)',
+          'QO\'SHIMCHA IZOH (IXTIYORIY)'.tr,
           style: AppTextStyles.labelCaps(),
         ),
         const SizedBox(height: 10),
@@ -295,7 +299,7 @@ class PhotoReportPage extends GetView<PhotoReportController> {
           maxLines: 4,
           style: AppTextStyles.bodyMd(),
           decoration: InputDecoration(
-            hintText: 'Qo\'shimcha izoh yozish...',
+            hintText: 'Qo\'shimcha izoh yozish...'.tr,
             hintStyle: AppTextStyles.bodyMd(color: AppColors.outline),
             filled: true,
             fillColor: AppColors.surfaceContainerLowest,
@@ -318,31 +322,33 @@ class PhotoReportPage extends GetView<PhotoReportController> {
   }
 
   Widget _buildSubmitButton() {
-    return Obx(
-      () => Pressable(
-        onTap: controller.isUploading.value ? null : controller.submitReport,
+    return Obx(() {
+      final uploading = controller.isUploading.value;
+      final ready = controller.pickedPhotos.isNotEmpty && !uploading;
+      return Pressable(
+        onTap: uploading ? null : controller.submitReport,
         child: AnimatedContainer(
           duration: AppMotion.base,
           width: double.infinity,
           height: 56,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: controller.isUploading.value
-                  ? [AppColors.outlineVariant, AppColors.outlineVariant]
-                  : const [
+              colors: ready
+                  ? const [
                       AppColors.primaryContainer,
                       AppColors.secondaryContainer,
-                    ],
+                    ]
+                  : [AppColors.outlineVariant, AppColors.outlineVariant],
             ),
             borderRadius: BorderRadius.circular(16),
-            boxShadow: controller.isUploading.value
-                ? null
-                : AppShadows.glow(AppColors.primary, alpha: 0.3),
+            boxShadow: ready
+                ? AppShadows.glow(AppColors.primary, alpha: 0.3)
+                : null,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (controller.isUploading.value)
+              if (uploading)
                 const SizedBox(
                   width: 20,
                   height: 20,
@@ -360,18 +366,18 @@ class PhotoReportPage extends GetView<PhotoReportController> {
                 ),
               const SizedBox(width: 8),
               Text(
-                controller.isUploading.value
-                    ? 'Yuborilmoqda...'
+                uploading
+                    ? 'Yuborilmoqda...'.tr
                     : controller.isPushPage
-                        ? 'Yakunlash'
-                        : 'Hisobotni yuborish',
+                    ? 'Yakunlash'.tr
+                    : 'Hisobotni yuborish'.tr,
                 style: AppTextStyles.bodyLg(color: AppColors.onPrimary),
               ),
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildCancelButton() {
@@ -385,8 +391,10 @@ class PhotoReportPage extends GetView<PhotoReportController> {
           border: Border.all(color: AppColors.outlineVariant),
         ),
         child: Center(
-          child: Text('Bekor qilish',
-              style: AppTextStyles.bodyLg(color: AppColors.primary)),
+          child: Text(
+            'Bekor qilish'.tr,
+            style: AppTextStyles.bodyLg(color: AppColors.primary),
+          ),
         ),
       ),
     );

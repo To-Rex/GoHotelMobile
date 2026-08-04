@@ -3,6 +3,7 @@ import '../../../data/models/notification_model.dart';
 import '../../../data/services/data_service.dart';
 import '../../../data/services/push_notification_service.dart';
 import '../../home/controllers/main_controller.dart';
+import '../../tasks/controllers/tasks_controller.dart';
 
 class NotificationsController extends GetxController {
   final _dataService = DataService();
@@ -44,7 +45,8 @@ class NotificationsController extends GetxController {
 
       notifications.value = [..._pushOnly.values, ...fromServer];
       notifications.refresh();
-    } catch (_) {} finally {
+    } catch (_) {
+    } finally {
       isLoading.value = false;
     }
   }
@@ -82,6 +84,37 @@ class NotificationsController extends GetxController {
     Get.find<MainController>().changeTab(2);
   }
 
+  /// "Borish" tugmasi: bildirishnoma bog'langan joyga olib boradi.
+  /// 1) task_id bo'lsa — vazifani yuklab, xona sahifasini ochadi;
+  /// 2) xona raqami bo'lsa — ro'yxatdan shu xona vazifasini topadi;
+  /// 3) aks holda — Vazifalar tab'iga o'tadi.
+  Future<void> goToTarget(NotificationModel notification) async {
+    markAsRead(notification.id);
+
+    final taskId = notification.taskId;
+    if (taskId != null && taskId.isNotEmpty) {
+      try {
+        final task = await _dataService.getTask(taskId);
+        Get.toNamed('/room-details', arguments: task);
+        return;
+      } catch (_) {}
+    }
+
+    final roomNumber = notification.roomNumber;
+    if (roomNumber != null && Get.isRegistered<TasksController>()) {
+      final tasks = Get.find<TasksController>().tasks;
+      final index = tasks.indexWhere((t) => t.roomNumber == roomNumber);
+      if (index != -1) {
+        Get.toNamed('/room-details', arguments: tasks[index]);
+        return;
+      }
+    }
+
+    if (Get.isRegistered<MainController>()) {
+      Get.find<MainController>().changeTab(1);
+    }
+  }
+
   void markAsRead(String id) {
     final index = notifications.indexWhere((n) => n.id == id);
     if (index != -1) {
@@ -96,13 +129,13 @@ class NotificationsController extends GetxController {
   }
 
   void markAllAsRead() {
-    notifications.value =
-        notifications.map((n) => n.copyWith(isRead: true)).toList();
+    notifications.value = notifications
+        .map((n) => n.copyWith(isRead: true))
+        .toList();
     notifications.refresh();
     _pushOnly.updateAll((_, n) => n.copyWith(isRead: true));
     _dataService.markAllNotificationsAsRead();
   }
 
-  int get unreadCount =>
-      notifications.where((n) => !n.isRead).length;
+  int get unreadCount => notifications.where((n) => !n.isRead).length;
 }

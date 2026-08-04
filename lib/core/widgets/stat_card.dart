@@ -44,7 +44,10 @@ class StatCard extends StatelessWidget {
               child: Icon(icon, color: iconColor, size: 22),
             ),
             const SizedBox(height: 14),
-            AnimatedCount(value: count, style: AppTextStyles.display(fontSize: 28)),
+            AnimatedCount(
+              value: count,
+              style: AppTextStyles.display(fontSize: 28),
+            ),
             const SizedBox(height: 2),
             Text(
               title,

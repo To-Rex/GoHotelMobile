@@ -26,20 +26,22 @@ abstract class AppTextStyles {
     color: color ?? AppColors.onSurface,
   );
 
-  static TextStyle bodyMd({Color? color, double? fontSize}) => GoogleFonts.inter(
-    fontSize: fontSize ?? 14,
-    fontWeight: FontWeight.w400,
-    height: 20 / (fontSize ?? 14),
-    color: color ?? AppColors.onSurface,
-  );
+  static TextStyle bodyMd({Color? color, double? fontSize}) =>
+      GoogleFonts.inter(
+        fontSize: fontSize ?? 14,
+        fontWeight: FontWeight.w400,
+        height: 20 / (fontSize ?? 14),
+        color: color ?? AppColors.onSurface,
+      );
 
-  static TextStyle labelCaps({Color? color, double? fontSize}) => GoogleFonts.inter(
-    fontSize: fontSize ?? 12,
-    fontWeight: FontWeight.w600,
-    height: 16 / (fontSize ?? 12),
-    letterSpacing: 0.05 * (fontSize ?? 12),
-    color: color ?? AppColors.onSurfaceVariant,
-  );
+  static TextStyle labelCaps({Color? color, double? fontSize}) =>
+      GoogleFonts.inter(
+        fontSize: fontSize ?? 12,
+        fontWeight: FontWeight.w600,
+        height: 16 / (fontSize ?? 12),
+        letterSpacing: 0.05 * (fontSize ?? 12),
+        color: color ?? AppColors.onSurfaceVariant,
+      );
 
   static TextStyle statusBadge({Color? color}) => GoogleFonts.inter(
     fontSize: 13,
@@ -56,12 +58,13 @@ abstract class AppTextStyles {
     fontFeatures: const [FontFeature.tabularFigures()],
   );
 
-  static TextStyle display({Color? color, double? fontSize}) => GoogleFonts.inter(
-    fontSize: fontSize ?? 40,
-    fontWeight: FontWeight.w800,
-    height: 1.05,
-    letterSpacing: -1,
-    color: color ?? AppColors.onSurface,
-    fontFeatures: const [FontFeature.tabularFigures()],
-  );
+  static TextStyle display({Color? color, double? fontSize}) =>
+      GoogleFonts.inter(
+        fontSize: fontSize ?? 40,
+        fontWeight: FontWeight.w800,
+        height: 1.05,
+        letterSpacing: -1,
+        color: color ?? AppColors.onSurface,
+        fontFeatures: const [FontFeature.tabularFigures()],
+      );
 }

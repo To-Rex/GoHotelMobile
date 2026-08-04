@@ -43,9 +43,7 @@ class AppTheme {
     cardTheme: CardThemeData(
       color: AppColors.surfaceContainerLowest,
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       margin: EdgeInsets.zero,
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -70,9 +68,7 @@ class AppTheme {
         backgroundColor: AppColors.primaryContainer,
         foregroundColor: AppColors.onPrimary,
         minimumSize: Size(double.infinity, 56),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
       ),
     ),
@@ -81,9 +77,7 @@ class AppTheme {
         foregroundColor: AppColors.primary,
         side: BorderSide(color: AppColors.outlineVariant),
         minimumSize: Size(double.infinity, 56),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
     splashFactory: InkSparkle.splashFactory,

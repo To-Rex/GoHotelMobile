@@ -20,8 +20,16 @@ class AppBottomNavBar extends StatelessWidget {
 
   static const _navItems = [
     _NavItemData(Icons.home_outlined, Icons.home_rounded, 'Bosh'),
-    _NavItemData(Icons.assignment_outlined, Icons.assignment_rounded, 'Vazifalar'),
-    _NavItemData(Icons.notifications_outlined, Icons.notifications_rounded, 'Xabarlar'),
+    _NavItemData(
+      Icons.assignment_outlined,
+      Icons.assignment_rounded,
+      'Vazifalar',
+    ),
+    _NavItemData(
+      Icons.notifications_outlined,
+      Icons.notifications_rounded,
+      'Xabarlar',
+    ),
     _NavItemData(Icons.person_outline_rounded, Icons.person_rounded, 'Profil'),
   ];
 
@@ -113,7 +121,7 @@ class _NavButton extends StatelessWidget {
                       ? Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
-                            item.label,
+                            item.label.tr,
                             maxLines: 1,
                             overflow: TextOverflow.fade,
                             softWrap: false,
@@ -151,11 +159,7 @@ class _NavButton extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         icon,
-        Positioned(
-          top: -2,
-          right: -2,
-          child: _UnreadDot(),
-        ),
+        Positioned(top: -2, right: -2, child: _UnreadDot()),
       ],
     );
   }
@@ -176,7 +180,10 @@ class _UnreadDot extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.error,
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.surfaceContainerLowest, width: 1.5),
+          border: Border.all(
+            color: AppColors.surfaceContainerLowest,
+            width: 1.5,
+          ),
         ),
       );
     });

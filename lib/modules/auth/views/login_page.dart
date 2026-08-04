@@ -68,7 +68,7 @@ class LoginPage extends GetView<AuthController> {
         Text(AppConstants.appName, style: AppTextStyles.display(fontSize: 30)),
         const SizedBox(height: 8),
         Text(
-          'Mehmonxona xizmati boshqaruv tizimiga xush kelibsiz',
+          'Mehmonxona xizmati boshqaruv tizimiga xush kelibsiz'.tr,
           style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
           textAlign: TextAlign.center,
         ),
@@ -138,9 +138,11 @@ class LoginPage extends GetView<AuthController> {
       keyboardType: TextInputType.text,
       style: AppTextStyles.bodyLg(),
       decoration: _inputDecoration(
-        hint: 'Foydalanuvchi nomi',
-        prefixIcon: const Icon(Icons.person_outline_rounded,
-            color: AppColors.onSurfaceVariant),
+        hint: 'Foydalanuvchi nomi'.tr,
+        prefixIcon: const Icon(
+          Icons.person_outline_rounded,
+          color: AppColors.onSurfaceVariant,
+        ),
       ),
     );
   }
@@ -153,8 +155,10 @@ class LoginPage extends GetView<AuthController> {
         style: AppTextStyles.bodyLg(),
         decoration: _inputDecoration(
           hint: '••••••••',
-          prefixIcon: const Icon(Icons.lock_outline_rounded,
-              color: AppColors.onSurfaceVariant),
+          prefixIcon: const Icon(
+            Icons.lock_outline_rounded,
+            color: AppColors.onSurfaceVariant,
+          ),
           suffixIcon: IconButton(
             onPressed: controller.togglePasswordVisibility,
             icon: AnimatedSwitcher(
@@ -179,8 +183,11 @@ class LoginPage extends GetView<AuthController> {
       child: GestureDetector(
         onTap: () {},
         child: Text(
-          'PAROLNI UNUTDINGIZMI?',
-          style: AppTextStyles.labelCaps(color: AppColors.primary, fontSize: 11),
+          'PAROLNI UNUTDINGIZMI?'.tr,
+          style: AppTextStyles.labelCaps(
+            color: AppColors.primary,
+            fontSize: 11,
+          ),
         ),
       ),
     );
@@ -198,7 +205,7 @@ class LoginPage extends GetView<AuthController> {
         const SizedBox(width: 10),
         GestureDetector(
           onTap: controller.toggleRememberMe,
-          child: Text('Eslab qolish', style: AppTextStyles.bodyMd()),
+          child: Text('Eslab qolish'.tr, style: AppTextStyles.bodyMd()),
         ),
       ],
     );
@@ -239,11 +246,13 @@ class LoginPage extends GetView<AuthController> {
                   ),
                 )
               else
-                const Icon(Icons.arrow_forward_rounded,
-                    color: AppColors.onPrimary),
+                const Icon(
+                  Icons.arrow_forward_rounded,
+                  color: AppColors.onPrimary,
+                ),
               const SizedBox(width: 8),
               Text(
-                controller.isLoading.value ? 'Kirish...' : 'Kirish',
+                controller.isLoading.value ? 'Kirish...'.tr : 'Kirish'.tr,
                 style: AppTextStyles.bodyLg(color: AppColors.onPrimary),
               ),
             ],
@@ -266,8 +275,10 @@ class LoginPage extends GetView<AuthController> {
               child: AnimatedContainer(
                 duration: AppMotion.base,
                 curve: AppMotion.emphasized,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: isActive
                       ? AppColors.primary.withValues(alpha: 0.1)
@@ -297,7 +308,7 @@ class LoginPage extends GetView<AuthController> {
 
   Widget _buildSupportInfo() {
     return Text(
-      'Qo\'llab-quvvatlash: ${AppConstants.supportPhone}',
+      '${'Qo\'llab-quvvatlash'.tr}: ${AppConstants.supportPhone}',
       style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
     );
   }
@@ -352,12 +363,18 @@ class _AmbientBackdropState extends State<_AmbientBackdrop>
           child: Stack(
             children: [
               _blob(
-                alignment: Alignment(0.9 + 0.2 * math.sin(t), -0.9 + 0.15 * math.cos(t)),
+                alignment: Alignment(
+                  0.9 + 0.2 * math.sin(t),
+                  -0.9 + 0.15 * math.cos(t),
+                ),
                 color: AppColors.surfaceContainerHighest,
                 size: 340,
               ),
               _blob(
-                alignment: Alignment(-1.1 + 0.2 * math.cos(t * 0.8), 0.7 + 0.2 * math.sin(t * 0.8)),
+                alignment: Alignment(
+                  -1.1 + 0.2 * math.cos(t * 0.8),
+                  0.7 + 0.2 * math.sin(t * 0.8),
+                ),
                 color: AppColors.surfaceContainer,
                 size: 300,
               ),
@@ -380,9 +397,7 @@ class _AmbientBackdropState extends State<_AmbientBackdrop>
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: [color, color.withValues(alpha: 0)],
-          ),
+          gradient: RadialGradient(colors: [color, color.withValues(alpha: 0)]),
         ),
       ),
     );

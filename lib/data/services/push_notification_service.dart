@@ -35,7 +35,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 /// lokal bildirishnoma ko'rsatish va bosilganda kerakli sahifaga o'tish.
 class PushNotificationService extends GetxService {
   PushNotificationService({DataService? dataService})
-      : _dataService = dataService ?? DataService();
+    : _dataService = dataService ?? DataService();
 
   static PushNotificationService get to => Get.find<PushNotificationService>();
 
@@ -115,7 +115,8 @@ class PushNotificationService extends GetxService {
 
     await _localNotifications
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(_channel);
   }
 
@@ -130,7 +131,7 @@ class PushNotificationService extends GetxService {
 
     isAuthorized.value =
         settings.authorizationStatus == AuthorizationStatus.authorized ||
-            settings.authorizationStatus == AuthorizationStatus.provisional;
+        settings.authorizationStatus == AuthorizationStatus.provisional;
 
     return isAuthorized.value;
   }
@@ -277,7 +278,9 @@ class PushNotificationService extends GetxService {
     if (initial == null) return;
     _pendingMessage = initial;
     // Birinchi frame chizilgach yo'naltiramiz — aks holda navigator tayyor emas.
-    WidgetsBinding.instance.addPostFrameCallback((_) => consumePendingMessage());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => consumePendingMessage(),
+    );
   }
 
   /// Kutib turgan push bo'lsa uni qayta ishlaydi (masalan login'dan keyin).
@@ -317,7 +320,8 @@ class PushNotificationService extends GetxService {
 
     await _localNotifications.show(
       // 32-bit int chegarasidan oshmasligi uchun hashCode'ni cheklaymiz.
-      id: (message.messageId ?? DateTime.now().toIso8601String()).hashCode &
+      id:
+          (message.messageId ?? DateTime.now().toIso8601String()).hashCode &
           0x7fffffff,
       title: title,
       body: body,

@@ -16,10 +16,21 @@ class HomeController extends GetxController {
   final todayTasks = <TaskModel>[].obs;
   final isLoading = false.obs;
 
+  Worker? _tasksWorker;
+
   @override
   void onInit() {
     super.onInit();
+    // Vazifalar serverdan keyinroq kelganda ham statistika avtomatik
+    // yangilanadi — aks holda birinchi ochilishda sahifa bo'sh qoladi.
+    _tasksWorker = ever(_tasksController.tasks, (_) => _updateStats());
     _initApp();
+  }
+
+  @override
+  void onClose() {
+    _tasksWorker?.dispose();
+    super.onClose();
   }
 
   Future<void> _initApp() async {
@@ -42,7 +53,8 @@ class HomeController extends GetxController {
     try {
       await _tasksController.loadTasks();
       _updateStats();
-    } catch (_) {} finally {
+    } catch (_) {
+    } finally {
       isLoading.value = false;
     }
   }
@@ -53,15 +65,23 @@ class HomeController extends GetxController {
 
   void _updateStats() {
     final tasks = _tasksController.tasks;
-    completedTasks.value = tasks.where((t) => t.status == TaskStatus.completed).length;
-    pendingTasks.value = tasks.where((t) => t.status == TaskStatus.pending).length;
+    completedTasks.value = tasks
+        .where((t) => t.status == TaskStatus.completed)
+        .length;
+    pendingTasks.value = tasks
+        .where((t) => t.status == TaskStatus.pending)
+        .length;
     problemTasks.value = tasks.where((t) => t.isUrgent).length;
 
-    final inProgress = tasks.where((t) => t.status == TaskStatus.inProgress).fold<int>(0, (s, t) => s + t.progress);
+    final inProgress = tasks
+        .where((t) => t.status == TaskStatus.inProgress)
+        .fold<int>(0, (s, t) => s + t.progress);
     final completed = completedTasks.value * 100;
     final total = tasks.length * 100;
     overallProgress.value = total > 0 ? (inProgress + completed) / total : 0.0;
 
-    todayTasks.value = tasks.where((t) => t.status != TaskStatus.completed).toList();
+    todayTasks.value = tasks
+        .where((t) => t.status != TaskStatus.completed)
+        .toList();
   }
 }

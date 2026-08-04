@@ -186,7 +186,9 @@ class AnimatedProgressBar extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       color ?? AppColors.primaryContainer,
-                      (color ?? AppColors.primaryContainer).withValues(alpha: 0.75),
+                      (color ?? AppColors.primaryContainer).withValues(
+                        alpha: 0.75,
+                      ),
                     ],
                   ),
                 ),
@@ -225,9 +227,7 @@ class AnimatedProgressRing extends StatelessWidget {
         height: size,
         child: CustomPaint(
           painter: _RingPainter(v, strokeWidth),
-          child: Center(
-            child: Text('${(v * 100).round()}%', style: textStyle),
-          ),
+          child: Center(child: Text('${(v * 100).round()}%', style: textStyle)),
         ),
       ),
     );
@@ -296,7 +296,9 @@ class BouncyCheck extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(size * 0.36),
         border: Border.all(
-          color: checked ? AppColors.primaryContainer : AppColors.outlineVariant,
+          color: checked
+              ? AppColors.primaryContainer
+              : AppColors.outlineVariant,
           width: 2,
         ),
         color: checked ? AppColors.primaryContainer : Colors.transparent,
@@ -314,8 +316,11 @@ class BouncyCheck extends StatelessWidget {
         scale: checked ? 1 : 0,
         duration: const Duration(milliseconds: 450),
         curve: AppMotion.spring,
-        child: Icon(Icons.check_rounded,
-            size: size * 0.66, color: AppColors.onPrimary),
+        child: Icon(
+          Icons.check_rounded,
+          size: size * 0.66,
+          color: AppColors.onPrimary,
+        ),
       ),
     );
   }
@@ -367,8 +372,10 @@ class _SoftPulseState extends State<SoftPulse>
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).disableAnimations) return widget.child;
     return ScaleTransition(
-      scale: Tween(begin: 1.0, end: 1.06)
-          .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut)),
+      scale: Tween(
+        begin: 1.0,
+        end: 1.06,
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut)),
       child: widget.child,
     );
   }

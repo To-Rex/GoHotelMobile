@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../app/translations/app_translations.dart';
 import '../../../core/storage/local_storage.dart';
 import '../../../data/services/data_service.dart';
 import '../../../data/services/push_notification_service.dart';
@@ -46,6 +47,8 @@ class ProfileController extends GetxController {
   void setLanguage(String lang) {
     selectedLanguage.value = lang;
     storage.language = lang;
+    // Butun ilova tilini darhol almashtiradi.
+    Get.updateLocale(AppTranslations.localeFromCode(lang));
   }
 
   Future<void> logout() async {

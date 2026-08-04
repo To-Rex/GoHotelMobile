@@ -73,8 +73,11 @@ class _EmptyStateState extends State<EmptyState>
                       ],
                     ),
                   ),
-                  child: Icon(widget.icon,
-                      size: 44, color: AppColors.primary.withValues(alpha: 0.65)),
+                  child: Icon(
+                    widget.icon,
+                    size: 44,
+                    color: AppColors.primary.withValues(alpha: 0.65),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),

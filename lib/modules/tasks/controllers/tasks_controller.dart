@@ -27,7 +27,8 @@ class TasksController extends GetxController {
     try {
       tasks.value = await _dataService.getTasks();
       tasks.refresh();
-    } catch (_) {} finally {
+    } catch (_) {
+    } finally {
       isLoading.value = false;
     }
   }
@@ -48,8 +49,13 @@ class TasksController extends GetxController {
   void updateTaskProgress(String taskId, int progress) {
     final index = tasks.indexWhere((t) => t.id == taskId);
     if (index != -1) {
-      final newStatus = progress >= 100 ? TaskStatus.completed : TaskStatus.inProgress;
-      tasks[index] = tasks[index].copyWith(progress: progress, status: newStatus);
+      final newStatus = progress >= 100
+          ? TaskStatus.completed
+          : TaskStatus.inProgress;
+      tasks[index] = tasks[index].copyWith(
+        progress: progress,
+        status: newStatus,
+      );
       tasks.refresh();
       _dataService.updateTaskProgress(taskId, progress);
     }
@@ -66,8 +72,9 @@ class TasksController extends GetxController {
         return item;
       }).toList();
       final completed = newChecklist.where((c) => c.isCompleted).length;
-      final progress =
-          newChecklist.isEmpty ? 0 : (completed / newChecklist.length * 100).round();
+      final progress = newChecklist.isEmpty
+          ? 0
+          : (completed / newChecklist.length * 100).round();
       tasks[taskIndex] = task.copyWith(
         checklist: newChecklist,
         progress: progress,

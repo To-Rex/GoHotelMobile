@@ -9,7 +9,7 @@ import '../../tasks/controllers/tasks_controller.dart';
 class PhotoReportController extends GetxController {
   final _dataService = DataService();
 
-  final pickedPhotos = <Map<String, String>>[].obs;
+  final pickedPhotos = <String>[].obs;
   final isUploading = false.obs;
   final commentController = ''.obs;
   final ImagePicker _picker = ImagePicker();
@@ -23,20 +23,13 @@ class PhotoReportController extends GetxController {
 
   bool get isPushPage => task != null;
 
-  List<Map<String, String>> get bedroomPhotos =>
-      pickedPhotos.where((p) => p['section'] == 'YOTOQ QISMI').toList();
-  List<Map<String, String>> get bathroomPhotos =>
-      pickedPhotos.where((p) => p['section'] == 'VANNAXONA').toList();
-  List<Map<String, String>> get generalPhotos =>
-      pickedPhotos.where((p) => p['section'] == 'UMUMIY KO\'RINISH').toList();
-
-  Future<void> pickImage(String section) async {
+  Future<void> pickImage() async {
     if (_isPicking) return;
     _isPicking = true;
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
       if (image != null) {
-        pickedPhotos.add({'path': image.path, 'section': section});
+        pickedPhotos.add(image.path);
       }
     } finally {
       _isPicking = false;
@@ -48,33 +41,64 @@ class PhotoReportController extends GetxController {
   }
 
   Future<void> submitReport() async {
-    isUploading.value = true;
+    if (isUploading.value) return;
 
+    if (pickedPhotos.isEmpty) {
+      Get.snackbar(
+        'Surat kerak'.tr,
+        'Kamida bitta surat oling'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.statusInProgressBg,
+        colorText: AppColors.statusInProgress,
+      );
+      return;
+    }
+
+    isUploading.value = true;
+    var success = true;
     if (isPushPage && task != null) {
-      final success = await _dataService.submitPhotoReport(
+      success = await _dataService.submitPhotoReport(
         taskId: task!.id,
-        photoPaths: pickedPhotos.map((p) => p['path']!).toList(),
-        comment: commentController.value.isEmpty ? null : commentController.value,
+        photoPaths: pickedPhotos.toList(),
+        comment: commentController.value.isEmpty
+            ? null
+            : commentController.value,
       );
       if (success) {
         Get.find<TasksController>().updateTaskProgress(task!.id, 100);
       }
     }
-
     isUploading.value = false;
+
+    if (!success) {
+      // Suratlar o'chirilmaydi — farrosh qayta urinishi mumkin.
+      Get.snackbar(
+        'Xatolik'.tr,
+        'Hisobot yuborilmadi. Internetni tekshirib, qayta urinib ko\'ring.'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorContainer,
+        colorText: AppColors.onErrorContainer,
+      );
+      return;
+    }
+
     pickedPhotos.clear();
     commentController.value = '';
 
     Get.snackbar(
-      'Muvaffaqiyatli!',
-      isPushPage ? 'Xona tozalandi va hisobot yuborildi' : 'Hisobot muvaffaqiyatli yuborildi',
+      'Muvaffaqiyatli!'.tr,
+      isPushPage
+          ? 'Xona tozalandi va hisobot yuborildi'.tr
+          : 'Hisobot muvaffaqiyatli yuborildi'.tr,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.statusCleanedBg,
       colorText: AppColors.statusCleaned,
     );
 
     if (isPushPage) {
-      Get.close(2);
+      // Qaysi yo'ldan kelinganidan qat'i nazar bosh ekranga qaytadi
+      // (room-details orqali ham, to'g'ridan-to'g'ri ham).
+      Get.until((route) => route.settings.name == '/home');
     } else {
       Get.find<MainController>().changeTab(0);
     }

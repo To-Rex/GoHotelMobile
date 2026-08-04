@@ -5,6 +5,7 @@ import 'package:get/get.dart' hide Response;
 import '../models/user_model.dart';
 import '../models/task_model.dart';
 import '../models/notification_model.dart';
+import '../models/occupied_room_model.dart';
 import '../../core/storage/local_storage.dart';
 import 'api_client.dart';
 import 'api_service.dart';
@@ -13,7 +14,7 @@ class DataService {
   final ApiService _api;
 
   DataService({ApiClient? apiClient})
-      : _api = ApiService(apiClient ?? ApiClient());
+    : _api = ApiService(apiClient ?? ApiClient());
 
   Future<void> _handleAuthError(dynamic e) async {
     if (e is DioException && e.response?.statusCode == 401) {
@@ -66,7 +67,9 @@ class DataService {
 
   void _logApiError(String method, dynamic e) {
     if (e is DioException && e.response != null) {
-      print('[DataService] $method failed: ${e.response?.statusCode} ${e.response?.data}');
+      print(
+        '[DataService] $method failed: ${e.response?.statusCode} ${e.response?.data}',
+      );
     } else {
       print('[DataService] $method failed: $e');
     }
@@ -163,6 +166,22 @@ class DataService {
     } catch (e) {
       _logApiError('submitProblemReport', e);
       return false;
+    }
+  }
+
+  // ── HOUSEKEEPING ──────────────────────────────────────────────────
+
+  Future<List<OccupiedRoomModel>> getOccupiedRooms({
+    bool includeReserved = false,
+  }) async {
+    try {
+      return await _api.getOccupiedRooms(includeReserved: includeReserved);
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getOccupiedRooms(includeReserved: includeReserved);
+      }
+      return [];
     }
   }
 

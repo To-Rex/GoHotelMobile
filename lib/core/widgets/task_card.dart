@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../app/theme/colors.dart';
 import '../../app/theme/text_styles.dart';
 import '../../data/models/task_model.dart';
@@ -74,15 +75,19 @@ class TaskCard extends StatelessWidget {
                         _buildStatusBadge(),
                         const Spacer(),
                         if (task.isUrgent)
-                          const Icon(Icons.warning_amber_rounded,
-                              color: AppColors.error, size: 20),
+                          const Icon(
+                            Icons.warning_amber_rounded,
+                            color: AppColors.error,
+                            size: 20,
+                          ),
                       ],
                     ),
                     const SizedBox(height: 6),
                     Text(
                       '${task.floor} • ${task.roomType}',
                       style: AppTextStyles.bodyMd(
-                          color: AppColors.onSurfaceVariant),
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
                     if (task.guest != null || task.deadline != null) ...[
                       const SizedBox(height: 10),
@@ -91,8 +96,10 @@ class TaskCard extends StatelessWidget {
                         runSpacing: 6,
                         children: [
                           if (task.guest != null)
-                            _metaChip(Icons.person_outline_rounded,
-                                '${task.guest} (${task.guestStatus})'),
+                            _metaChip(
+                              Icons.person_outline_rounded,
+                              '${task.guest} (${task.guestStatus})',
+                            ),
                           if (task.deadline != null)
                             _metaChip(Icons.schedule_rounded, task.deadline!),
                         ],
@@ -112,7 +119,8 @@ class TaskCard extends StatelessWidget {
                           Text(
                             '${task.progress}%',
                             style: AppTextStyles.labelCaps(
-                                color: AppColors.primary),
+                              color: AppColors.primary,
+                            ),
                           ),
                         ],
                       ),
@@ -122,21 +130,29 @@ class TaskCard extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
-                          color: AppColors.errorContainer.withValues(alpha: 0.45),
+                          color: AppColors.errorContainer.withValues(
+                            alpha: 0.45,
+                          ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.priority_high_rounded,
-                                size: 16, color: AppColors.error),
+                            const Icon(
+                              Icons.priority_high_rounded,
+                              size: 16,
+                              color: AppColors.error,
+                            ),
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(
                                 task.note!,
                                 style: AppTextStyles.bodyMd(
-                                    color: AppColors.onErrorContainer),
+                                  color: AppColors.onErrorContainer,
+                                ),
                               ),
                             ),
                           ],
@@ -153,7 +169,7 @@ class TaskCard extends StatelessWidget {
                         children: [
                           if (task.status == TaskStatus.pending)
                             _actionButton(
-                              task.isUrgent ? 'Bajarish' : 'Boshlash',
+                              task.isUrgent ? 'Bajarish'.tr : 'Boshlash'.tr,
                               AppColors.primaryContainer,
                               AppColors.onPrimary,
                               Icons.play_arrow_rounded,
@@ -162,7 +178,7 @@ class TaskCard extends StatelessWidget {
                             ),
                           if (task.status == TaskStatus.inProgress) ...[
                             _actionButton(
-                              'Yakunlash',
+                              'Yakunlash'.tr,
                               AppColors.primaryContainer,
                               AppColors.onPrimary,
                               Icons.check_circle_rounded,
@@ -170,14 +186,14 @@ class TaskCard extends StatelessWidget {
                               glow: true,
                             ),
                             _actionButton(
-                              'Hisobot',
+                              'Hisobot'.tr,
                               AppColors.surfaceContainer,
                               AppColors.primary,
                               Icons.photo_camera_rounded,
                               onReport,
                             ),
                             _actionButton(
-                              'Muammo',
+                              'Muammo'.tr,
                               AppColors.surfaceContainer,
                               AppColors.error,
                               Icons.report_problem_outlined,
@@ -231,23 +247,23 @@ class TaskCard extends StatelessWidget {
       case TaskStatus.inProgress:
         bgColor = AppColors.statusInProgressBg;
         textColor = AppColors.statusInProgress;
-        text = 'Jarayonda';
+        text = 'Jarayonda'.tr;
         break;
       case TaskStatus.completed:
         bgColor = AppColors.statusCleanedBg;
         textColor = AppColors.statusCleaned;
-        text = 'Tozalangan';
+        text = 'Tozalangan'.tr;
         icon = Icons.check_circle_rounded;
         break;
       case TaskStatus.pending:
         if (task.isUrgent) {
           bgColor = AppColors.errorContainer;
           textColor = AppColors.onErrorContainer;
-          text = 'Shoshilinch';
+          text = 'Shoshilinch'.tr;
         } else {
           bgColor = AppColors.statusPendingBg;
           textColor = AppColors.statusPending;
-          text = 'Tozalanishi kerak';
+          text = 'Tozalanishi kerak'.tr;
         }
         break;
     }
@@ -288,7 +304,9 @@ class TaskCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(14),
-          boxShadow: glow ? AppShadows.glow(AppColors.primary, alpha: 0.25) : null,
+          boxShadow: glow
+              ? AppShadows.glow(AppColors.primary, alpha: 0.25)
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

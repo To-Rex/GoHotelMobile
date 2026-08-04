@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../app/theme/colors.dart';
+import '../../../app/translations/app_translations.dart';
 import '../../../core/storage/local_storage.dart';
 import '../../../data/services/data_service.dart';
 import '../../../data/services/push_notification_service.dart';
@@ -39,13 +40,15 @@ class AuthController extends GetxController {
   void setLanguage(String lang) {
     selectedLanguage.value = lang;
     storage.language = lang;
+    // Butun ilova tilini darhol almashtiradi.
+    Get.updateLocale(AppTranslations.localeFromCode(lang));
   }
 
   Future<void> login() async {
     if (phoneController.value.isEmpty || passwordController.value.isEmpty) {
       Get.snackbar(
-        'Xatolik',
-        'Iltimos, foydalanuvchi nomi va parolni kiriting',
+        'Xatolik'.tr,
+        'Iltimos, foydalanuvchi nomi va parolni kiriting'.tr,
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
@@ -92,8 +95,8 @@ class AuthController extends GetxController {
       await _syncPushToken(alreadySent: fcmToken != null);
     } catch (e) {
       Get.snackbar(
-        'Xatolik',
-        'Login ma\'lumotlari noto\'g\'ri yoki serverga ulanishda xatolik',
+        'Xatolik'.tr,
+        'Login ma\'lumotlari noto\'g\'ri yoki serverga ulanishda xatolik'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.errorContainer,
         colorText: AppColors.onErrorContainer,

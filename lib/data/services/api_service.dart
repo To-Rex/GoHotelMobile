@@ -4,6 +4,7 @@ import 'package:http_parser/http_parser.dart';
 import '../models/user_model.dart';
 import '../models/task_model.dart';
 import '../models/notification_model.dart';
+import '../models/occupied_room_model.dart';
 import 'api_client.dart';
 
 class ApiService {
@@ -64,16 +65,22 @@ class ApiService {
   Future<List<TaskModel>> getTasks() async {
     final response = await _client.get<dynamic>('/api/v1/tasks');
     final list = response.data as List<dynamic>;
-    return list.map((e) => TaskModel.fromJson(e as Map<String, dynamic>)).toList();
+    return list
+        .map((e) => TaskModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<TaskModel> getTask(String id) async {
-    final response = await _client.get<Map<String, dynamic>>('/api/v1/tasks/$id');
+    final response = await _client.get<Map<String, dynamic>>(
+      '/api/v1/tasks/$id',
+    );
     return TaskModel.fromJson(response.data!);
   }
 
   Future<TaskModel> startTask(String id) async {
-    final response = await _client.put<Map<String, dynamic>>('/api/v1/tasks/$id/start');
+    final response = await _client.put<Map<String, dynamic>>(
+      '/api/v1/tasks/$id/start',
+    );
     return TaskModel.fromJson(response.data!);
   }
 
@@ -102,12 +109,16 @@ class ApiService {
     final formData = FormData();
     for (final path in photoPaths) {
       final file = File(path);
-      formData.files.add(MapEntry(
-        'photos',
-        await MultipartFile.fromFile(path,
+      formData.files.add(
+        MapEntry(
+          'photos',
+          await MultipartFile.fromFile(
+            path,
             filename: file.uri.pathSegments.last,
-            contentType: MediaType('image', 'jpeg')),
-      ));
+            contentType: MediaType('image', 'jpeg'),
+          ),
+        ),
+      );
     }
     if (comment != null) formData.fields.add(MapEntry('comment', comment));
 
@@ -129,22 +140,41 @@ class ApiService {
     formData.fields.add(MapEntry('category', category));
     formData.fields.add(MapEntry('description', description));
     if (taskId != null) formData.fields.add(MapEntry('task_id', taskId));
-    if (roomNumber != null) formData.fields.add(MapEntry('room_number', roomNumber));
+    if (roomNumber != null)
+      formData.fields.add(MapEntry('room_number', roomNumber));
 
     for (final path in photoPaths) {
-      formData.files.add(MapEntry(
-        'photos',
-        await MultipartFile.fromFile(path,
+      formData.files.add(
+        MapEntry(
+          'photos',
+          await MultipartFile.fromFile(
+            path,
             filename: File(path).uri.pathSegments.last,
-            contentType: MediaType('image', 'jpeg')),
-      ));
+            contentType: MediaType('image', 'jpeg'),
+          ),
+        ),
+      );
     }
 
-    final response = await _client.post(
-      '/api/v1/problems',
-      data: formData,
-    );
+    final response = await _client.post('/api/v1/problems', data: formData);
     return response.data as Map<String, dynamic>;
+  }
+
+  // ── HOUSEKEEPING ──────────────────────────────────────────────────
+
+  /// Hozir band xonalar va ularning kutilayotgan chiqish vaqtlari.
+  /// [includeReserved] true bo'lsa, hali kelmagan (CONFIRMED) bronlar ham qo'shiladi.
+  Future<List<OccupiedRoomModel>> getOccupiedRooms({
+    bool includeReserved = false,
+  }) async {
+    final response = await _client.get<dynamic>(
+      '/api/v1/housekeeping/occupied-rooms',
+      queryParameters: {'include_reserved': includeReserved},
+    );
+    final list = response.data as List<dynamic>;
+    return list
+        .map((e) => OccupiedRoomModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   // ── NOTIFICATIONS ─────────────────────────────────────────────────
@@ -174,10 +204,7 @@ class ApiService {
   }) async {
     await _client.post(
       '/api/v1/notifications/device-token',
-      data: {
-        'token': token,
-        'platform': platform,
-      },
+      data: {'token': token, 'platform': platform},
       options: Options(headers: {'Content-Type': 'application/json'}),
     );
   }

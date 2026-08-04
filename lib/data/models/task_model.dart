@@ -41,9 +41,11 @@ class TaskModel {
     deadline: json['deadline'],
     note: json['note'],
     isUrgent: json['is_urgent'] ?? false,
-    checklist: (json['checklist'] as List<dynamic>?)
-        ?.map((e) => ChecklistItem.fromJson(e))
-        .toList() ?? [],
+    checklist:
+        (json['checklist'] as List<dynamic>?)
+            ?.map((e) => ChecklistItem.fromJson(e))
+            .toList() ??
+        [],
   );
 
   Map<String, dynamic> toJson() => {
@@ -103,11 +105,7 @@ class ChecklistItem {
     this.isCompleted = false,
   });
 
-  ChecklistItem copyWith({
-    String? id,
-    String? title,
-    bool? isCompleted,
-  }) {
+  ChecklistItem copyWith({String? id, String? title, bool? isCompleted}) {
     return ChecklistItem(
       id: id ?? this.id,
       title: title ?? this.title,

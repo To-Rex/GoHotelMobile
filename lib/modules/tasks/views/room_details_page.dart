@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
 import '../../../core/animations/app_animations.dart';
+import '../../../data/models/occupied_room_model.dart';
 import '../../../data/models/task_model.dart';
+import '../controllers/room_details_controller.dart';
 import '../controllers/tasks_controller.dart';
 
 class RoomDetailsPage extends StatelessWidget {
@@ -26,30 +28,42 @@ class RoomDetailsPage extends StatelessWidget {
           backgroundColor: AppColors.surface,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded,
-                color: AppColors.onSurface),
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppColors.onSurface,
+            ),
             onPressed: () => Get.back(),
           ),
           title: Text(
-            'Xona ${currentTask.roomNumber}',
+            '${'Xona'.tr} ${currentTask.roomNumber}',
             style: AppTextStyles.h2(),
           ),
           actions: [
             TextButton.icon(
               onPressed: () =>
                   Get.toNamed('/problem-report', arguments: currentTask),
-              icon: const Icon(Icons.report_problem_outlined,
-                  size: 18, color: AppColors.error),
-              label: Text('Muammo',
-                  style: AppTextStyles.bodyMd(color: AppColors.error)),
+              icon: const Icon(
+                Icons.report_problem_outlined,
+                size: 18,
+                color: AppColors.error,
+              ),
+              label: Text(
+                'Muammo'.tr,
+                style: AppTextStyles.bodyMd(color: AppColors.error),
+              ),
             ),
             TextButton.icon(
               onPressed: () =>
                   Get.toNamed('/photo-report', arguments: currentTask),
-              icon: const Icon(Icons.photo_camera_rounded,
-                  size: 18, color: AppColors.primary),
-              label: Text('Hisobot',
-                  style: AppTextStyles.bodyMd(color: AppColors.primary)),
+              icon: const Icon(
+                Icons.photo_camera_rounded,
+                size: 18,
+                color: AppColors.primary,
+              ),
+              label: Text(
+                'Hisobot'.tr,
+                style: AppTextStyles.bodyMd(color: AppColors.primary),
+              ),
             ),
           ],
         ),
@@ -59,14 +73,21 @@ class RoomDetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FadeSlideIn(index: 0, child: _buildInfoGrid(currentTask)),
+              const SizedBox(height: 16),
+              FadeSlideIn(index: 1, child: _buildDetailsCard(currentTask)),
               const SizedBox(height: 24),
               FadeSlideIn(
                 index: 2,
-                child:
-                    Text('Tekshirish ro\'yxati', style: AppTextStyles.h2()),
+                child: Text(
+                  'Tekshirish ro\'yxati'.tr,
+                  style: AppTextStyles.h2(),
+                ),
               ),
               const SizedBox(height: 12),
-              _buildChecklist(currentTask, tasksController),
+              if (currentTask.checklist.isEmpty)
+                FadeSlideIn(index: 3, child: _buildEmptyChecklist())
+              else
+                _buildChecklist(currentTask, tasksController),
               if (currentTask.note != null) ...[
                 const SizedBox(height: 16),
                 FadeSlideIn(
@@ -78,8 +99,10 @@ class RoomDetailsPage extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButton:
-            _buildCompleteButton(currentTask, tasksController),
+        floatingActionButton: _buildCompleteButton(
+          currentTask,
+          tasksController,
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       );
     });
@@ -88,88 +111,99 @@ class RoomDetailsPage extends StatelessWidget {
   Widget _buildInfoGrid(TaskModel task) {
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLowest,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: AppShadows.soft,
+        // IntrinsicHeight shart: stretch scroll ichida cheksiz balandlik olib,
+        // butun sahifani oppoq qilib qo'yadi (layout exception).
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceContainerLowest,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: AppShadows.soft,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('QAVAT'.tr, style: AppTextStyles.labelCaps()),
+                      const SizedBox(height: 6),
+                      Text(task.floor, style: AppTextStyles.h2()),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.info_outline_rounded,
+                            size: 16,
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              task.roomType,
+                              style: AppTextStyles.bodyMd(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('QAVAT', style: AppTextStyles.labelCaps()),
-                    const SizedBox(height: 6),
-                    Text(task.floor, style: AppTextStyles.h2()),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(Icons.info_outline_rounded,
-                            size: 16, color: AppColors.onSurfaceVariant),
-                        const SizedBox(width: 4),
-                        Expanded(
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: task.isUrgent
+                        ? AppColors.errorContainer
+                        : AppColors.surfaceContainerLowest,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: task.isUrgent
+                        ? AppShadows.glow(AppColors.error, alpha: 0.15)
+                        : AppShadows.soft,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('HOLAT'.tr, style: AppTextStyles.labelCaps()),
+                      const SizedBox(height: 6),
+                      Text(
+                        _statusText(task),
+                        style: AppTextStyles.h2(
+                          color: task.isUrgent
+                              ? AppColors.onErrorContainer
+                              : AppColors.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      if (task.isUrgent)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.error,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
                           child: Text(
-                            task.roomType,
-                            style: AppTextStyles.bodyMd(
-                                color: AppColors.onSurfaceVariant),
+                            'Priority',
+                            style: AppTextStyles.labelCaps(
+                              color: AppColors.onError,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: task.isUrgent
-                      ? AppColors.errorContainer
-                      : AppColors.surfaceContainerLowest,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: task.isUrgent
-                      ? AppShadows.glow(AppColors.error, alpha: 0.15)
-                      : AppShadows.soft,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('HOLAT', style: AppTextStyles.labelCaps()),
-                    const SizedBox(height: 6),
-                    Text(
-                      _statusText(task),
-                      style: AppTextStyles.h2(
-                        color: task.isUrgent
-                            ? AppColors.onErrorContainer
-                            : AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    if (task.isUrgent)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColors.error,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Text(
-                          'Priority',
-                          style:
-                              AppTextStyles.labelCaps(color: AppColors.onError),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: 12),
         if (task.status != TaskStatus.completed)
@@ -187,7 +221,7 @@ class RoomDetailsPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('JARAYON', style: AppTextStyles.labelCaps()),
+                    Text('JARAYON'.tr, style: AppTextStyles.labelCaps()),
                     AnimatedCount(
                       value: task.progress,
                       suffix: '%',
@@ -205,15 +239,211 @@ class RoomDetailsPage extends StatelessWidget {
   }
 
   String _statusText(TaskModel task) {
-    if (task.isUrgent) return 'Shoshilinch';
+    if (task.isUrgent) return 'Shoshilinch'.tr;
     switch (task.status) {
       case TaskStatus.pending:
-        return 'Kutilmoqda';
+        return 'Kutilmoqda'.tr;
       case TaskStatus.inProgress:
-        return 'Jarayonda';
+        return 'Jarayonda'.tr;
       case TaskStatus.completed:
-        return 'Yakunlangan';
+        return 'Yakunlangan'.tr;
     }
+  }
+
+  Widget _buildDetailsCard(TaskModel task) {
+    final detailsController = Get.find<RoomDetailsController>();
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: AppShadows.soft,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('QO\'SHIMCHA MA\'LUMOT'.tr, style: AppTextStyles.labelCaps()),
+          const SizedBox(height: 14),
+          _detailRow(
+            Icons.person_outline_rounded,
+            'Mehmon'.tr,
+            task.guest ?? 'Ma\'lumot yo\'q'.tr,
+            trailing: task.guestStatus != null
+                ? _statusChip(task.guestStatus!)
+                : null,
+          ),
+          _rowDivider(),
+          _detailRow(
+            Icons.schedule_rounded,
+            'Tozalash muddati'.tr,
+            task.deadline ?? 'Belgilanmagan'.tr,
+          ),
+          _rowDivider(),
+          Obx(() {
+            final info = detailsController.occupiedInfo.value;
+            final loading = detailsController.isLoadingOccupied.value;
+
+            String value;
+            Widget? trailing;
+            if (loading) {
+              value = 'Tekshirilmoqda...'.tr;
+            } else if (info == null) {
+              value = 'Xona hozir band emas'.tr;
+            } else {
+              value = '${'Chiqish'.tr}: ${info.checkoutLabel}';
+              final minutes = info.minutesUntilCheckout;
+              final Color color;
+              final Color bg;
+              if (minutes < 0) {
+                color = AppColors.error;
+                bg = AppColors.errorContainer;
+              } else if (minutes <= 60) {
+                color = AppColors.statusInProgress;
+                bg = AppColors.statusInProgressBg;
+              } else {
+                color = AppColors.statusCleaned;
+                bg = AppColors.statusCleanedBg;
+              }
+              trailing = Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: bg,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  OccupiedRoomModel.formatRemaining(minutes),
+                  style: AppTextStyles.labelCaps(color: color),
+                ),
+              );
+            }
+
+            return _detailRow(
+              Icons.meeting_room_rounded,
+              'Xona bandligi'.tr,
+              value,
+              trailing: trailing,
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailRow(
+    IconData icon,
+    String label,
+    String value, {
+    Widget? trailing,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, size: 18, color: AppColors.primary),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: AppTextStyles.labelCaps()),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.bodyMd(),
+              ),
+            ],
+          ),
+        ),
+        if (trailing != null) ...[const SizedBox(width: 8), trailing],
+      ],
+    );
+  }
+
+  Widget _statusChip(String status) {
+    final isActive = status == 'Band';
+    final color = isActive
+        ? AppColors.statusInProgress
+        : AppColors.statusCleaned;
+    final bg = isActive
+        ? AppColors.statusInProgressBg
+        : AppColors.statusCleanedBg;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(status.tr, style: AppTextStyles.labelCaps(color: color)),
+    );
+  }
+
+  Widget _rowDivider() {
+    return Container(
+      height: 1,
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      color: AppColors.outlineVariant.withValues(alpha: 0.3),
+    );
+  }
+
+  Widget _buildEmptyChecklist() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.outlineVariant.withValues(alpha: 0.35),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.checklist_rtl_rounded,
+              size: 22,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Ro\'yxat biriktirilmagan'.tr,
+                  style: AppTextStyles.bodyLg(),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Xonani standart tartibda tozalang va yakunida fotohisobot yuboring.'
+                      .tr,
+                  style: AppTextStyles.bodyMd(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildChecklist(TaskModel task, TasksController controller) {
@@ -275,16 +505,16 @@ class RoomDetailsPage extends StatelessWidget {
         color: AppColors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
         border: Border(
-          left: BorderSide(
-            color: AppColors.secondaryContainer,
-            width: 4,
-          ),
+          left: BorderSide(color: AppColors.secondaryContainer, width: 4),
         ),
       ),
       child: Row(
         children: [
-          const Icon(Icons.assignment_late_rounded,
-              color: AppColors.primary, size: 20),
+          const Icon(
+            Icons.assignment_late_rounded,
+            color: AppColors.primary,
+            size: 20,
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -328,8 +558,11 @@ class RoomDetailsPage extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.check_circle_rounded,
-                  color: AppColors.onPrimary, size: 26),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.onPrimary,
+                size: 26,
+              ),
               AnimatedSize(
                 duration: AppMotion.base,
                 curve: AppMotion.emphasized,
@@ -337,9 +570,10 @@ class RoomDetailsPage extends StatelessWidget {
                     ? Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: Text(
-                          'Yakunlash',
+                          'Yakunlash'.tr,
                           style: AppTextStyles.bodyLg(
-                              color: AppColors.onPrimary),
+                            color: AppColors.onPrimary,
+                          ),
                         ),
                       )
                     : const SizedBox.shrink(),

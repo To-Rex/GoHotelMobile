@@ -7,6 +7,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gohotels/firebase_options.dart';
 import 'app/theme/app_theme.dart';
 import 'app/routes/app_routes.dart';
+import 'app/translations/app_translations.dart';
+import 'core/storage/local_storage.dart';
 import 'data/services/push_notification_service.dart';
 
 void main() async {
@@ -24,12 +26,10 @@ void main() async {
   unawaited(push.init());
 
   runApp(const GoHotelApp());
-
 }
 
 class GoHotelApp extends StatelessWidget {
   const GoHotelApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +39,9 @@ class GoHotelApp extends StatelessWidget {
       theme: AppTheme.light,
       defaultTransition: Transition.cupertino,
       transitionDuration: const Duration(milliseconds: 380),
+      translations: AppTranslations(),
+      locale: AppTranslations.localeFromCode(LocalStorage().language),
+      fallbackLocale: AppTranslations.fallback,
       initialRoute: AppRoutes.initialRoute,
       getPages: AppRoutes.routes,
     );

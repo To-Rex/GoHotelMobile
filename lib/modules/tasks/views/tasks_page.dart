@@ -20,9 +20,9 @@ class TasksPage extends GetView<TasksController> {
         bottom: false,
         child: Column(
           children: [
-            const AppHeader(
-              title: 'Mening vazifalarim',
-              subtitle: 'Bugun, 24-Oktyabr',
+            AppHeader(
+              title: 'Mening vazifalarim'.tr,
+              subtitle: 'Bugun, 24-Oktyabr'.tr,
             ),
             const SizedBox(height: 8),
             FadeSlideIn(index: 1, child: _buildTabBar()),
@@ -74,9 +74,9 @@ class TasksPage extends GetView<TasksController> {
         ),
         child: Row(
           children: [
-            _buildTab('Kutilmoqda', 0, controller.pendingTasks.length),
-            _buildTab('Jarayonda', 1, controller.inProgressTasks.length),
-            _buildTab('Yakunlangan', 2, controller.completedTasks.length),
+            _buildTab('Kutilmoqda'.tr, 0, controller.pendingTasks.length),
+            _buildTab('Jarayonda'.tr, 1, controller.inProgressTasks.length),
+            _buildTab('Yakunlangan'.tr, 2, controller.completedTasks.length),
           ],
         ),
       ),
@@ -94,8 +94,9 @@ class TasksPage extends GetView<TasksController> {
           curve: AppMotion.emphasized,
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color:
-                isActive ? AppColors.surfaceContainerLowest : Colors.transparent,
+            color: isActive
+                ? AppColors.surfaceContainerLowest
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             boxShadow: isActive
                 ? [
@@ -118,16 +119,19 @@ class TasksPage extends GetView<TasksController> {
                     overflow: TextOverflow.fade,
                     softWrap: false,
                     style: AppTextStyles.statusBadge(
-                      color:
-                          isActive ? AppColors.primary : AppColors.onSurfaceVariant,
+                      color: isActive
+                          ? AppColors.primary
+                          : AppColors.onSurfaceVariant,
                     ),
                   ),
                 ),
                 const SizedBox(width: 4),
                 AnimatedContainer(
                   duration: AppMotion.base,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: isActive
                         ? AppColors.primary.withValues(alpha: 0.1)
@@ -137,8 +141,9 @@ class TasksPage extends GetView<TasksController> {
                   child: Text(
                     '$count',
                     style: AppTextStyles.labelCaps(
-                      color:
-                          isActive ? AppColors.primary : AppColors.onSurfaceVariant,
+                      color: isActive
+                          ? AppColors.primary
+                          : AppColors.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -159,11 +164,11 @@ class TasksPage extends GetView<TasksController> {
     };
 
     if (tasks.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.only(top: 40),
+      return Padding(
+        padding: const EdgeInsets.only(top: 40),
         child: EmptyState(
           icon: Icons.assignment_turned_in_rounded,
-          message: 'Hozircha vazifalar yo\'q',
+          message: 'Hozircha vazifalar yo\'q'.tr,
         ),
       );
     }
@@ -172,21 +177,23 @@ class TasksPage extends GetView<TasksController> {
       children: tasks
           .asMap()
           .entries
-          .map((entry) => FadeSlideIn(
-                index: entry.key,
-                child: TaskCard(
-                  task: entry.value,
-                  onTap: () =>
-                      Get.toNamed('/room-details', arguments: entry.value),
-                  onStart: () => controller.startTask(entry.value.id),
-                  onFinish: () =>
-                      Get.toNamed('/room-details', arguments: entry.value),
-                  onReport: () =>
-                      Get.toNamed('/photo-report', arguments: entry.value),
-                  onProblemReport: () =>
-                      Get.toNamed('/problem-report', arguments: entry.value),
-                ),
-              ))
+          .map(
+            (entry) => FadeSlideIn(
+              index: entry.key,
+              child: TaskCard(
+                task: entry.value,
+                onTap: () =>
+                    Get.toNamed('/room-details', arguments: entry.value),
+                onStart: () => controller.startTask(entry.value.id),
+                onFinish: () =>
+                    Get.toNamed('/room-details', arguments: entry.value),
+                onReport: () =>
+                    Get.toNamed('/photo-report', arguments: entry.value),
+                onProblemReport: () =>
+                    Get.toNamed('/problem-report', arguments: entry.value),
+              ),
+            ),
+          )
           .toList(),
     );
   }
