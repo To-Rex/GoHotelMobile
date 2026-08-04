@@ -9,7 +9,10 @@ class OccupiedRoomsController extends GetxController {
 
   final rooms = <OccupiedRoomModel>[].obs;
   final isLoading = false.obs;
-  final includeReserved = false.obs;
+
+  /// Standart true: band (CHECKED_IN) bilan birga bron qilingan (CONFIRMED)
+  /// xonalar ham ko'rsatiladi. Sahifadagi toggle bilan o'chirish mumkin.
+  final includeReserved = true.obs;
 
   /// Qolgan vaqt hisobi qurilma soat mintaqasiga bog'liq bo'lmasligi uchun
   /// server bergan daqiqadan yuklangandan beri o'tgan vaqt ayiriladi.

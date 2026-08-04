@@ -70,6 +70,7 @@ class AppTranslations extends Translations {
     'Hammasi': 'Все',
     'Band xonalar': 'Занятые номера',
     'Xonalar qachon bo\'shashini ko\'ring': 'Узнайте, когда освободятся номера',
+    'Barcha vazifalarni ko\'rish': 'Посмотреть все задачи',
 
     // Vazifalar
     'Mening vazifalarim': 'Мои задачи',
@@ -247,6 +248,7 @@ class AppTranslations extends Translations {
     'Hammasi': 'All',
     'Band xonalar': 'Occupied rooms',
     'Xonalar qachon bo\'shashini ko\'ring': 'See when rooms become free',
+    'Barcha vazifalarni ko\'rish': 'View all tasks',
 
     // Tasks
     'Mening vazifalarim': 'My tasks',

@@ -29,6 +29,8 @@ class AppRoutes {
       bindings: [
         MainBinding(),
         TasksBinding(),
+        // Home'dagi "Band xonalar" ro'yxati shu controller'dan o'qiydi.
+        OccupiedRoomsBinding(),
         HomeBinding(),
         NotificationsBinding(),
         ReportBinding(),

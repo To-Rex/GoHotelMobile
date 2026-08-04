@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../../../core/storage/local_storage.dart';
 import '../../../data/models/task_model.dart';
 import '../../../data/services/data_service.dart';
+import '../../occupied_rooms/controllers/occupied_rooms_controller.dart';
 import '../../tasks/controllers/tasks_controller.dart';
 
 class HomeController extends GetxController {
@@ -51,7 +52,12 @@ class HomeController extends GetxController {
   Future<void> refreshData() async {
     isLoading.value = true;
     try {
-      await _tasksController.loadTasks();
+      // Home'da band xonalar ro'yxati ham ko'rsatiladi — pull-to-refresh
+      // ikkalasini birga yangilaydi.
+      await Future.wait([
+        _tasksController.loadTasks(),
+        Get.find<OccupiedRoomsController>().loadRooms(),
+      ]);
       _updateStats();
     } catch (_) {
     } finally {

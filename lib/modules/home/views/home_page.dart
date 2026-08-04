@@ -4,10 +4,10 @@ import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
 import '../../../core/animations/app_animations.dart';
 import '../../../core/widgets/app_header.dart';
+import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/occupied_room_card.dart';
 import '../../../core/widgets/stat_card.dart';
-import '../../../core/widgets/task_card.dart';
-import '../../../data/models/task_model.dart';
-import '../../tasks/controllers/tasks_controller.dart';
+import '../../occupied_rooms/controllers/occupied_rooms_controller.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/main_controller.dart';
 
@@ -36,11 +36,11 @@ class HomePage extends GetView<HomeController> {
                       const SizedBox(height: 20),
                       FadeSlideIn(index: 2, child: _buildStatsGrid()),
                       const SizedBox(height: 16),
-                      FadeSlideIn(index: 3, child: _buildOccupiedRoomsCard()),
+                      FadeSlideIn(index: 3, child: _buildTasksNavCard()),
                       const SizedBox(height: 28),
-                      FadeSlideIn(index: 4, child: _buildTasksHeader()),
+                      FadeSlideIn(index: 4, child: _buildRoomsHeader()),
                       const SizedBox(height: 14),
-                      _buildTasksList(),
+                      _buildRoomsList(),
                     ],
                   ),
                 ),
@@ -153,9 +153,11 @@ class HomePage extends GetView<HomeController> {
     );
   }
 
-  Widget _buildOccupiedRoomsCard() {
+  /// Vazifalar tab'iga tez o'tish kartasi — avval "Band xonalar" shu shaklda
+  /// edi; endi ro'yxat Home'da bo'lgani uchun karta vazifalarga yo'naltiradi.
+  Widget _buildTasksNavCard() {
     return Pressable(
-      onTap: () => Get.toNamed('/occupied-rooms'),
+      onTap: () => Get.find<MainController>().changeTab(1),
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
@@ -172,7 +174,7 @@ class HomePage extends GetView<HomeController> {
                 borderRadius: BorderRadius.circular(14),
               ),
               child: const Icon(
-                Icons.meeting_room_rounded,
+                Icons.cleaning_services_rounded,
                 color: AppColors.primary,
                 size: 24,
               ),
@@ -182,10 +184,10 @@ class HomePage extends GetView<HomeController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Band xonalar'.tr, style: AppTextStyles.bodyLg()),
+                  Text('Bugungi vazifalar'.tr, style: AppTextStyles.bodyLg()),
                   const SizedBox(height: 2),
                   Text(
-                    'Xonalar qachon bo\'shashini ko\'ring'.tr,
+                    'Barcha vazifalarni ko\'rish'.tr,
                     style: AppTextStyles.bodyMd(
                       color: AppColors.onSurfaceVariant,
                     ),
@@ -206,13 +208,13 @@ class HomePage extends GetView<HomeController> {
     );
   }
 
-  Widget _buildTasksHeader() {
+  Widget _buildRoomsHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('Bugungi vazifalar'.tr, style: AppTextStyles.h2()),
+        Text('Band xonalar'.tr, style: AppTextStyles.h2()),
         Pressable(
-          onTap: () => Get.find<MainController>().changeTab(1),
+          onTap: () => Get.toNamed('/occupied-rooms'),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -240,36 +242,43 @@ class HomePage extends GetView<HomeController> {
     );
   }
 
-  Widget _buildTasksList() {
-    return Obx(
-      () => Column(
-        children: controller.todayTasks
+  Widget _buildRoomsList() {
+    final roomsController = Get.find<OccupiedRoomsController>();
+    return Obx(() {
+      if (roomsController.isLoading.value && roomsController.rooms.isEmpty) {
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 32),
+          child: Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          ),
+        );
+      }
+
+      if (roomsController.rooms.isEmpty) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: EmptyState(
+            icon: Icons.night_shelter_rounded,
+            message: 'Hozircha band xonalar yo\'q'.tr,
+          ),
+        );
+      }
+
+      return Column(
+        children: roomsController.rooms
             .asMap()
             .entries
             .map(
               (entry) => FadeSlideIn(
                 index: 5 + entry.key,
-                child: TaskCard(
-                  task: entry.value,
-                  onTap: () =>
-                      Get.toNamed('/room-details', arguments: entry.value),
-                  onStart: () {
-                    if (entry.value.status == TaskStatus.pending) {
-                      Get.find<TasksController>().startTask(entry.value.id);
-                      controller.loadData();
-                    }
-                  },
-                  onFinish: () =>
-                      Get.toNamed('/room-details', arguments: entry.value),
-                  onReport: () =>
-                      Get.toNamed('/photo-report', arguments: entry.value),
-                  onProblemReport: () =>
-                      Get.toNamed('/problem-report', arguments: entry.value),
+                child: OccupiedRoomCard(
+                  room: entry.value,
+                  minutesLeft: roomsController.minutesLeft(entry.value),
                 ),
               ),
             )
             .toList(),
-      ),
-    );
+      );
+    });
   }
 }
