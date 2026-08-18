@@ -5,6 +5,7 @@ import '../../../app/theme/text_styles.dart';
 import '../../../core/animations/app_animations.dart';
 import '../../../data/models/staff_model.dart';
 import '../controllers/admin_staff_controller.dart';
+import 'widgets/admin_common.dart';
 
 /// Xodim yaratish / tahrirlash formasi.
 /// `Get.arguments` sifatida [StaffModel] kelsa — tahrirlash rejimi.
@@ -62,99 +63,190 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
+        titleSpacing: 0,
         leading: IconButton(
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           icon: const Icon(
             Icons.arrow_back_rounded,
             color: AppColors.onSurface,
           ),
-          onPressed: () => Get.back(),
+          onPressed: Get.back,
         ),
         title: Text(
           isEdit ? 'Xodimni tahrirlash'.tr : 'Yangi xodim'.tr,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: AppTextStyles.h2(),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final gutter = adminPageGutterForWidth(constraints.maxWidth);
+          return SafeArea(
+            top: false,
+            child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: const EdgeInsets.only(bottom: 32),
+              child: AdminContentConstraint(
+                maxWidth: 920,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(gutter, 12, gutter, 24),
+                  child: Obx(_buildForm),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildForm() {
+    // MUHIM: Obx builder'i HAR QANDAY yo'lda kamida bitta observable o'qishi
+    // shart — tahrirlash rejimida filial bloki chiqmasa ham ro'yxat shu yerda
+    // o'qiladi, aks holda GetX "improper use" xatosini otadi.
+    final branchCount = controller.branches.length;
+    final fields = <Widget>[
+      _field('Ism'.tr, _textField(firstNameController, 'Ism'.tr)),
+      _field('Familiya'.tr, _textField(lastNameController, 'Familiya'.tr)),
+      if (!isEdit) ...[
+        _field(
+          'Login'.tr,
+          _textField(usernameController, 'Login (kamida 3 belgi)'.tr),
+        ),
+        _field(
+          'Parol'.tr,
+          _textField(
+            passwordController,
+            'Parol (kamida 6 belgi)'.tr,
+            obscure: true,
+          ),
+        ),
+        // Filiallar yuklanishi kechiksa ham form reaktiv tarzda tanlovni
+        // ko'rsatadi; avvalgi yaratish oqimi aynan shu holatda saqlanadi.
+        if (branchCount > 1)
+          _field(
+            'Filial'.tr,
+            _dropdown<String>(
+              value: branchId,
+              hint: 'Filialni tanlang'.tr,
+              items: controller.branches
+                  .map(
+                    (branch) => DropdownMenuItem(
+                      value: branch.id,
+                      child: Text(
+                        branch.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bodyMd(),
+                      ),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) => setState(() => branchId = value),
+            ),
+          ),
+      ],
+      _field('Telefon'.tr, _textField(phoneController, '+998 ...')),
+      if (isEdit)
+        _field(
+          'Holat'.tr,
+          _dropdown<String>(
+            value: status,
+            items: [
+              DropdownMenuItem(
+                value: 'ACTIVE',
+                child: Text('Faol'.tr, style: AppTextStyles.bodyMd()),
+              ),
+              DropdownMenuItem(
+                value: 'INACTIVE',
+                child: Text('Faol emas'.tr, style: AppTextStyles.bodyMd()),
+              ),
+            ],
+            onChanged: (value) => setState(() => status = value ?? 'ACTIVE'),
+          ),
+        ),
+    ];
+
+    return FocusTraversalGroup(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildIntro(),
+          const SizedBox(height: 20),
+          _AdminFormGrid(children: fields),
+          const SizedBox(height: 24),
+          _buildSubmitButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIntro() {
+    final title = isEdit ? 'Xodim ma\'lumotlari'.tr : 'Jamoaga yangi xodim'.tr;
+    final subtitle = isEdit
+        ? 'Kerakli ma\'lumotlarni yangilang'.tr
+        : 'Kirish va aloqa ma\'lumotlarini kiriting'.tr;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final narrow = constraints.maxWidth < 260;
+        final icon = Container(
+          width: 46,
+          height: 46,
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Icon(
+            isEdit ? Icons.manage_accounts_rounded : Icons.person_add_alt_1,
+            color: AppColors.primary,
+          ),
+        );
+        final copy = Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _label('Ism'.tr),
-            _textField(firstNameController, 'Ism'.tr),
-            const SizedBox(height: 16),
-            _label('Familiya'.tr),
-            _textField(lastNameController, 'Familiya'.tr),
-            const SizedBox(height: 16),
-            if (!isEdit) ...[
-              _label('Login'.tr),
-              _textField(usernameController, 'Login (kamida 3 belgi)'.tr),
-              const SizedBox(height: 16),
-              _label('Parol'.tr),
-              _textField(
-                passwordController,
-                'Parol (kamida 6 belgi)'.tr,
-                obscure: true,
+            Text(title, style: AppTextStyles.bodyLg()),
+            const SizedBox(height: 3),
+            Text(
+              subtitle,
+              maxLines: narrow ? 2 : 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodyMd(
+                color: AppColors.onSurfaceVariant,
+                fontSize: 12,
               ),
-              const SizedBox(height: 16),
-              // Filial bloki TO'LIQ Obx ichida — filiallar keyin yuklansa ham
-              // tanlov paydo bo'ladi (aks holda ko'p filialli mehmonxonada
-              // dropdown umuman chiqmay, xodim yaratib bo'lmas edi)
-              Obx(() {
-                if (controller.branches.length <= 1) {
-                  return const SizedBox.shrink();
-                }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _label('Filial'.tr),
-                    _dropdown<String>(
-                      value: branchId,
-                      hint: 'Filialni tanlang'.tr,
-                      items: controller.branches
-                          .map(
-                            (b) => DropdownMenuItem(
-                              value: b.id,
-                              child: Text(
-                                b.name,
-                                style: AppTextStyles.bodyMd(),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (v) => setState(() => branchId = v),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                );
-              }),
-            ],
-            _label('Telefon'.tr),
-            _textField(phoneController, '+998 ...'),
-            const SizedBox(height: 16),
-            if (isEdit) ...[
-              _label('Holat'.tr),
-              _dropdown<String>(
-                value: status,
-                items: [
-                  DropdownMenuItem(
-                    value: 'ACTIVE',
-                    child: Text('Faol'.tr, style: AppTextStyles.bodyMd()),
-                  ),
-                  DropdownMenuItem(
-                    value: 'INACTIVE',
-                    child: Text('Faol emas'.tr, style: AppTextStyles.bodyMd()),
-                  ),
-                ],
-                onChanged: (v) => setState(() => status = v ?? 'ACTIVE'),
-              ),
-              const SizedBox(height: 16),
-            ],
-            const SizedBox(height: 12),
-            _buildSubmitButton(),
-            const SizedBox(height: 20),
+            ),
           ],
-        ),
-      ),
+        );
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: AppShadows.soft,
+          ),
+          child: narrow
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [icon, const SizedBox(height: 12), copy],
+                )
+              : Row(
+                  children: [
+                    icon,
+                    const SizedBox(width: 12),
+                    Expanded(child: copy),
+                  ],
+                ),
+        );
+      },
+    );
+  }
+
+  Widget _field(String label, Widget field) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [_label(label), field],
     );
   }
 
@@ -172,26 +264,29 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
       controller: textController,
       obscureText: obscure,
       style: AppTextStyles.bodyMd(),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: AppTextStyles.bodyMd(color: AppColors.outline),
-        filled: true,
-        fillColor: AppColors.surfaceContainerLowest,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.outlineVariant),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.outlineVariant),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
-        ),
-      ),
+      decoration: _inputDecoration(hint),
     );
   }
+
+  InputDecoration _inputDecoration(String hint) => InputDecoration(
+    hintText: hint,
+    hintStyle: AppTextStyles.bodyMd(color: AppColors.outline),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+    filled: true,
+    fillColor: AppColors.surfaceContainerLowest,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: AppColors.outlineVariant),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: AppColors.outlineVariant),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: AppColors.primary, width: 2),
+    ),
+  );
 
   Widget _dropdown<T>({
     required T? value,
@@ -200,7 +295,7 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
     String? hint,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(14),
@@ -214,6 +309,8 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
               ? null
               : Text(
                   hint,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.bodyMd(color: AppColors.outline),
                 ),
           icon: const Icon(
@@ -232,53 +329,62 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
   Widget _buildSubmitButton() {
     return Obx(() {
       final submitting = controller.isSubmitting.value;
-      return Pressable(
-        onTap: submitting ? null : _submit,
-        child: AnimatedContainer(
-          duration: AppMotion.base,
-          width: double.infinity,
-          height: 56,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: submitting
-                  ? [AppColors.outlineVariant, AppColors.outlineVariant]
-                  : const [
-                      AppColors.primaryContainer,
-                      AppColors.secondaryContainer,
-                    ],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: submitting
-                ? null
-                : AppShadows.glow(AppColors.primary, alpha: 0.3),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (submitting)
-                const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppColors.onPrimary,
-                  ),
-                )
-              else
-                Icon(
-                  isEdit ? Icons.save_rounded : Icons.person_add_alt_rounded,
-                  color: AppColors.onPrimary,
-                ),
-              const SizedBox(width: 8),
-              Text(
-                submitting
-                    ? 'Saqlanmoqda...'.tr
-                    : isEdit
-                    ? 'Saqlash'.tr
-                    : 'Xodim qo\'shish'.tr,
-                style: AppTextStyles.bodyLg(color: AppColors.onPrimary),
+      final label = submitting
+          ? 'Saqlanmoqda...'.tr
+          : isEdit
+          ? 'Saqlash'.tr
+          : 'Xodim qo\'shish'.tr;
+      final foreground = submitting
+          ? AppColors.onSurfaceVariant
+          : AppColors.onPrimary;
+      return Semantics(
+        button: true,
+        label: label,
+        child: Pressable(
+          onTap: submitting ? null : _submit,
+          child: AnimatedContainer(
+            duration: AppMotion.base,
+            height: 56,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: submitting
+                  ? AppColors.surfaceContainerHigh
+                  : AppColors.primary,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: submitting
+                    ? AppColors.outlineVariant.withValues(alpha: 0.7)
+                    : AppColors.primary,
               ),
-            ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (submitting)
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: foreground,
+                    ),
+                  )
+                else
+                  Icon(
+                    isEdit ? Icons.save_rounded : Icons.person_add_alt_rounded,
+                    color: foreground,
+                  ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyLg(color: foreground),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -291,7 +397,7 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
     final phone = phoneController.text.trim();
 
     // Backend ism ham, familiya ham bo'sh bo'lmasligini talab qiladi —
-    // 422 o'rniga tushunarli mahalliy ogohlantirish
+    // 422 o'rniga tushunarli mahalliy ogohlantirish.
     if (firstName.isEmpty || lastName.isEmpty) {
       _warn('Ism va familiyani kiriting'.tr);
       return;
@@ -303,7 +409,7 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
         firstName: firstName,
         lastName: lastName,
         // Bo'sh qoldirilsa telefon O'CHIRILADI (null yuborilsa backend
-        // e'tiborsiz qoldirib, eski raqam qolib ketardi)
+        // e'tiborsiz qoldirib, eski raqam qolib ketardi).
         phone: phone,
         status: status,
       );
@@ -313,8 +419,9 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
 
     final username = usernameController.text.trim();
     final password = passwordController.text;
-    // Ko'p filialda tanlov MAJBURIY — jimgina birinchi filialga yozilmaydi
-    final branch = branchId ??
+    // Ko'p filialda tanlov MAJBURIY — jimgina birinchi filialga yozilmaydi.
+    final branch =
+        branchId ??
         (controller.branches.length == 1 ? controller.branches.first.id : null);
 
     if (username.length < 3 || password.length < 6) {
@@ -344,6 +451,37 @@ class _AdminStaffFormPageState extends State<AdminStaffFormPage> {
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.errorContainer,
       colorText: AppColors.onErrorContainer,
+    );
+  }
+}
+
+/// Reflows the same form controls instead of creating separate desktop and
+/// mobile form trees, so entered text and focus survive a window resize.
+class _AdminFormGrid extends StatelessWidget {
+  final List<Widget> children;
+
+  const _AdminFormGrid({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // 600dp oynada 24dp chetlar qolganidan keyin forma ~552dp bo'ladi;
+        // shu sabab mavjud maydon kengligi 520dp ga yetganda ikki ustunga
+        // o'tamiz. Qaror butun qurilma emas, amaldagi constraintga asoslanadi.
+        final twoColumns = constraints.maxWidth >= 520;
+        const gap = 16.0;
+        final itemWidth = twoColumns
+            ? (constraints.maxWidth - gap) / 2
+            : constraints.maxWidth;
+        return Wrap(
+          spacing: gap,
+          runSpacing: 18,
+          children: children
+              .map((child) => SizedBox(width: itemWidth, child: child))
+              .toList(),
+        );
+      },
     );
   }
 }
