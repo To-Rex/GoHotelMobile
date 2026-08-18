@@ -44,9 +44,15 @@ class StatCard extends StatelessWidget {
               child: Icon(icon, color: iconColor, size: 22),
             ),
             const SizedBox(height: 14),
-            AnimatedCount(
-              value: count,
-              style: AppTextStyles.display(fontSize: 28),
+            // FittedBox — tor ekran/katta shriftda raqam kartadan chiqib
+            // ketmasdan o'zi kichrayadi
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: AnimatedCount(
+                value: count,
+                style: AppTextStyles.display(fontSize: 28),
+              ),
             ),
             const SizedBox(height: 2),
             Text(

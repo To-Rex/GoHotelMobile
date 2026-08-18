@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' show DateTimeRange;
 import 'package:get/get.dart';
+import '../../../core/utils/api_error_text.dart';
 import '../../../data/models/finance_models.dart';
 import '../../../data/services/data_service.dart';
 
@@ -13,6 +14,10 @@ class AdminFinanceController extends GetxController {
   final expenses = <ExpenseModel>[].obs;
   final shopSales = <ShopSaleModel>[].obs;
   final isLoading = false.obs;
+
+  /// Tarmoq xatosi — eski davr raqamlari yangi davr natijasi deb
+  /// o'qilmasligi uchun ko'rsatiladi
+  final errorMessage = RxnString();
 
   /// Tanlangan davr (standart: so'nggi 7 kun)
   final rangeFrom = DateTime.now().subtract(const Duration(days: 6)).obs;
@@ -59,6 +64,14 @@ class AdminFinanceController extends GetxController {
 
   Future<void> loadData() async {
     isLoading.value = true;
+    errorMessage.value = null;
+    // Preset rejimida davr har yuklashda BUGUNGA nisbatan qayta hisoblanadi —
+    // ilova yarim tundan oshib ochiq qolsa "Bugun/7 kun" eskirib qolmasin
+    if (presetDays.value >= 0) {
+      final now = DateTime.now();
+      rangeFrom.value = now.subtract(Duration(days: presetDays.value));
+      rangeTo.value = now;
+    }
     try {
       final from = _dateKey(rangeFrom.value);
       final to = _dateKey(rangeTo.value);
@@ -81,6 +94,7 @@ class AdminFinanceController extends GetxController {
       expenses.refresh();
       shopSales.refresh();
     } catch (_) {
+      errorMessage.value = loadErrorText();
     } finally {
       isLoading.value = false;
     }

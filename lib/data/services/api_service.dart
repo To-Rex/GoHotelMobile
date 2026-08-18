@@ -326,10 +326,13 @@ class ApiService {
     String? email,
   }) async {
     final storage = LocalStorage();
+    // hotel_id saqlanmagan bo'lsa YUBORILMAYDI — backend uni tokendan o'zi
+    // aniqlaydi; bo'sh '' yuborilsa tushunarsiz 422 (UUID emas) qaytardi
+    final hotelId = storage.hotelId;
     final response = await _client.post<Map<String, dynamic>>(
       '/api/v1/employees/',
       data: {
-        'hotel_id': storage.hotelId,
+        if (hotelId.isNotEmpty) 'hotel_id': hotelId,
         'branch_id': branchId,
         'first_name': firstName,
         'last_name': lastName,

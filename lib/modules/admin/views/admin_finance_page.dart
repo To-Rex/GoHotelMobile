@@ -52,6 +52,41 @@ class AdminFinancePage extends GetView<AdminFinanceController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         FadeSlideIn(index: 1, child: _buildRangeSelector(context)),
+                        // Yuklash xatosi — ko'rinib turgan raqamlar eskirgan
+                        // bo'lishi mumkinligi haqida ogohlantirish + retry
+                        if (controller.errorMessage.value != null) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: AppColors.errorContainer,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.wifi_off_rounded,
+                                  size: 18,
+                                  color: AppColors.onErrorContainer,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    controller.errorMessage.value!,
+                                    style: AppTextStyles.bodyMd(
+                                      color: AppColors.onErrorContainer,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: controller.loadData,
+                                  child: Text('Qayta'.tr),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 16),
                         FadeSlideIn(index: 2, child: _buildHero()),
                         const SizedBox(height: 16),
@@ -290,10 +325,20 @@ class AdminFinancePage extends GetView<AdminFinanceController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AnimatedMoney(value: value, style: AppTextStyles.h2(color: color)),
+        // Tor ustunda katta summa qisqarib emas, o'zi kichrayib sig'adi
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: AnimatedMoney(
+            value: value,
+            style: AppTextStyles.h2(color: color),
+          ),
+        ),
         const SizedBox(height: 2),
         Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: AppTextStyles.labelCaps(color: AppColors.onSurfaceVariant),
         ),
       ],
@@ -363,14 +408,20 @@ class AdminFinancePage extends GetView<AdminFinanceController> {
                     Expanded(
                       child: Text(
                         e.key,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.bodyMd(
                           color: AppColors.onSurfaceVariant,
                         ),
                       ),
                     ),
-                    Text(
-                      formatMoney(e.value),
-                      style: AppTextStyles.bodyLg(),
+                    Flexible(
+                      child: Text(
+                        formatMoney(e.value),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bodyLg(),
+                      ),
                     ),
                   ],
                 ),
@@ -403,10 +454,19 @@ class AdminFinancePage extends GetView<AdminFinanceController> {
         Expanded(
           child: Text(
             '$label · $count ta',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
           ),
         ),
-        Text(formatMoney(total), style: AppTextStyles.bodyLg(color: color)),
+        Flexible(
+          child: Text(
+            formatMoney(total),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.bodyLg(color: color),
+          ),
+        ),
       ],
     );
   }
@@ -538,7 +598,14 @@ class AdminFinancePage extends GetView<AdminFinanceController> {
               ],
             ),
           ),
-          Text(amount, style: AppTextStyles.bodyLg(color: color)),
+          Flexible(
+            child: Text(
+              amount,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodyLg(color: color),
+            ),
+          ),
         ],
       ),
     );

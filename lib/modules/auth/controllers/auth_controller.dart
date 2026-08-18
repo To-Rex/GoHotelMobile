@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../../../app/theme/colors.dart';
 import '../../../app/translations/app_translations.dart';
 import '../../../core/storage/local_storage.dart';
+import '../../../core/utils/app_roles.dart';
 import '../../../data/services/data_service.dart';
 import '../../../data/services/push_notification_service.dart';
 
@@ -71,16 +72,32 @@ class AuthController extends GetxController {
       await storage.write('auth_token', result['access_token'] ?? '');
       await storage.write('refresh_token', result['refresh_token'] ?? '');
 
+      // Profil (rol/ruxsatlar) MAJBURIY: olinmasa login muvaffaqiyatsiz
+      // deb hisoblanadi — aks holda admin/menejer vaqtinchalik tarmoq
+      // xatosida jimgina farrosh oqimiga tushib qolardi. Bir marta qayta
+      // uriniladi, baribir bo'lmasa token tozalanib xato ko'rsatiladi.
+      dynamic user;
       try {
-        final user = await _dataService.getCurrentUser();
-        storage.userId = user.id;
-        storage.userRole = user.role;
-        storage.userName = user.name;
+        user = await _dataService.getCurrentUser();
       } catch (_) {
-        storage.userId = result['access_token'] ?? '';
-        storage.userRole = 'Housekeeper';
-        storage.userName = phoneController.value;
+        try {
+          user = await _dataService.getCurrentUser();
+        } catch (_) {
+          user = null;
+        }
       }
+      if (user == null) {
+        await storage.write('auth_token', '');
+        await storage.write('refresh_token', '');
+        storage.isLoggedIn = false;
+        throw Exception('profile_load_failed');
+      }
+      storage.userId = user.id;
+      storage.userRole = user.role;
+      storage.userName = user.name;
+      storage.userType = user.userType;
+      storage.userPermissions = user.permissions;
+      storage.hotelId = user.hotelId ?? '';
 
       storage.rememberMe = rememberMe.value;
       if (rememberMe.value) {
@@ -88,7 +105,11 @@ class AuthController extends GetxController {
       }
 
       isLoggedIn.value = true;
-      Get.offAllNamed('/home');
+      final management = AppRoles.isManagement(
+        userType: storage.userType,
+        permissions: storage.userPermissions,
+      );
+      Get.offAllNamed(management ? '/admin' : '/home');
 
       // Token login so'roviga ulgurmagan bo'lsa (masalan iOS'da APNs hali
       // tayyor emas edi) — uni alohida so'rov bilan bog'laymiz.
@@ -142,6 +163,8 @@ class AuthController extends GetxController {
 
     storage.isLoggedIn = false;
     storage.userId = '';
+    storage.userType = '';
+    storage.userPermissions = [];
     storage.write('auth_token', '');
     storage.write('refresh_token', '');
     isLoggedIn.value = false;
