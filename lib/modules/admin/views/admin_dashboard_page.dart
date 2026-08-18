@@ -4,7 +4,6 @@ import '../../../app/theme/colors.dart';
 import '../../../app/theme/text_styles.dart';
 import '../../../core/animations/app_animations.dart';
 import '../../../core/widgets/app_header.dart';
-import '../../../core/widgets/stat_card.dart';
 import '../../../data/models/hk_task_model.dart';
 import '../../../data/models/room_model.dart';
 import '../controllers/admin_dashboard_controller.dart';
@@ -12,6 +11,12 @@ import '../controllers/admin_main_controller.dart';
 import 'widgets/admin_common.dart';
 import 'widgets/admin_drawer.dart';
 
+/// Boshqaruvdagi kundalik ish stoli.
+///
+/// Sahifa ko'rsatkichlarni ketma-ket kartalarga ajratmaydi: yuqorida joriy
+/// holat va navbatdagi ish, so'ng vazifalar oqimi hamda xonalar holati bir
+/// workspaceda jamlanadi. Kenglik oshganda bu bloklar yonma-yon, tor ekranda
+/// esa tabiiy ketma-ket ko'rinadi.
 class AdminDashboardPage extends GetView<AdminDashboardController> {
   const AdminDashboardPage({super.key});
 
@@ -30,38 +35,16 @@ class AdminDashboardPage extends GetView<AdminDashboardController> {
               leading: const DrawerMenuButton(),
             ),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: controller.loadData,
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-                  child: Obx(() {
-                    if (controller.isLoading.value &&
-                        controller.rooms.isEmpty &&
-                        controller.tasks.isEmpty) {
-                      return const AdminSkeletonList(count: 5);
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FadeSlideIn(index: 1, child: _buildHero()),
-                        const SizedBox(height: 16),
-                        FadeSlideIn(index: 2, child: _buildTaskStats(main)),
-                        const SizedBox(height: 16),
-                        FadeSlideIn(index: 3, child: _buildOccupiedRoomsCard()),
-                        const SizedBox(height: 24),
-                        FadeSlideIn(index: 4, child: _buildRoomBreakdown()),
-                        const SizedBox(height: 24),
-                        FadeSlideIn(
-                          index: 5,
-                          child: _buildRecentTasksHeader(main),
-                        ),
-                        const SizedBox(height: 12),
-                        _buildRecentTasks(main),
-                      ],
-                    );
-                  }),
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final gutter = adminPageGutterForWidth(constraints.maxWidth);
+                  return AdminContentConstraint(
+                    child: RefreshIndicator(
+                      onRefresh: controller.loadData,
+                      child: Obx(() => _buildWorkspace(context, main, gutter)),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -70,199 +53,206 @@ class AdminDashboardPage extends GetView<AdminDashboardController> {
     );
   }
 
-  /// Gradientli hero: bandlik halqasi va asosiy raqamlar bir qarashda.
-  Widget _buildHero() {
-    return Container(
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.primaryContainer, AppColors.primary],
-        ),
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: AppShadows.glow(AppColors.primary, alpha: 0.3),
-      ),
-      child: Obx(
-        () => Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildWorkspace(
+    BuildContext context,
+    AdminMainController main,
+    double gutter,
+  ) {
+    if (controller.isLoading.value &&
+        controller.rooms.isEmpty &&
+        controller.tasks.isEmpty) {
+      return ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(gutter, 8, gutter, 32),
+        children: const [AdminSkeletonList(count: 4, height: 118)],
+      );
+    }
+
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.fromLTRB(gutter, 8, gutter, 32),
+      children: [
+        FadeSlideIn(index: 0, child: _buildCurrentState(main)),
+        if (controller.errorMessage.value != null) ...[
+          const SizedBox(height: 10),
+          _buildErrorState(),
+        ],
+        const SizedBox(height: 12),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final sideBySide = constraints.maxWidth >= 720;
+            final taskFlow = _buildTaskFlow(main);
+            final roomStatus = _buildRoomStatusWorkspace();
+            if (!sideBySide) {
+              return Column(
                 children: [
-                  Text(
-                    'UMUMIY HOLAT'.tr,
-                    style: AppTextStyles.labelCaps(
-                      color: AppColors.onPrimary.withValues(alpha: 0.8),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Xush kelibsiz!'.tr,
-                    style: AppTextStyles.h1(color: AppColors.onPrimary),
-                  ),
+                  FadeSlideIn(index: 1, child: taskFlow),
                   const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      _heroChip(
-                        Icons.meeting_room_rounded,
-                        '${controller.totalRooms} ${'ta xona'.tr}',
-                      ),
-                      _heroChip(
-                        Icons.check_circle_rounded,
-                        '${controller.statusCount('AVAILABLE')} ${'bo\'sh'.tr}',
-                      ),
-                    ],
-                  ),
+                  FadeSlideIn(index: 2, child: roomStatus),
                 ],
+              );
+            }
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: FadeSlideIn(index: 1, child: taskFlow),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 5,
+                  child: FadeSlideIn(index: 2, child: roomStatus),
+                ),
+              ],
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+        FadeSlideIn(index: 3, child: _buildActiveTaskQueue(main)),
+      ],
+    );
+  }
+
+  /// Asosiy holat va uni bosib hal qilinadigan navbatdagi ish.
+  Widget _buildCurrentState(AdminMainController main) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 340;
+        final veryCompact = constraints.maxWidth < 260;
+        final ringSize = compact ? 58.0 : 70.0;
+        final stateSummary = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'UMUMIY HOLAT'.tr,
+              style: AppTextStyles.labelCaps(
+                color: AppColors.onPrimary.withValues(alpha: 0.80),
               ),
             ),
-            const SizedBox(width: 16),
-            Column(
+            const SizedBox(height: 5),
+            Text(
+              'Xush kelibsiz!'.tr,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.h1(color: AppColors.onPrimary),
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 7,
+              runSpacing: 7,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: AppColors.surfaceContainerLowest,
-                    shape: BoxShape.circle,
-                  ),
-                  child: AnimatedProgressRing(
-                    value: controller.occupancy,
-                    size: 72,
-                    strokeWidth: 7,
-                    textStyle: AppTextStyles.h2(color: AppColors.primary),
-                  ),
+                _heroMetric(
+                  Icons.meeting_room_rounded,
+                  '${controller.totalRooms} ${'ta xona'.tr}',
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.onPrimary.withValues(alpha: 0.18),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    'Bandlik'.tr,
-                    style: AppTextStyles.labelCaps(color: AppColors.onPrimary),
-                  ),
+                _heroMetric(
+                  Icons.check_circle_outline_rounded,
+                  '${controller.statusCount('AVAILABLE')} ${'bo\'sh'.tr}',
                 ),
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _heroChip(IconData icon, String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: AppColors.onPrimary.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: AppColors.onPrimary),
-          const SizedBox(width: 5),
-          Text(
-            label,
-            style: AppTextStyles.labelCaps(color: AppColors.onPrimary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTaskStats(AdminMainController main) {
-    return Obx(
-      () => Row(
-        children: [
-          Expanded(
-            child: StatCard(
-              title: 'Ochiq'.tr,
-              count: controller.openTaskCount,
-              icon: Icons.assignment_late_outlined,
-              iconColor: AppColors.primary,
-              onTap: () => main.changeTab(AdminMainController.tasksTab),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: StatCard(
-              title: 'Jarayonda'.tr,
-              count: controller.inProgressTaskCount,
-              icon: Icons.pending_rounded,
-              iconColor: AppColors.statusInProgress,
-              onTap: () => main.changeTab(AdminMainController.tasksTab),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: StatCard(
-              title: 'Yakunlangan'.tr,
-              count: controller.completedTaskCount,
-              icon: Icons.check_circle_rounded,
-              iconColor: AppColors.success,
-              onTap: () => main.changeTab(AdminMainController.tasksTab),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOccupiedRoomsCard() {
-    return Pressable(
-      onTap: () => Get.toNamed('/occupied-rooms'),
-      child: Container(
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: AppShadows.soft,
-        ),
-        child: Row(
+        );
+        final occupancy = Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(11),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(14),
+              padding: const EdgeInsets.all(7),
+              decoration: const BoxDecoration(
+                color: AppColors.surfaceContainerLowest,
+                shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.meeting_room_rounded,
-                color: AppColors.primary,
-                size: 24,
+              child: AnimatedProgressRing(
+                value: controller.occupancy,
+                size: ringSize,
+                strokeWidth: compact ? 6 : 7,
+                textStyle: AppTextStyles.h2(color: AppColors.primary),
               ),
             ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Band xonalar'.tr, style: AppTextStyles.bodyLg()),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Xonalar qachon bo\'shashini ko\'ring'.tr,
-                    style: AppTextStyles.bodyMd(
-                      color: AppColors.onSurfaceVariant,
+            const SizedBox(height: 6),
+            Text(
+              'Bandlik'.tr,
+              style: AppTextStyles.labelCaps(
+                color: AppColors.onPrimary.withValues(alpha: 0.88),
+              ),
+            ),
+          ],
+        );
+        final nextAction = _nextAction(main, compact: compact);
+
+        return Container(
+          padding: EdgeInsets.all(compact ? 14 : 20),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(compact ? 20 : 24),
+          ),
+          child: veryCompact
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    stateSummary,
+                    const SizedBox(height: 16),
+                    occupancy,
+                    const SizedBox(height: 12),
+                    nextAction,
+                  ],
+                )
+              : compact
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    stateSummary,
+                    const SizedBox(height: 16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        occupancy,
+                        const SizedBox(width: 14),
+                        Expanded(child: nextAction),
+                      ],
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(child: stateSummary),
+                    const SizedBox(width: 14),
+                    occupancy,
+                    const SizedBox(width: 14),
+                    SizedBox(width: 176, child: nextAction),
+                  ],
+                ),
+        );
+      },
+    );
+  }
+
+  Widget _heroMetric(IconData icon, String label) {
+    return ConstrainedBox(
+      // Watch-width hero cards have only ~136dp of useful width.  Keep each
+      // metric self-contained so the long Uzbek label truncates rather than
+      // letting its icon row overflow.
+      constraints: const BoxConstraints(maxWidth: 136),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+        decoration: BoxDecoration(
+          color: AppColors.onPrimary.withValues(alpha: 0.14),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: AppColors.onPrimary),
+            const SizedBox(width: 5),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.labelCaps(color: AppColors.onPrimary),
               ),
-            ),
-            const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 16,
-              color: AppColors.onSurfaceVariant,
             ),
           ],
         ),
@@ -270,76 +260,228 @@ class AdminDashboardPage extends GetView<AdminDashboardController> {
     );
   }
 
-  /// Xonalar holati — jonli segmentli diagramma va legenda.
-  Widget _buildRoomBreakdown() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: AppShadows.soft,
-      ),
-      child: Obx(() {
-        final total = controller.totalRooms;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('XONALAR HOLATI'.tr, style: AppTextStyles.labelCaps()),
-            const SizedBox(height: 14),
-            if (total == 0)
-              Text(
-                'Ma\'lumot yo\'q'.tr,
-                style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
-              )
-            else ...[
-              _buildSegmentedBar(total),
-              const SizedBox(height: 14),
-              Column(
-                children: RoomModel.statuses.map((status) {
-                  final count = controller.statusCount(status);
-                  if (count == 0) return const SizedBox.shrink();
-                  final color = roomStatusColor(status);
-                  final pct = (count / total * 100).round();
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 10,
-                          height: 10,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            RoomModel.statusLabel(status),
-                            style: AppTextStyles.bodyMd(),
-                          ),
-                        ),
-                        Text(
-                          '$pct%',
-                          style: AppTextStyles.labelCaps(
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        AnimatedCount(
-                          value: count,
-                          style: AppTextStyles.bodyLg(color: color),
-                        ),
-                      ],
+  Widget _nextAction(AdminMainController main, {required bool compact}) {
+    return Semantics(
+      button: true,
+      label: 'Vazifalar'.tr,
+      child: Pressable(
+        onTap: () => main.changeTab(AdminMainController.tasksTab),
+        child: Container(
+          padding: EdgeInsets.all(compact ? 10 : 12),
+          decoration: BoxDecoration(
+            color: AppColors.onPrimary.withValues(alpha: 0.14),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.onPrimary.withValues(alpha: 0.22),
+            ),
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.assignment_rounded,
+                color: AppColors.onPrimary,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Vazifalar'.tr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.bodyMd(
+                        color: AppColors.onPrimary,
+                      ).copyWith(fontWeight: FontWeight.w600),
                     ),
-                  );
-                }).toList(),
+                    Text(
+                      '${controller.openTaskCount} ${'Ochiq'.tr}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.bodyMd(
+                        color: AppColors.onPrimary.withValues(alpha: 0.82),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_rounded,
+                color: AppColors.onPrimary,
+                size: 18,
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.errorContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.wifi_off_rounded,
+            color: AppColors.onErrorContainer,
+            size: 18,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              controller.errorMessage.value!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodyMd(color: AppColors.onErrorContainer),
+            ),
+          ),
+          TextButton(onPressed: controller.loadData, child: Text('Qayta'.tr)),
+        ],
+      ),
+    );
+  }
+
+  /// Ochiq → jarayonda → yakunlangan oqimi. Har yo'lak amaldagi vazifalar
+  /// sahifasiga olib boradi; shu sabab bu yer faqat statik diagramma emas.
+  Widget _buildTaskFlow(AdminMainController main) {
+    return AdminWorkspaceSurface(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _workspaceHeading(
+            title: 'Vazifalar'.tr,
+            onTap: () => main.changeTab(AdminMainController.tasksTab),
+          ),
+          const SizedBox(height: 12),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final vertical = constraints.maxWidth < 380;
+              final lanes = [
+                _TaskLane(
+                  label: 'Ochiq'.tr,
+                  count: controller.openTaskCount,
+                  icon: Icons.assignment_late_outlined,
+                  color: AppColors.primary,
+                  onTap: () => main.changeTab(AdminMainController.tasksTab),
+                ),
+                _TaskLane(
+                  label: 'Jarayonda'.tr,
+                  count: controller.inProgressTaskCount,
+                  icon: Icons.pending_rounded,
+                  color: AppColors.statusInProgress,
+                  onTap: () => main.changeTab(AdminMainController.tasksTab),
+                ),
+                _TaskLane(
+                  label: 'Yakunlangan'.tr,
+                  count: controller.completedTaskCount,
+                  icon: Icons.check_circle_outline_rounded,
+                  color: AppColors.success,
+                  onTap: () => main.changeTab(AdminMainController.tasksTab),
+                ),
+              ];
+              if (vertical) {
+                return Column(
+                  children: [
+                    for (var i = 0; i < lanes.length; i++) ...[
+                      lanes[i],
+                      if (i < lanes.length - 1) const SizedBox(height: 7),
+                    ],
+                  ],
+                );
+              }
+              // IntrinsicHeight + stretch: yorliq bir kartada 2 qatorga
+              // o'tsa ham UCHALA karta BIR XIL balandlikda turadi —
+              // "biri katta, biri kichik" nosimmetriya bo'lmaydi
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (var i = 0; i < lanes.length; i++) ...[
+                      Expanded(child: lanes[i]),
+                      if (i < lanes.length - 1) const SizedBox(width: 7),
+                    ],
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRoomStatusWorkspace() {
+    final total = controller.totalRooms;
+    return AdminWorkspaceSurface(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _workspaceHeading(
+            title: 'Xonalar holati'.tr,
+            onTap: () => Get.toNamed('/occupied-rooms'),
+          ),
+          const SizedBox(height: 11),
+          if (total == 0)
+            Text(
+              'Ma\'lumot yo\'q'.tr,
+              style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+            )
+          else ...[
+            _buildSegmentedBar(total),
+            const SizedBox(height: 12),
+            for (final status in RoomModel.statuses)
+              if (controller.statusCount(status) > 0)
+                _roomStatusRow(status, total),
           ],
-        );
-      }),
+        ],
+      ),
+    );
+  }
+
+  Widget _workspaceHeading({
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.h2(),
+          ),
+        ),
+        Tooltip(
+          message: title,
+          child: Pressable(
+            haptic: false,
+            onTap: onTap,
+            child: Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.arrow_forward_rounded,
+                color: AppColors.primary,
+                size: 18,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -348,21 +490,21 @@ class AdminDashboardPage extends GetView<AdminDashboardController> {
       tween: Tween(begin: 0, end: 1),
       duration: AppMotion.count,
       curve: AppMotion.emphasized,
-      builder: (context, t, child) => Align(
+      builder: (context, progress, child) => Align(
         alignment: Alignment.centerLeft,
-        child: FractionallySizedBox(widthFactor: t, child: child),
+        child: FractionallySizedBox(widthFactor: progress, child: child),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(999),
         child: SizedBox(
-          height: 10,
+          height: 9,
           child: Row(
             children: RoomModel.statuses
-                .where((s) => controller.statusCount(s) > 0)
+                .where((status) => controller.statusCount(status) > 0)
                 .map(
-                  (s) => Expanded(
-                    flex: controller.statusCount(s),
-                    child: Container(color: roomStatusColor(s)),
+                  (status) => Expanded(
+                    flex: controller.statusCount(status),
+                    child: ColoredBox(color: roomStatusColor(status)),
                   ),
                 )
                 .toList(),
@@ -372,119 +514,264 @@ class AdminDashboardPage extends GetView<AdminDashboardController> {
     );
   }
 
-  Widget _buildRecentTasksHeader(AdminMainController main) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Faol vazifalar'.tr, style: AppTextStyles.h2()),
-        Pressable(
-          onTap: () => main.changeTab(AdminMainController.tasksTab),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Hammasi'.tr,
-                  style: AppTextStyles.statusBadge(color: AppColors.primary),
-                ),
-                const SizedBox(width: 4),
-                const Icon(
-                  Icons.arrow_forward_rounded,
-                  size: 16,
-                  color: AppColors.primary,
-                ),
-              ],
+  Widget _roomStatusRow(String status, int total) {
+    final count = controller.statusCount(status);
+    final color = roomStatusColor(status);
+    final percent = (count / total * 100).round();
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              RoomModel.statusLabel(status),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodyMd(),
             ),
           ),
-        ),
-      ],
+          Text(
+            '$percent%',
+            style: AppTextStyles.bodyMd(
+              color: AppColors.onSurfaceVariant,
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 24,
+            child: Text(
+              '$count',
+              textAlign: TextAlign.end,
+              style: AppTextStyles.bodyMd(
+                color: color,
+              ).copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildRecentTasks(AdminMainController main) {
-    return Obx(() {
-      final items = controller.recentActiveTasks;
-      if (items.isEmpty) {
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(16),
+  Widget _buildActiveTaskQueue(AdminMainController main) {
+    final items = controller.recentActiveTasks;
+    return AdminWorkspaceSurface(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _workspaceHeading(
+            title: 'Faol vazifalar'.tr,
+            onTap: () => main.changeTab(AdminMainController.tasksTab),
           ),
-          child: Text(
-            'Faol vazifalar yo\'q'.tr,
-            style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
-          ),
-        );
-      }
-      return Column(
-        children: items
-            .map(
-              (task) => Pressable(
+          const SizedBox(height: 10),
+          if (items.isEmpty)
+            Text(
+              'Faol vazifalar yo\'q'.tr,
+              style: AppTextStyles.bodyMd(color: AppColors.onSurfaceVariant),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: items.length,
+              separatorBuilder: (_, _) => Divider(
+                height: 1,
+                color: AppColors.outlineVariant.withValues(alpha: 0.48),
+              ),
+              itemBuilder: (context, index) => _ActiveTaskRow(
+                task: items[index],
                 onTap: () => main.changeTab(AdminMainController.tasksTab),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerLowest,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: AppShadows.soft,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TaskLane extends StatelessWidget {
+  const _TaskLane({
+    required this.label,
+    required this.count,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String label;
+  final int count;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: '$label: $count',
+      child: Pressable(
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 78),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: color.withValues(alpha: 0.18)),
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final horizontal = constraints.maxWidth < 120;
+              final text = Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '$count',
+                    style: AppTextStyles.h2(
+                      color: color,
+                    ).copyWith(fontWeight: FontWeight.w700),
                   ),
-                  child: Row(
-                    children: [
-                      // Tor ekranda uzun xona raqami qatordan chiqib ketmasin
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 80),
-                        child: Text(
-                          task.roomNumber.isEmpty ? '—' : task.roomNumber,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.h2(color: AppColors.primary),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              HkTaskModel.typeLabel(task.taskType),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.bodyMd(),
-                            ),
-                            if (task.assigneeName.isNotEmpty)
-                              Text(
-                                task.assigneeName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.bodyMd(
-                                  color: AppColors.onSurfaceVariant,
-                                  fontSize: 12,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        child: AdminChip(
-                          label: HkTaskModel.statusLabel(task.status),
-                          color: taskStatusColor(task.status),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    label,
+                    maxLines: horizontal ? 1 : 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyMd(
+                      color: AppColors.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              );
+              if (!horizontal) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(icon, color: color, size: 19),
+                    text,
+                  ],
+                );
+              }
+              return Row(
+                children: [
+                  Icon(icon, color: color, size: 19),
+                  const SizedBox(width: 9),
+                  Expanded(child: text),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActiveTaskRow extends StatelessWidget {
+  const _ActiveTaskRow({required this.task, required this.onTap});
+
+  final HkTaskModel task;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final statusColor = taskStatusColor(task.status);
+    return Semantics(
+      button: true,
+      label:
+          '${'Xona'.tr} ${task.roomNumber}: ${HkTaskModel.statusLabel(task.status)}',
+      child: Pressable(
+        haptic: false,
+        onTap: onTap,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final narrow = constraints.maxWidth < 300;
+            final leading = Container(
+              constraints: const BoxConstraints(minWidth: 48),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                task.roomNumber.isEmpty ? '—' : task.roomNumber,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.bodyMd(
+                  color: AppColors.primary,
+                ).copyWith(fontWeight: FontWeight.w700),
+              ),
+            );
+            final copy = Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  HkTaskModel.typeLabel(task.taskType),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodyMd().copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+                if (task.assigneeName.isNotEmpty)
+                  Text(
+                    task.assigneeName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyMd(
+                      color: AppColors.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
+                  ),
+              ],
+            );
+            final status = AdminChip(
+              label: HkTaskModel.statusLabel(task.status),
+              color: statusColor,
+            );
+
+            if (narrow) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        leading,
+                        const SizedBox(width: 9),
+                        Expanded(child: copy),
+                      ],
+                    ),
+                    const SizedBox(height: 7),
+                    status,
+                  ],
+                ),
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                children: [
+                  leading,
+                  const SizedBox(width: 10),
+                  Expanded(child: copy),
+                  const SizedBox(width: 8),
+                  Flexible(child: status),
+                ],
               ),
-            )
-            .toList(),
-      );
-    });
+            );
+          },
+        ),
+      ),
+    );
   }
 }
