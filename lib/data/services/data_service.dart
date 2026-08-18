@@ -6,6 +6,14 @@ import '../models/user_model.dart';
 import '../models/task_model.dart';
 import '../models/notification_model.dart';
 import '../models/occupied_room_model.dart';
+import '../models/branch_model.dart';
+import '../models/finance_models.dart';
+import '../models/hk_task_model.dart';
+import '../models/problem_model.dart';
+import '../models/reservation_model.dart';
+import '../models/room_model.dart';
+import '../models/staff_message_model.dart';
+import '../models/staff_model.dart';
 import '../../core/storage/local_storage.dart';
 import 'api_client.dart';
 import 'api_service.dart';
@@ -183,6 +191,331 @@ class DataService {
       }
       return [];
     }
+  }
+
+  // ── BOSHQARUV (admin/menejer) ─────────────────────────────────────
+
+  Future<List<HkTaskModel>> getHkTasks({String? status}) async {
+    try {
+      return await _api.getHkTasks(status: status);
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getHkTasks(status: status);
+      }
+      return [];
+    }
+  }
+
+  /// Mutatsiyalar xatoni tashlaydi — controller foydalanuvchiga
+  /// aniq xabar (masalan, 403 "ruxsat yo'q") ko'rsatishi uchun.
+  /// Takroriy urinish faqat 401 (token yangilangan) holatida qilinadi.
+  Future<T> _mutate<T>(Future<T> Function() call) async {
+    try {
+      return await call();
+    } catch (e) {
+      final was401 = e is DioException && e.response?.statusCode == 401;
+      await _handleAuthError(e);
+      if (was401 && _isTokenValid()) {
+        return await call();
+      }
+      rethrow;
+    }
+  }
+
+  Future<HkTaskModel> createHkTask({
+    required String branchId,
+    required String roomId,
+    required String taskType,
+    String priority = 'MEDIUM',
+    String? assignedTo,
+    String? notes,
+    String? scheduledDate,
+  }) {
+    return _mutate(
+      () => _api.createHkTask(
+        branchId: branchId,
+        roomId: roomId,
+        taskType: taskType,
+        priority: priority,
+        assignedTo: assignedTo,
+        notes: notes,
+        scheduledDate: scheduledDate,
+      ),
+    );
+  }
+
+  Future<HkTaskModel> updateHkTaskStatus(
+    String id,
+    String status, {
+    String? notes,
+  }) {
+    return _mutate(() => _api.updateHkTaskStatus(id, status, notes: notes));
+  }
+
+  Future<HkTaskModel> assignHkTask(String id, String assignedTo) {
+    return _mutate(() => _api.assignHkTask(id, assignedTo));
+  }
+
+  Future<List<RoomModel>> getRooms() async {
+    try {
+      return await _api.getRooms();
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getRooms();
+      }
+      return [];
+    }
+  }
+
+  Future<RoomModel> updateRoomStatus(
+    String roomId,
+    String status, {
+    String? notes,
+  }) {
+    return _mutate(() => _api.updateRoomStatus(roomId, status, notes: notes));
+  }
+
+  Future<List<FloorModel>> getFloors() async {
+    try {
+      return await _api.getFloors();
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getFloors();
+      }
+      return [];
+    }
+  }
+
+  Future<List<BranchModel>> getBranches() async {
+    try {
+      return await _api.getBranches();
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getBranches();
+      }
+      return [];
+    }
+  }
+
+  Future<List<StaffModel>> getEmployees() async {
+    try {
+      final staff = await _api.getEmployees(status: 'ACTIVE');
+      return staff.where((s) => s.isActive).toList();
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        final staff = await _api.getEmployees(status: 'ACTIVE');
+        return staff.where((s) => s.isActive).toList();
+      }
+      return [];
+    }
+  }
+
+  /// Xodimlar boshqaruvi uchun — barcha holatdagi (o'chirilmagan) xodimlar.
+  Future<List<StaffModel>> getAllStaff() async {
+    try {
+      final staff = await _api.getEmployees();
+      return staff.where((s) => !s.isDeleted).toList();
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        final staff = await _api.getEmployees();
+        return staff.where((s) => !s.isDeleted).toList();
+      }
+      return [];
+    }
+  }
+
+  Future<StaffModel> createEmployee({
+    required String branchId,
+    required String firstName,
+    required String lastName,
+    required String username,
+    required String password,
+    String? phone,
+    String? email,
+  }) {
+    return _mutate(
+      () => _api.createEmployee(
+        branchId: branchId,
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        password: password,
+        phone: phone,
+        email: email,
+      ),
+    );
+  }
+
+  Future<StaffModel> updateEmployee(
+    String id, {
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? status,
+  }) {
+    return _mutate(
+      () => _api.updateEmployee(
+        id,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        status: status,
+      ),
+    );
+  }
+
+  Future<List<ReservationModel>> getReservations({String? status}) async {
+    try {
+      return await _api.getReservations(status: status);
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getReservations(status: status);
+      }
+      return [];
+    }
+  }
+
+  Future<void> checkInReservation(String id) {
+    return _mutate(() => _api.checkInReservation(id));
+  }
+
+  Future<void> checkOutReservation(String id) {
+    return _mutate(() => _api.checkOutReservation(id));
+  }
+
+  Future<void> cancelReservation(String id, {String? reason}) {
+    return _mutate(() => _api.cancelReservation(id, reason: reason));
+  }
+
+  Future<List<GuestLiteModel>> getGuests() async {
+    try {
+      return await _api.getGuests();
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getGuests();
+      }
+      return [];
+    }
+  }
+
+  Future<List<ProblemModel>> getProblems({String? status}) async {
+    try {
+      return await _api.getProblems(status: status);
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getProblems(status: status);
+      }
+      return [];
+    }
+  }
+
+  Future<ProblemModel?> getProblemDetail(String id) async {
+    try {
+      return await _api.getProblemDetail(id);
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        try {
+          return await _api.getProblemDetail(id);
+        } catch (_) {}
+      }
+      return null;
+    }
+  }
+
+  Future<void> updateProblemStatus(String id, String status) {
+    return _mutate(() => _api.updateProblemStatus(id, status));
+  }
+
+  Future<List<PaymentModel>> getPayments({
+    String? dateFrom,
+    String? dateTo,
+  }) async {
+    try {
+      return await _api.getPayments(dateFrom: dateFrom, dateTo: dateTo);
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getPayments(dateFrom: dateFrom, dateTo: dateTo);
+      }
+      return [];
+    }
+  }
+
+  Future<List<ExpenseModel>> getExpenses({
+    String? dateFrom,
+    String? dateTo,
+  }) async {
+    try {
+      return await _api.getExpenses(dateFrom: dateFrom, dateTo: dateTo);
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getExpenses(dateFrom: dateFrom, dateTo: dateTo);
+      }
+      return [];
+    }
+  }
+
+  Future<List<ShopSaleModel>> getShopSales({
+    String? dateFrom,
+    String? dateTo,
+    String? status,
+    String dateBy = 'paid',
+  }) async {
+    try {
+      return await _api.getShopSales(
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+        dateBy: dateBy,
+      );
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getShopSales(
+          dateFrom: dateFrom,
+          dateTo: dateTo,
+          status: status,
+          dateBy: dateBy,
+        );
+      }
+      return [];
+    }
+  }
+
+  // ── XODIMLAR XABARLARI ────────────────────────────────────────────
+
+  Future<List<StaffMessageModel>> getStaffMessages({String? status}) async {
+    try {
+      return await _api.getStaffMessages(status: status);
+    } catch (e) {
+      await _handleAuthError(e);
+      if (_isTokenValid()) {
+        return await _api.getStaffMessages(status: status);
+      }
+      return [];
+    }
+  }
+
+  Future<StaffMessageModel> createStaffMessage({
+    required String body,
+    String? roomId,
+  }) {
+    return _mutate(() => _api.createStaffMessage(body: body, roomId: roomId));
+  }
+
+  Future<StaffMessageModel> markStaffMessageDone(String id) {
+    return _mutate(() => _api.markStaffMessageDone(id));
   }
 
   // ── NOTIFICATIONS ─────────────────────────────────────────────────
