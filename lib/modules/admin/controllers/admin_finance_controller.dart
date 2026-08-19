@@ -124,7 +124,17 @@ class AdminFinanceController extends GetxController {
       add(p.paymentMethod, p.amount);
     }
     for (final s in shopSales) {
-      add(s.paymentMethod, s.totalAmount);
+      // Bo'lib to'langan savdoda har bo'lak o'z usuliga qo'shiladi
+      if (s.payments.isNotEmpty) {
+        for (final part in s.payments) {
+          add(
+            part['payment_method'] as String? ?? 'CASH',
+            (part['amount'] as num?)?.toDouble() ?? 0,
+          );
+        }
+      } else {
+        add(s.paymentMethod, s.totalAmount);
+      }
     }
     return m;
   }

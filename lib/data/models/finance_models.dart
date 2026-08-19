@@ -69,6 +69,9 @@ class ShopSaleModel {
   final String? createdByName;
   final int itemsCount;
 
+  /// Bo'lib to'lash bo'laklari: [{amount, payment_method}] (bo'lmasa bo'sh)
+  final List<Map<String, dynamic>> payments;
+
   const ShopSaleModel({
     required this.id,
     required this.totalAmount,
@@ -79,6 +82,7 @@ class ShopSaleModel {
     this.reservationNumber,
     this.createdByName,
     this.itemsCount = 0,
+    this.payments = const [],
   });
 
   factory ShopSaleModel.fromJson(Map<String, dynamic> json) => ShopSaleModel(
@@ -91,6 +95,9 @@ class ShopSaleModel {
     reservationNumber: json['reservation_number'] as String?,
     createdByName: json['created_by_name'] as String?,
     itemsCount: (json['items'] as List<dynamic>?)?.length ?? 0,
+    payments: (json['payments'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .toList(),
   );
 
   /// Ro'yxatda ko'rsatiladigan sana (faqat kun qismi)
@@ -110,6 +117,8 @@ String paymentMethodLabel(String method) {
     case 'MOBILE_PAYMENT':
     case 'ONLINE':
       return 'Onlayn'.tr;
+    case 'MIXED':
+      return 'Aralash'.tr;
     default:
       return method;
   }
